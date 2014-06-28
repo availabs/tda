@@ -1,0 +1,48 @@
+<%- partial('../partials/nav') %>
+<div class="wrap sidebar-icons">
+    <%- partial('../partials/header') %>
+	<div class="content container">
+	    <div class="row" ng-controller="StationController">
+		  <div class="col-md-8">
+		    <section class="widget">
+		    	<header>
+		    		<fieldset>
+            			<legend>Station: <%= station %></legend>
+        			</fieldset>
+		    	</header>
+		    	<div class="body">
+		    		<div id="wimgraph"></div>
+		      	</div>
+		    </section>
+		    <section class="widget">
+		    	<header>
+		    		<fieldset>
+            			<legend>Calendar View</legend>
+        			</fieldset>
+		    	</header>
+		    	<div class="body">
+		    		<div id="wimgraph"></div>
+		      	</div>
+		    </section>
+		  </div>
+		  <div class="col-md-4">
+		  	<section class="widget">
+		      <div class="body">
+		       <div id="infoTable"></div>
+		      </div>
+		    </section>
+		  </div>
+		</div>
+	</div>
+ 	<div class="loader-wrap hiding hide">
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+</div>
+<script>
+	station="<%=station%>";
+	stationType="<%=stationType%>";
+</script>
+<script src="/trafficanalytics/wimXHR.js"></script>
+<script src="/trafficanalytics/wimgraph.js"></script>
+<script src="/trafficanalytics/stationInfo.js"></script>
+<script src="/pages/station.js"></script>

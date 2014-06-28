@@ -1,0 +1,121 @@
+$(function(){
+    function pageLoad(){        
+        //PjaxApp.onResize(drawSparkLines);
+        $('.widget').widgster();
+        // $("body").on("mousemove", function(e) {
+     
+        //   var x = e.pageX - 20;
+        //   var y = e.pageY;
+        //   var windowH = $(window).height();
+        //   if (y > (windowH - 100)) {
+        //   var y = e.pageY - 100;
+        //   } else {
+        //   var y = e.pageY - 20;
+        //   }
+        //   //console.log(x,y)
+        //   $("#stationInfo").css({
+        //     "left": x,
+        //     "top": y
+        //   });
+        // });
+    }
+
+    pageLoad();
+
+    PjaxApp.onPageLoad(pageLoad);
+});
+
+function IndexController ($scope) {
+    var state2fips = {"01": "Alabama","02": "Alaska","04": "Arizona","05": "Arkansas","06": "California","08": "Colorado","09": "Connecticut","10": "Delaware","11": "District of Columbia","12": "Florida","13": "Geogia","15": "Hawaii","16": "Idaho","17": "Illinois","18": "Indiana","19": "Iowa","20": "Kansas","21": "Kentucky","22": "Louisiana","23": "Maine","24": "Maryland","25": "Massachusetts","26": "Michigan","27": "Minnesota","28": "Mississippi","29": "Missouri","30": "Montana","31": "Nebraska","32": "Nevada","33": "New Hampshire","34": "New Jersey","35": "New Mexico","36": "New York","37": "North Carolina","38": "North Dakota","39": "Ohio","40": "Oklahoma","41": "Oregon","42": "Pennsylvania","44": "Rhode Island","45": "South Carolina","46": "South Dakota","47": "Tennessee","48": "Texas","49": "Utah","50": "Vermont","51": "Virginia","53": "Washington","54": "West Virginia","55": "Wisconsin","56": "Wyoming"};
+    var states ={};
+
+    $scope.barGraph = null;
+    var URL = '/stations/byState',
+        dataSources = 0,
+        numRoutes = 2;
+
+    wimXHR.get(URL, function(error, data) {
+
+        data.rows.forEach(function(row){
+            var rowState = row.f[0].v;
+            var rowStation = row.f[1].v;
+
+
+            if (!(rowState in states)) {
+                states[rowState] = {
+                    'state_fips': rowState, 
+                    stations: {length: 0},
+                    name: state2fips[rowState]
+                };
+            }
+            var obj = {
+                stationID: rowStation,
+                stationCount: row.f[2].v,
+                stationType: 'wim'
+            }
+            if (!(rowStation in states[rowState].stations)) {
+                states[rowState].stations[rowStation] = obj;
+                states[rowState].stations.length++;
+            } else {
+                states[rowState].stations[rowStation].stationType = 'wim';
+
+            }
+        });
+        if (++dataSources == numRoutes) {
+            wimstates.drawMap('#statesDIV', states, $scope);
+        }
+    })
+
+    URL = '/stations/allClass';
+
+    wimXHR.get(URL, function(error, data) {
+        data.rows.forEach(function(row){
+            var rowState = row.f[0].v;
+            var rowStation = row.f[1].v;
+
+            if (!(rowState in states)) {
+                states[rowState] = {
+                    'state_fips': rowState, 
+                    stations: {length: 0},
+                    name: state2fips[rowState]
+                };
+            }
+            var obj = {
+                stationID: rowStation,
+                stationCount: row.f[2].v,
+                stationType: 'class'
+            }
+            if (!(rowStation in states[rowState].stations)) {
+                states[rowState].stations[rowStation] = obj;
+                states[rowState].stations.length++;
+            }
+        });
+        if (++dataSources == numRoutes) {
+            wimstates.drawMap('#statesDIV', states, $scope);
+        }
+    });
+
+    AADTGraph.initAADTGraph('#povAADTGraph');
+    AADTGraph.initAADTGraph('#suAADTGraph');
+    AADTGraph.initAADTGraph('#ttAADTGraph');
+    var type = [true,false,false]
+
+
+    $scope.$watch('stations', function() {
+        if($scope.stations != undefined){
+          if($scope.stations.length > 0){
+            var pov={},tt={};
+            AADTGraph.drawAADTGraph('#povAADTGraph',angular.copy($scope.stations),'class',[true,false,false]);
+            AADTGraph.drawAADTGraph('#suAADTGraph' ,angular.copy($scope.stations),'class', [false,true,false]);
+            AADTGraph.drawAADTGraph('#ttAADTGraph' ,angular.copy($scope.stations),'class', [false,false,true]);
+          }
+          
+        }
+
+    });
+
+    function getStateIndex(state_fips){
+      return $scope.states.map(function(el) {return el.state_fips;}).indexOf(state_fips);
+    }
+};
+
