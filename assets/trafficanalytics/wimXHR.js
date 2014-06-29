@@ -4,10 +4,12 @@
 	}
 	// variable to hold the database name that the client
 	// will be querying from
-	var _DATABASE = 'mdot';
+	var _DATABASE = 'allWim';
 
 	// domain where API is located
 	var _URLbase = 'http://api.availabs.org/wim';
+	//var _URLbase = 'http://localhost:1338';
+
 
 	// AJAX get request convenience method
 	// simple redirects to the post method

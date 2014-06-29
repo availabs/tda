@@ -3,11 +3,10 @@
 
 
 var wimCalendar = {
-  
   init:function(min,max){
-  	var html = [];
-  	var caldiv = d3.select("#caldiv");
-   	var m = {top: 10, right: 10, bottom: 25, left: 80},
+    var html = [];
+    var caldiv = d3.select("#caldiv");
+    var m = {top: 10, right: 10, bottom: 25, left: 80},
       w = parseInt(caldiv.style('width'))-m.right,
       z = parseInt(w/54),
       h = parseInt(z*7);
@@ -16,6 +15,8 @@ var wimCalendar = {
           week = d3.time.format("%U"),
           //percent = d3.format(".1%"),
           format = d3.time.format("%Y-%m-%d");
+
+      
 
       if(parseInt(min) < 10){
             min = "0"+min
@@ -39,8 +40,8 @@ var wimCalendar = {
           var svg2 = d3.select("#legend").selectAll("svg")
               .data(d3.range(0, 1))
             .enter().append("svg")
-              .attr("width", 1200)
-              .attr("height", 20)
+              .style("width", 800)
+              .style("height", 20)
               .attr("class", "RdYlGn")
             .append("g")
               .attr("transform", "translate(60,0)");
@@ -59,94 +60,94 @@ var wimCalendar = {
               .text(function(d) { return d; });
 
       html.push(z)
-    	html.push(day)
-    	html.push(week)
-    	html.push(svg)
-    	html.push(svg2)
-    	html.push(rect)
+      html.push(day)
+      html.push(week)
+      html.push(svg)
+      html.push(svg2)
+      html.push(rect)
 
-    	return html
+      return html
 
   },
 
   drawCalendar:function(rect,svg,input_data,day,week,z,svg2,dispType){
-	  
-  		
-  		var values = [];
-	    input_data.forEach(function(input){
-	    	if(dispType === "Weight"){
-	    		values.push(+input.averageWeight);
-	    	}
-	    	else{
-	    		values.push(+input.numTrucks);	
-	    	}
-	    })
+    
+      
+      var values = [];
+      input_data.forEach(function(input){
+        if(dispType === "Weight"){
+          values.push(+input.averageWeight);
+        }
+        else{
+          values.push(+input.numTrucks);  
+        }
+      })
 
-	    var color = d3.scale.quantize()
-	        .domain([d3.min(values), d3.max(values)])
-	        .range(colorbrewer.RdYlGn[11]);
+      var color = d3.scale.quantize()
+          .domain([d3.min(values), d3.max(values)])
+          .range(colorbrewer.RdYlGn[11]);
 
-	   
-	      var data = wimCalendar.colorDays(svg,input_data,monthPath,rect,color,dispType)
-	      
-	      
+     
+        var data = wimCalendar.colorDays(svg,input_data,monthPath,rect,color,dispType)
+        
+        
 
-	      //Legend is drawn below
-
-
-	      	//truckData should contain strings detailing which truck goes where
-	      	if(typeof wimCalendar.legend != 'undefined'){
-	      		wimCalendar.legend.remove();
-	      	}
-
-	        var truckData = [Math.floor(color.invertExtent("#a50026")[0]) + " - " + Math.floor(color.invertExtent("#a50026")[1]),Math.floor(color.invertExtent("#d73027")[0]) + " - " + Math.floor(color.invertExtent("#d73027")[1]),Math.floor(color.invertExtent("#f46d43")[0]) + " - " + Math.floor(color.invertExtent("#f46d43")[1]),Math.floor(color.invertExtent("#fdae61")[0]) + " - " + Math.floor(color.invertExtent("#fdae61")[1]),Math.floor(color.invertExtent("#fee08b")[0]) + " - " + Math.floor(color.invertExtent("#fee08b")[1]),Math.floor(color.invertExtent("#ffffbf")[0]) + " - " + Math.floor(color.invertExtent("#ffffbf")[1]),Math.floor(color.invertExtent("#d9ef8b")[0]) + " - " + Math.floor(color.invertExtent("#d9ef8b")[1]),Math.floor(color.invertExtent("#a6d96a")[0]) + " - " + Math.floor(color.invertExtent("#a6d96a")[1]),Math.floor(color.invertExtent("#66bd63")[0]) + " - " + Math.floor(color.invertExtent("#66bd63")[1]),Math.floor(color.invertExtent("#1a9850")[0]) + " - " + Math.floor(color.invertExtent("#1a9850")[1]),Math.floor(color.invertExtent("#006837")[0]) + " - " + Math.floor(color.invertExtent("#006837")[1])]
-
-	        var color2 = d3.scale.ordinal()
-    			.range(["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]);
+        //Legend is drawn below
 
 
-	        wimCalendar.legend = svg2.selectAll(".legend")
-		      .data(truckData.slice())
-		    .enter().append("g")
-		      .attr("class", "legend")
-		      .attr("transform", function(d, i) { return "translate(" + i * 95 + ",0)"; }); //Displays ordering of legend
-		    
-		 
-				//Coordinates of legend
-				  wimCalendar.legend.append("rect")
-				      .attr("x", 0)
-				      .attr("y", 0)
-				      .attr("width", 95)
-				      .attr("height", 18)
-				      .style("fill", color2)    //Sets text of legend
-				  
-				  wimCalendar.legend.append("text")
-				   	  .attr("x", 10)
-				      .attr("y", 10)     
-				      .attr("dy", ".35em")
-				      .style("text-anchor", "front")
-				      .style("font-size","12px")
-				      .style("color","#fff")
-				      .text(function(d) { return d; });
+          //truckData should contain strings detailing which truck goes where
+          if(typeof wimCalendar.legend != 'undefined'){
+            wimCalendar.legend.remove();
+          }
 
-		function monthPath(t0) {
-	      var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
-	          d0 = +day(t0), w0 = +week(t0),
-	          d1 = +day(t1), w1 = +week(t1);
-	      return "M" + (w0 + 1) * z + "," + d0 * z
-	          + "H" + w0 * z + "V" + 7 * z
-	          + "H" + w1 * z + "V" + (d1 + 1) * z
-	          + "H" + (w1 + 1) * z + "V" + 0
-	          + "H" + (w0 + 1) * z + "Z";
-	    }
+          var truckData = [Math.floor(color.invertExtent("#a50026")[0]) + " - " + Math.floor(color.invertExtent("#a50026")[1]),Math.floor(color.invertExtent("#d73027")[0]) + " - " + Math.floor(color.invertExtent("#d73027")[1]),Math.floor(color.invertExtent("#f46d43")[0]) + " - " + Math.floor(color.invertExtent("#f46d43")[1]),Math.floor(color.invertExtent("#fdae61")[0]) + " - " + Math.floor(color.invertExtent("#fdae61")[1]),Math.floor(color.invertExtent("#fee08b")[0]) + " - " + Math.floor(color.invertExtent("#fee08b")[1]),Math.floor(color.invertExtent("#ffffbf")[0]) + " - " + Math.floor(color.invertExtent("#ffffbf")[1]),Math.floor(color.invertExtent("#d9ef8b")[0]) + " - " + Math.floor(color.invertExtent("#d9ef8b")[1]),Math.floor(color.invertExtent("#a6d96a")[0]) + " - " + Math.floor(color.invertExtent("#a6d96a")[1]),Math.floor(color.invertExtent("#66bd63")[0]) + " - " + Math.floor(color.invertExtent("#66bd63")[1]),Math.floor(color.invertExtent("#1a9850")[0]) + " - " + Math.floor(color.invertExtent("#1a9850")[1]),Math.floor(color.invertExtent("#006837")[0]) + " - " + Math.floor(color.invertExtent("#006837")[1])]
 
-	    
-	},
+          var color2 = d3.scale.ordinal()
+          .range(["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]);
+
+
+          wimCalendar.legend = svg2.selectAll(".legend")
+          .data(truckData.slice())
+        .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d, i) { return "translate(" + i * 95 + ",0)"; }); //Displays ordering of legend
+        
+     
+        //Coordinates of legend
+          wimCalendar.legend.append("rect")
+              .attr("x", 0)
+              .attr("y", 0)
+              .attr("width", 95)
+              .attr("height", 18)
+              .style("fill", color2)    //Sets text of legend
+          
+          wimCalendar.legend.append("text")
+              .attr("x", 10)
+              .attr("y", 10)     
+              .attr("dy", ".35em")
+              .style("text-anchor", "front")
+              .style("font-size","12px")
+              .style("color","#fff")
+              .text(function(d) { return d; });
+
+    function monthPath(t0) {
+        var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+            d0 = +day(t0), w0 = +week(t0),
+            d1 = +day(t1), w1 = +week(t1);
+        return "M" + (w0 + 1) * z + "," + d0 * z
+            + "H" + w0 * z + "V" + 7 * z
+            + "H" + w1 * z + "V" + (d1 + 1) * z
+            + "H" + (w1 + 1) * z + "V" + 0
+            + "H" + (w0 + 1) * z + "Z";
+      }
+
+      
+  },
 
 colorDays:function(svg,input_data,monthPath,rect,color,dispType){
   var format = d3.time.format("%Y-%m-%d");
 
-	svg.selectAll("path.month")
+  svg.selectAll("path.month")
         .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
       .enter().append("path")
         .attr("class", "month")
@@ -155,23 +156,123 @@ colorDays:function(svg,input_data,monthPath,rect,color,dispType){
     var data = d3.nest() 
         .key(function(d) {  return d.date; }) //Creates key value
         .rollup(function(d) { 
-        	if(dispType === "Weight"){
-        		return +d[0].averageWeight; 
-        	}
-        	else{
-        		return +d[0].numTrucks;	
-        	}
+          if(dispType === "Weight"){
+            return +d[0].averageWeight; 
+          }
+          else{
+            return +d[0].numTrucks; 
+          }
         }) //create pair value
         .map(input_data); //Turns code into an array of objects
 
+        svg.selectAll('rect.day').attr('style','fill:#fff');
+
         //Below code colors in the calendar
         rect.filter(function(d) { return format(d) in data; })
-	          .attr("style", function(d) { 
-	            return  "fill:"+color(data[format(d)])+";"; })
-	        .select("title") //Creates hover icon
-	          .text(function(d) { return d + ": " + data[format(d)]; }); //creates hover icon
-	 
-	  return data;
+            .attr("style", function(d) { 
+              return  "fill:"+color(data[format(d)])+";"; })
+          .select("title") //Creates hover icon
+            .text(function(d) { return d + ": " + data[format(d)]; }); //creates hover icon
+   
+    return data;
 
-	}
+  }
 }
+
+function calCreate(rect,svg,classT,day,week,data,z,svg2,dispType,dispType2){
+      if(dispType2 === "Freight"){
+        wimCalendar.drawCalendar(rect,svg,parseDataF(data,classT),day,week,z,svg2,dispType);
+      }
+      else{
+        wimCalendar.drawCalendar(rect,svg,parseDataA(data,classT),day,week,z,svg2,dispType); 
+      }
+  };
+
+function parseDataA(input,classInfo){
+  var output = [];
+  input.rows.forEach(function(row){
+
+        var item = {}
+        var string = ""
+        var yearStr = row.f[0].v
+        var totalTrucks = 0;
+        if(classInfo == 0){
+          totalTrucks = parseInt(row.f[3].v) + parseInt(row.f[4].v) + parseInt(row.f[5].v) + parseInt(row.f[6].v) + parseInt(row.f[7].v) + parseInt(row.f[8].v) + parseInt(row.f[9].v) + parseInt(row.f[10].v) + parseInt(row.f[11].v) + parseInt(row.f[12].v) + parseInt(row.f[13].v) + parseInt(row.f[14].v) + parseInt(row.f[15].v)
+        }
+        else{
+          totalTrucks = parseInt(row.f[classInfo+2].v);
+        }
+        if(row.f[0].v < 10){
+          yearStr = "0"+row.f[0].v
+        }
+        if(row.f[1].v < 10){
+              if(row.f[2].v < 10){
+                string= "20"+yearStr+"-0"+row.f[1].v+"-0"+row.f[2].v
+              }else{
+                string = "20"+yearStr+"-0"+row.f[1].v+"-"+row.f[2].v
+              }
+        }else{
+              if(row.f[2].v < 10){
+                string = "20"+yearStr+"-"+row.f[1].v+"-0"+row.f[2].v
+              }else{
+                string = "20"+yearStr+"-"+row.f[1].v+"-"+row.f[2].v
+              }
+        }
+
+              item.date = string;
+              item.numTrucks = totalTrucks;
+              output.push(item);
+  });
+  return output
+};
+
+function parseDataF(input,classInfo){
+  var output = [];
+  if(input.rows != undefined){
+    input.rows.forEach(function(row){
+      if(classInfo == 0 || classInfo == row.f[4].v){
+          var item = {}
+          var x = 0
+          var string = ""
+          var yearStr = row.f[5].v
+          if(row.f[5].v < 10){
+            yearStr = "0"+row.f[5].v
+          }
+          if(row.f[2].v < 10){
+                if(row.f[3].v < 10){
+                  string= "20"+yearStr+"-0"+row.f[2].v+"-0"+row.f[3].v
+                }else{
+                  string = "20"+yearStr+"-0"+row.f[2].v+"-"+row.f[3].v
+                }
+          }else{
+                if(row.f[3].v < 10){
+                  string = "20"+yearStr+"-"+row.f[2].v+"-0"+row.f[3].v
+                }else{
+                  string = "20"+yearStr+"-"+row.f[2].v+"-"+row.f[3].v
+                }
+          }
+
+              for(var i = 0;i<output.length;i++){
+                if(output[i].date == string){
+                  output[i].numTrucks = parseInt(row.f[1].v) + parseInt(output[i].numTrucks)
+                  output[i].totalWeight = parseInt(row.f[6].v) + parseInt(output[i].totalWeight)
+                  x = 1
+                  break
+                }
+              }
+              if(x == 0){
+                item.date = string;
+                item.numTrucks = parseInt(row.f[1].v);
+                item.totalWeight = parseInt(row.f[6].v)
+                item.averageWeight = parseInt(row.f[6].v) / parseInt(row.f[1].v)
+                output.push(item);
+              }
+              x = 0 
+           }
+
+          
+    });
+  }
+ 
+  return output
+};

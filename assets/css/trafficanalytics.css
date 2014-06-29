@@ -43,6 +43,9 @@
 .selector a.deactivated:hover {
   opacity: 0.75;
 }
+.legend{
+  color:#fff;
+}
 
 #graphDIV {
   height: 500px;
@@ -94,6 +97,7 @@
   position: absolute;
   right: 0;
   left: 0;
+  color
 }
 .legend a {
   line-height:40px;
@@ -178,4 +182,15 @@
   position: absolute;
   background-color: #6baed6;
   border: solid 5px #081d58;
+}
+
+.day {
+  fill: #fff;
+  stroke: #ccc;
+}
+
+.month {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
 }
