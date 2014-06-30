@@ -19,6 +19,9 @@ function StationController ($scope) {
 
     $scope.values = [
       { id: 0, label: 'All' },
+       { id: 1, label: '1' },
+        { id: 2, label: '2' },
+         { id: 3, label: '3' },
       { id: 4, label: '4' },
       { id: 5, label: '5' },
       { id: 6, label: '6' },
@@ -40,7 +43,7 @@ function StationController ($scope) {
     ];
   $scope.myClass = 0;
   $scope.myDisp = "Count";
-  $scope.myDataDisp = "Freight";
+  $scope.myDataDisp = "Class";
 
        $scope.minYear = ""
        $scope.maxYear = ""
@@ -65,6 +68,7 @@ function StationController ($scope) {
           
           wimXHR.get('/stations/byStation/'+$scope.station, function(error, data) {
               $scope.stationData = data;
+              stationInfo.drawTable($scope.station,'#infoTable')
               calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"trucks","Freight")
           });
           

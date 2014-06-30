@@ -110,7 +110,7 @@ var wimCalendar = {
           .data(truckData.slice())
         .enter().append("g")
           .attr("class", "legend")
-          .attr("transform", function(d, i) { return "translate(" + i * 95 + ",0)"; }); //Displays ordering of legend
+          .attr("transform", function(d, i) { return "translate(" + i * 65 + ",0)"; }); //Displays ordering of legend
         
      
         //Coordinates of legend

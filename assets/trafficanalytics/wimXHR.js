@@ -7,9 +7,13 @@
 	var _DATABASE = 'allWim';
 
 	// domain where API is located
-	var _URLbase = 'http://api.availabs.org/wim';
-	//var _URLbase = 'http://localhost:1338';
+	//var _URLbase = 'http://api.availabs.org/wim';
+	var _URLbase = 'http://localhost:1338';
 
+
+	wimXHR.setDatabase = function(database){
+		_DATABASE = database;
+	}
 
 	// AJAX get request convenience method
 	// simple redirects to the post method
@@ -35,14 +39,14 @@
                 })
 	}
 	// retrieves client database name from file 'session.conf'
-	d3.json('/session.conf', function(error, config) {
-        if (error) {
-          console.log('Could not load config file', error);
-          return;
-        }
-        _DATABASE = config.database;
-        _URLbase = _URLbase || config.urlbas
-    })
+	// d3.json('/session.conf', function(error, config) {
+ //        if (error) {
+ //          console.log('Could not load config file', error);
+ //          return;
+ //        }
+ //        _DATABASE = config.database;
+ //        _URLbase = _URLbase || config.urlbas
+ //    })
 
 	this.wimXHR = wimXHR;
 }) ()

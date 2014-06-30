@@ -31,6 +31,7 @@ module.exports.routes = {
   '/hpms':'HomeController.hpms',
   '/station/:type/:id':'StationController.index',
   '/user/admin':'UserController.admin',
+  '/user/db' : 'UserController.changeDatabase',
 
   '/login':'UserController.login',
   '/login/auth':'UserController.auth',

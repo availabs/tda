@@ -1,92 +1,73 @@
-<header class="page-header">
-        <div class="navbar">
-                <ul class="nav navbar-nav navbar-right pull-right">
-                    <li class="visible-phone-landscape">
-                        <a href="#" id="search-toggle">
-                            <i class="fa fa-search"></i>
-                        </a>
-                    </li>
-                    
-                    <li class="dropdown">
-                        <a href="#" title="8 support tickets" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-gears"></i>
-                            <span class="count">0</span>
-                        </a>
-                        <ul id="support-menu" class="dropdown-menu support" role="menu">
-                            <li role="presentation">
-                                <a href="#" class="support-ticket">
-                                    <div class="picture">
-                                        <span class="label label-important"><i class="fa fa-bell-o"></i></span>
-                                    </div>
-                                    <div class="details">
-                                        ACS Data Loaded
-                                    </div>
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#" class="support-ticket">
-                                    <div class="picture">
-                                        <span class="label label-warning"><i class="fa fa-question-circle"></i></span>
-                                    </div>
-                                    <div class="details">
-                                        Paterson AM CTPP Model Loaded
-                                    </div>
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#" class="text-align-center see-all">
-                                    See all Jobs <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                    <li class="hidden-xs">
-                        <a href="#" id="settings" title="" data-toggle="popover" data-placement="bottom" data-original-title="Settings">
-                            <i class="fa fa-cog"></i>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li class="hidden-xs dropdown">
-                        <a href="#" title="Account" id="account" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-user"></i>
-                        </a>
-                        <ul id="account-menu" class="dropdown-menu account" role="menu">
-                            <li role="presentation" class="account-picture">
-                                <%= session.User.name %>
-                            </li>
-                            <li role="presentation">
-                                <a href="form_account.html" class="link">
-                                    <i class="fa fa-user"></i>
-                                    Profile
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="component_calendar.html" class="link">
-                                    <i class="fa fa-calendar"></i>
-                                    Calendar
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#" class="link">
-                                    <i class="fa fa-inbox"></i>
-                                    Inbox
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="visible-xs">
-                        <a href="#" class="btn-navbar" data-toggle="collapse" data-target=".sidebar" title="">
-                            <i class="fa fa-bars"></i>
-                        </a>
-                    </li>
-                    <li class="hidden-xs"><a href="/logout"><i class="fa fa-sign-out"></i></a></li>
-                </ul>
-                <form id="search-form" class="navbar-form pull-right" role="search">
-                    <input type="search" class="search-query" placeholder="Search...">
-                </form>
-                <div class="notifications pull-right">
-                    
-                </div>
-        </div>
-    </header>
+<header class="page-header" ng-controller="HeaderController">
+    <div class="navbar">
+            <ul class="nav navbar-nav navbar-right pull-right">
+                <li class="visible-phone-landscape">
+                    <a href="#" id="search-toggle">
+                        <i class="fa fa-search"></i>
+                    </a>
+                </li>
+                
+                
+                <li class="hidden-xs">
+                    <a href="#" id="settings" title="" class="dropdown-toggle" data-toggle="dropdown" data-original-title="Settings">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <ul id="settings-menu" class="dropdown-menu settings" role="menu">
+                        <li role="presentation" class="account-picture">
+                            <a ng-click="setDatabase('allWim')" class="active">TMAS</a>
+                        </li>
+                        <li role="presentation" class="account-picture">
+                            <a ng-click="setDatabase('mdot')">Michigan DOT</a>
+                        </li>
+                        <li role="presentation" class="account-picture">
+                            <a ng-click="setDatabase('ohwim')">Ohio DOT</a>
+                        </li>
+                        <li role="presentation" class="account-picture">
+                            <a ng-click="setDatabase('pawim')">Pennsylvania DOT</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="divider"></li>
+                <li class="hidden-xs dropdown">
+                    <a href="#" title="Account" id="account" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-user"></i>
+                    </a>
+                    <ul id="account-menu" class="dropdown-menu account" role="menu">
+                        <li role="presentation" class="account-picture">
+                            <%= session.User.name %>
+                        </li>
+                        <li role="presentation">
+                            <a href="form_account.html" class="link">
+                                <i class="fa fa-user"></i>
+                                Profile
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="component_calendar.html" class="link">
+                                <i class="fa fa-calendar"></i>
+                                Calendar
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#" class="link">
+                                <i class="fa fa-inbox"></i>
+                                Inbox
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="visible-xs">
+                    <a href="#" class="btn-navbar" data-toggle="collapse" data-target=".sidebar" title="">
+                        <i class="fa fa-bars"></i>
+                    </a>
+                </li>
+                <li class="hidden-xs"><a href="/logout"><i class="fa fa-sign-out"></i></a></li>
+            </ul>
+            <form id="search-form" class="navbar-form pull-right" role="search">
+                <input type="search" class="search-query" placeholder="Search...">
+            </form>
+            <div class="notifications pull-right">
+                
+            </div>
+    </div>
+</header>
