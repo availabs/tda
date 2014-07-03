@@ -22,7 +22,7 @@ module.exports = {
 	changeDatabase: function(req,res){
 
 		req.session.database = req.param('database');
-		res.redirect('/');
+		res.send({'status':'updated'});
 	},
 	auth: function(req, res, next) {
 

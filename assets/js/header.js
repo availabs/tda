@@ -5,11 +5,11 @@ wimXHR.setDatabase(database);
 $scope.setDatabase = function(database){
 	 console.log(database)
 	 io.socket.post('/user/db',{database:database},function serverSays(err,message){
-            if (err)
-                console.log(err)
-
-            console.log(message);
-        });
+            if (err) {console.log(err);}
+            console.log(message,'what??');
+        	window.location = "/";
+        	console.log('long gone');
+    });
 }
 
 }
