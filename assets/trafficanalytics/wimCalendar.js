@@ -1,9 +1,9 @@
-//function that takes three parameters: stationId, url(where to get data from)[maybe combine url and stationId into one], the dom container(div that contains the calendar)
-//url where to get the data#calendar
+(function() {
+  var wimCal = {
+    version: "0.2-reloaded"
+  }
 
-
-var wimCalendar = {
-  init:function(min,max){
+  function _init(min,max){
     var html = [];
     var caldiv = d3.select("#caldiv");
     var m = {top: 10, right: 10, bottom: 25, left: 80},
@@ -68,83 +68,9 @@ var wimCalendar = {
 
       return html
 
-  },
+  } // end init
 
-  drawCalendar:function(rect,svg,input_data,day,week,z,svg2,dispType){
-    
-      
-      var values = [];
-      input_data.forEach(function(input){
-        if(dispType === "Weight"){
-          values.push(+input.averageWeight);
-        }
-        else{
-          values.push(+input.numTrucks);  
-        }
-      })
-
-      var color = d3.scale.quantize()
-          .domain([d3.min(values), d3.max(values)])
-          .range(colorbrewer.RdYlGn[11]);
-
-     
-        var data = wimCalendar.colorDays(svg,input_data,monthPath,rect,color,dispType)
-        
-        
-
-        //Legend is drawn below
-
-
-          //truckData should contain strings detailing which truck goes where
-          if(typeof wimCalendar.legend != 'undefined'){
-            wimCalendar.legend.remove();
-          }
-
-          var truckData = [Math.floor(color.invertExtent("#a50026")[0]) + " - " + Math.floor(color.invertExtent("#a50026")[1]),Math.floor(color.invertExtent("#d73027")[0]) + " - " + Math.floor(color.invertExtent("#d73027")[1]),Math.floor(color.invertExtent("#f46d43")[0]) + " - " + Math.floor(color.invertExtent("#f46d43")[1]),Math.floor(color.invertExtent("#fdae61")[0]) + " - " + Math.floor(color.invertExtent("#fdae61")[1]),Math.floor(color.invertExtent("#fee08b")[0]) + " - " + Math.floor(color.invertExtent("#fee08b")[1]),Math.floor(color.invertExtent("#ffffbf")[0]) + " - " + Math.floor(color.invertExtent("#ffffbf")[1]),Math.floor(color.invertExtent("#d9ef8b")[0]) + " - " + Math.floor(color.invertExtent("#d9ef8b")[1]),Math.floor(color.invertExtent("#a6d96a")[0]) + " - " + Math.floor(color.invertExtent("#a6d96a")[1]),Math.floor(color.invertExtent("#66bd63")[0]) + " - " + Math.floor(color.invertExtent("#66bd63")[1]),Math.floor(color.invertExtent("#1a9850")[0]) + " - " + Math.floor(color.invertExtent("#1a9850")[1]),Math.floor(color.invertExtent("#006837")[0]) + " - " + Math.floor(color.invertExtent("#006837")[1])]
-
-          var color2 = d3.scale.ordinal()
-          .range(["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]);
-
-
-          wimCalendar.legend = svg2.selectAll(".legend")
-          .data(truckData.slice())
-        .enter().append("g")
-          .attr("class", "legend")
-          .attr("transform", function(d, i) { return "translate(" + i * 65 + ",0)"; }); //Displays ordering of legend
-        
-     
-        //Coordinates of legend
-          wimCalendar.legend.append("rect")
-              .attr("x", 0)
-              .attr("y", 0)
-              .attr("width", 95)
-              .attr("height", 18)
-              .style("fill", color2)    //Sets text of legend
-          
-          wimCalendar.legend.append("text")
-              .attr("x", 10)
-              .attr("y", 10)     
-              .attr("dy", ".35em")
-              .style("text-anchor", "front")
-              .style("font-size","12px")
-              .style("color","#fff")
-              .text(function(d) { return d; });
-
-    function monthPath(t0) {
-        var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
-            d0 = +day(t0), w0 = +week(t0),
-            d1 = +day(t1), w1 = +week(t1);
-        return "M" + (w0 + 1) * z + "," + d0 * z
-            + "H" + w0 * z + "V" + 7 * z
-            + "H" + w1 * z + "V" + (d1 + 1) * z
-            + "H" + (w1 + 1) * z + "V" + 0
-            + "H" + (w0 + 1) * z + "Z";
-      }
-
-      
-  },
-
-colorDays:function(svg,input_data,monthPath,rect,color,dispType){
+wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
   var format = d3.time.format("%Y-%m-%d");
 
   svg.selectAll("path.month")
@@ -176,15 +102,165 @@ colorDays:function(svg,input_data,monthPath,rect,color,dispType){
    
     return data;
 
-  }
-}
+  }//end colorDays
+
+  wimCal.drawCalendar = function(rect,svg,input_data,day,week,z,svg2,dispType){
+      var values = [];
+      input_data.forEach(function(input){
+        if(dispType === "Weight"){
+          values.push(+input.averageWeight);
+        }
+        else{
+          values.push(+input.numTrucks);  
+        }
+      })
+
+      var color = d3.scale.quantize()
+          .domain([d3.min(values), d3.max(values)])
+          .range(colorbrewer.RdYlGn[11]);
+
+     
+        var data = wimCal.colorDays(svg,input_data,monthPath,rect,color,dispType)
+        
+        
+
+        //Legend is drawn below
+
+
+          //truckData should contain strings detailing which truck goes where
+          if(typeof wimCal.legend != 'undefined'){
+            wimCal.legend.remove();
+          }
+
+          var truckData = [Math.floor(color.invertExtent("#a50026")[0]) + " - " + Math.floor(color.invertExtent("#a50026")[1]),
+                           Math.floor(color.invertExtent("#d73027")[0]) + " - " + Math.floor(color.invertExtent("#d73027")[1]),
+                           Math.floor(color.invertExtent("#f46d43")[0]) + " - " + Math.floor(color.invertExtent("#f46d43")[1]),
+                           Math.floor(color.invertExtent("#fdae61")[0]) + " - " + Math.floor(color.invertExtent("#fdae61")[1]),
+                           Math.floor(color.invertExtent("#fee08b")[0]) + " - " + Math.floor(color.invertExtent("#fee08b")[1]),
+                           Math.floor(color.invertExtent("#ffffbf")[0]) + " - " + Math.floor(color.invertExtent("#ffffbf")[1]),
+                           Math.floor(color.invertExtent("#d9ef8b")[0]) + " - " + Math.floor(color.invertExtent("#d9ef8b")[1]),
+                           Math.floor(color.invertExtent("#a6d96a")[0]) + " - " + Math.floor(color.invertExtent("#a6d96a")[1]),
+                           Math.floor(color.invertExtent("#66bd63")[0]) + " - " + Math.floor(color.invertExtent("#66bd63")[1]),
+                           Math.floor(color.invertExtent("#1a9850")[0]) + " - " + Math.floor(color.invertExtent("#1a9850")[1]),
+                           Math.floor(color.invertExtent("#006837")[0]) + " - " + Math.floor(color.invertExtent("#006837")[1])]
+
+          var color2 = d3.scale.ordinal()
+          .range(["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]);
+
+          wimCal.legend = svg2.selectAll(".legend")
+          .data(truckData.slice())
+        .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d, i) { return "translate(" + i * 65 + ",0)"; }); //Displays ordering of legend
+        
+     
+        //Coordinates of legend
+          wimCal.legend.append("rect")
+              .attr("x", 0)
+              .attr("y", 0)
+              .attr("width", 95)
+              .attr("height", 18)
+              .style("fill", color2)    //Sets text of legend
+          
+          wimCal.legend.append("text")
+              .attr("x", 10)
+              .attr("y", 10)     
+              .attr("dy", ".35em")
+              .style("text-anchor", "front")
+              .style("font-size","12px")
+              .style("color","#fff")
+              .text(function(d) { return d; });
+
+    function monthPath(t0) {
+        var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+            d0 = +day(t0), w0 = +week(t0),
+            d1 = +day(t1), w1 = +week(t1);
+        return "M" + (w0 + 1) * z + "," + d0 * z
+            + "H" + w0 * z + "V" + 7 * z
+            + "H" + w1 * z + "V" + (d1 + 1) * z
+            + "H" + (w1 + 1) * z + "V" + 0
+            + "H" + (w0 + 1) * z + "Z";
+      }
+
+      
+  } // end drawCalendar
+
+  wimCal.init = function($scope) {
+
+        $scope.values = [
+          { id: 0, label: 'All' },
+          { id: 1, label: '1' },
+          { id: 2, label: '2' },
+          { id: 3, label: '3' },
+          { id: 4, label: '4' },
+          { id: 5, label: '5' },
+          { id: 6, label: '6' },
+          { id: 7, label: '7' },
+          { id: 8, label: '8' },
+          { id: 9, label: '9' },
+          { id: 10, label: '10' },
+          { id: 11, label: '11' },
+          { id: 12, label: '12' },
+          { id: 13, label: '13' },
+        ];
+        $scope.values2 = [
+          { id: "Weight", label: 'Weight' },
+          { id: "Count", label: 'Count' },
+        ];
+        $scope.values3 = [
+          { id: "Freight", label:'Freight'},
+          { id: "Class", label:'Class'},
+        ];
+      $scope.myClass = 0;
+      $scope.myDisp = "Count";
+      $scope.myDataDisp = "Class";
+
+           $scope.minYear = ""
+           $scope.maxYear = ""
+           $scope.drawVars = []
+
+          var URL = '/station/'+$scope.station+'/yearsActive';
+
+          wimXHR.get(URL, function(error, data) {
+              $scope.minYear = data.rows[0].f[0].v;
+              $scope.maxYear = data.rows[0].f[1].v;
+
+              $scope.drawVars = _init($scope.minYear,$scope.maxYear);
+
+              $scope.stationData = [];
+              $scope.stationDataAll = [];
+              $scope.myClass = $scope.values[0].id;
+              $scope.myDisp = $scope.values2[1].id;
+              $scope.myDataDisp = $scope.values3[0].id;
+
+              wimXHR.get(/station/+$scope.station+'/classAmounts', function(error, data) {
+                $scope.stationDataAll = data;
+              });
+              
+              wimXHR.get('/station/'+$scope.station+'/dailyWeights', function(error, data) {
+                  $scope.stationData = data;
+                  stationInfo.drawTable($scope.station,'#infoTable')
+                  calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"trucks","Freight")
+              });
+              
+              $scope.loadCalendar = function(){
+                if($scope.myDataDisp === "Freight"){
+                    calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationData,$scope.drawVars[0],$scope.drawVars[4],$scope.myDisp,$scope.myDataDisp)
+                
+                }
+                else{
+                    calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationDataAll,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
+                }
+              }
+          });
+  }// end init
 
 function calCreate(rect,svg,classT,day,week,data,z,svg2,dispType,dispType2){
       if(dispType2 === "Freight"){
-        wimCalendar.drawCalendar(rect,svg,parseDataF(data,classT),day,week,z,svg2,dispType);
+        wimCal.drawCalendar(rect,svg,parseDataF(data,classT),day,week,z,svg2,dispType);
       }
       else{
-        wimCalendar.drawCalendar(rect,svg,parseDataA(data,classT),day,week,z,svg2,dispType); 
+        wimCal.drawCalendar(rect,svg,parseDataA(data,classT),day,week,z,svg2,dispType); 
       }
   };
 
@@ -276,3 +352,6 @@ function parseDataF(input,classInfo){
  
   return output
 };
+
+  this.wimCal = wimCal;
+})()

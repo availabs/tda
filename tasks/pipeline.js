@@ -16,7 +16,8 @@
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
   'css/application.css',
-  '/css/trafficanalytics.css'
+  '/css/trafficanalytics.css',
+  '/css/AVAILmap.css'
 ];
 
 
@@ -69,6 +70,8 @@ var jsFilesToInject = [
     "js/app.js",
     "js/settings.js",
 
+    
+    "lib/AVAILmap.js"
 
 
     // <!-- page specific -->

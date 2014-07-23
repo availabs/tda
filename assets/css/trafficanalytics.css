@@ -1,3 +1,5 @@
+/* wimgraph */
+
 #wimgraph {
   height: auto;
   overflow: hidden;
@@ -49,9 +51,12 @@
 
 #graphDIV {
   height: 500px;
-  background-color: #fff;
+  background-color: #999;
   margin: 20px;
   position: relative;
+}
+.tick text {
+  fill: #000;
 }
 .navBar {
   text-align: center;
@@ -81,6 +86,12 @@
 }
 .navBar a.inactive {
   background-color: #d73027;
+}
+.navBar a.deactivated {
+  background-color: #666;
+}
+.navBar a.deactivated:hover {
+  opacity: 0.75;
 }
 #legendDIV {
   margin: 20px;
@@ -113,7 +124,7 @@
   width: 60px;
 }
 .legend a.weight-label {
-  width: 100px;
+  width: 115px;
 }
 .legend a:hover {
   opacity: 1.0;
@@ -149,40 +160,50 @@
   text-align: left;
   position: absolute;
   background-color: #6baed6;
+  color: #000;
   border: solid 5px #081d58;
 }
+
+/* end wimgraph */
+
+/* wimstates */
 
 #statesDIV {
   position: relative;
   margin: 0 0 20px 0;
+  border: solid 5px #081d58;
 }
 #mapSVG {
   display: block;
 }
 
 .state {
-  stroke: #666;
-  stroke-width: 1px;
-}
-.state-hover {
-  fill: #fee391;
-}
-.state-active {
-  fill: #fe9929;
+  fill-opacity: 0.5;
 }
 
 .station-popup {
   font-size: 12pt;
   display: none;
-  height: 40px;
+  /*height: 40px;*/
   line-height: 20px;
-  padding: 5px 0;
-  text-align: center;
-  width: 170px;
+  padding: 5px;
+  text-align: left;
+  /*width: 170px;*/
   position: absolute;
   background-color: #6baed6;
+  color: #081d58;
   border: solid 5px #081d58;
+  z-index: 10;
 }
+
+.station-point {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  z-index: 5;
+}
+
+/* end wimstates */
 
 .day {
   fill: #fff;

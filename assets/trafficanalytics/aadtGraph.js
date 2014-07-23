@@ -119,8 +119,10 @@ var AADTGraph ={
 			  	.on("click",function(d,i,zz) { window.location ="/station/class/"+ graphData[zz].stationId; })
 			  	.on("mouseover",function(d,i,zz) {
 			  		$(this).attr('opacity',0.5);
-			  		$('#map_station_'+graphData[zz].stationId).attr('stroke-width','2px');
-			  		$('#map_station_'+graphData[zz].stationId).attr('stroke','yellow');
+			  		d3.select('#map_station_'+graphData[zz].stationId)
+			  			.style('opacity', 1.0)
+			  			.style('background', 'yellow')//#a50026')
+			  			.style('z-index', 6);
 			  		if(classT !== "class"){
 				  		var info =  "<p class="+graphData[i].stationId+">Station: " +graphData[i].stationId+
 									"<br> Number of years of data: "+graphData[i].years.length+
@@ -148,8 +150,14 @@ var AADTGraph ={
 			  		//$("#stationInfo").show();
 			  	})
 			  	.on("mouseout",function(d,i,zz) {
-			  		$('#map_station_'+graphData[zz].stationId).attr('stroke-width','none');
-			  		$('#map_station_'+graphData[zz].stationId).attr('stroke','none');
+			  		d3.select('#map_station_'+graphData[zz].stationId)
+			  			.style('opacity', 0.66)
+			  			.style('z-index', 5)
+			  			.style('background', function(d) {
+							return (d.properties.type == 'wim' ? '#081d58' : '#d94801');
+						});
+			  		$('#map_station_'+graphData[zz].stationId).css('opacity', 0.66);
+			  		$('#map_station_'+graphData[zz].stationId).css('z-index', 5);
 			  		$(this).attr('opacity',1);
 			  		$("#stationInfo").html('');
 			  		//$("#stationInfo").hide();

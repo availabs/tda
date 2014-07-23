@@ -1,134 +1,180 @@
 (function() {
 	var wimstates = {
-		version: 0.1,
+		version: 0.3,
 	}
 
 	var mapDIV = null,
-		SVG = null,
 		popup = null,
-		geoJSON = null,
-		centered = null,
+		__JSON__ = {},
 		$scope = null,
-		clicked = false;
+		clicked = null,
+		prevMarker = null,
+		prevColor = null,
+		stations = null,
+		XHR = null,
+		dataCollection = {
+			type: 'FeatureCollection',
+			features: []
+		};
 
-	var width = null,
-		height = 600;
+	var AVLmap = null,
+		resetZoom,
+		resetState,
+		width = 1000,
+		height = 500;
 
-	var projection = d3.geo.albersUsa()
-		.scale(1 << 10);
-
-	var path = d3.geo.path()
-		.projection(projection);
+	var projection = null,
+		zoom = null,
+		path = null;
 
 	var colorScale = d3.scale.linear()
 		.range(['#deebf7', '#08306b']);
 
 	function _drawMap() {
-		var states = SVG.selectAll('path')
-			.data(geoJSON.features)
+    	var states = mapDIV.append('svg')
+    		.style('position', 'absolute')
+    		.selectAll('path')
+    		.data(dataCollection.features);
 
-		states.enter().append('path')
-			.attr('fill', function(d) {
-				if (typeof d.properties.stations !== 'undefined') {
-					return colorScale(d.properties.stations.length);
-				} else {
-					return '#999';
-				}
-			})
-			.attr('class', 'state')
-			.attr('d', path)
-			.on('click', function(d) {
-				if (!clicked) {
-					clicked = true;
-					_clickZoom(d);
-				}
-			})
-			.on('mouseover', function(d) {
-				if (typeof d.properties.stations !== 'undefined') {
-					d3.select(this).classed('state-hover', true);
-				}
-			})
-			.on('mouseout', function(d) {
-				if (typeof d.properties.stations !== 'undefined') {
-					d3.select(this).classed('state-hover', false);
-				}
-			});
+    	states.enter()
+    		.append('path')
+    		.attr('id', function(d) {
+    			return 'state-'+d.id;
+    		})
+    		.attr('class', 'state')
+    		.attr('fill', function(d) {
+				return colorScale(d.properties.stations.length);
+    		})
+    		.attr('d', path)
+    		.each(function(d) {
+	    		__JSON__[d.id] = d;
+	    		var marker = avl.MapMarker(projection.invert(path.centroid(d)),
+					{name: d.id, BGcolor: colorScale(d.properties.stations.length),
+						click: function(m) {
+							_clicked(m, d);
+						}
+					});
+	    		AVLmap.addMarker(marker);
+				marker.marker()
+					.on('mouseover', function() {
+						mouseover(d.id, marker);
+					})
+					.on('mouseout', function() {
+						mouseout(d, marker);
+					})
+    		});
 
-		function _clickZoom(d) {
-			if (typeof d.properties.stations === 'undefined') {
-				return;
+		function mouseover(id, marker) {
+			//if (!clicked) {
+				d3.select('#state-'+id).attr('fill', '#fdae6b');
+				marker.BGcolor('#fdae6b');
+			//}
+		}
+		function mouseout(d, marker) {
+			d3.select('#state-'+d.id).attr('fill', function(d) {
+						return colorScale(d.properties.stations.length);
+		    		})
+			if (marker != clicked) {
+				marker.BGcolor(colorScale(d.properties.stations.length));
 			}
-			var x, y, k;
+		}
+
+    	resetZoom.click(function() {
+    		// zoom to bounds of all data
+    		_zoomToBounds(path.bounds(dataCollection));
+
+    		// if there is a pending xhr, then abort it
+    		if (XHR) {
+    			XHR.abort();
+    		}
+    		// if there is an active state, then clear it
+    		if (clicked) {
+    			_clicked(clicked);
+    		}
+    	});
+
+    	AVLmap.addAlert(_update);
+
+    	function _update() {
+    		states.attr('d', path);
+    		if (stations) {
+    			_updateStations();
+    		}
+    	}
+
+		function _updateStations() {
+			stations
+				.style('left', function(d) {
+					return (projection(d.geometry.coordinates)[0]-10)+"px";
+				})
+				.style('top', function(d) {
+					return (projection(d.geometry.coordinates)[1]-10)+"px";
+				})
+		};
+
+		function _clicked(marker, d) {
+	  		if (d3.event.defaultPrevented) return;
 
 			var collection = {
-				type: 'FeatureCollection',
-				features: []
-			};
-			var	URL;
+					type: 'FeatureCollection',
+					features: []
+				};
 
-			if (d && centered !== d) {
-			    var bounds = path.bounds(d);
-			    var wdth = bounds[1][0] - bounds[0][0];
-			    var hght = bounds[1][1] - bounds[0][1];
-			    x = bounds[1][0] - wdth/2
-			    y = bounds[1][1] - hght/2
-			    k = Math.floor(Math.min(width/wdth, height/hght));
-			    centered = d;
-			} else {
-			    x = width / 2;
-			    y = height / 2;
-			    k = 1;
-			    centered = null;
+			if (marker == clicked) {
+				_drawStationPoints(collection);
+				prevMarker.BGcolor(prevColor);
+				clicked = prevMarker = prevColor = null;
+				_updateScopeStations([]);
+				resetState.toggle(false);
+				return;
 			}
+			var name = marker.name();
 
-			if (centered) {
-				URL = '/stations/stateGeo/';
-				_getStationPoints();
+			// set resetState control button to reset to bounds of current state on click
+			resetState.click(function() {
+    			_zoomToBounds(path.bounds(__JSON__[name]));
+			});
 
-				_getStationData(d);
-			} else {
-				d3.selectAll('.station').remove();
+			resetState.toggle(true);
 
-				collection.features = [];
-			  		
-		  		$scope.$apply(function() {
-		  			$scope.stations = [];
-		  			$scope.stationsClass = [];
-		  		});
-				clicked = false;
-			}
+	  		clicked = marker;
 
-			SVG.selectAll("path")
-			    .classed("state-active", centered && function(d) { return d === centered; });
+	  		if (prevMarker) {
+				prevMarker.BGcolor(prevColor);
+	  		}
+	  		prevMarker = marker;
+	  		prevColor = colorScale(d.properties.stations.length);
 
-			SVG.transition()
-			    .duration(750)
+	  		marker.BGcolor("#fdae6b");
 
-			    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"+
-			    				    "scale(" + k + ")"+
-			    				    "translate(" + -x + "," + -y + ")");
+			_zoomToBounds(path.bounds(__JSON__[name]), _getStationPoints);
+
+			_getStationData(name);
 
 			function _getStationPoints() {
-				wimXHR.get(URL + d.id, function(error, data) {
+				var URL = '/state/'+name+'/allStationsGeo/';
+				XHR = wimXHR.get(URL, function(error, data) {
+	            	XHR = null;
 	            	if (error) {
 	            		console.log(error);
 	            		return;
 	            	}
-	            	_drawStationPoints(_formatData(d, data));
-					clicked = false;
+	            	if (clicked) {
+						_drawStationPoints(_formatData(__JSON__[name], data));
+					}
 				})
 			}
 
 
 			function _formatData(stateData, stationData) {
+				// get valid geometries
 				var stations = {};
+				// need this to filter out bad geometry
 				stationData.features.forEach(function(d) {
 					if (d.geometry.coordinates[0] != 0 && d.geometry.coordinates[1] != 0) {
 						stations[d.properties.station_id] = d.geometry;
 					}
 				});
-
-				//stateData.properties.stations.forEach(function(d) {
 				for (var i in stateData.properties.stations) {
 					var d = stateData.properties.stations[i];
 
@@ -148,34 +194,29 @@
 				}
 				return collection;
 			}
-		} // end _clickZoom
+		} // end _clicked
 
 		function _drawStationPoints(collection) {
-			var stations = SVG.selectAll('circle')
+			stations = mapDIV.selectAll('.station-point')
 				.data(collection.features);
 
 			stations.exit().remove();
 
-			stations.enter().append('circle');
+			stations.enter().append('div');
 
-			stations.attr('class', 'station')
+			stations.attr('class', 'station-point')
 				.attr('id',function(d){
 					return 'map_station_'+d.properties.stationID;
 				})
-				.attr('r', 1.5)
-				.attr('opacity', 0.66)
-				.attr('fill', function(d) {
-					if (d.properties.type == 'wim') {
-						return '#081d58';
-					} else {
-						return '#ff0000';
-					}
+				.style('background', function(d) {
+					return (d.properties.type == 'wim' ? '#081d58' : '#d94801');
 				})
-				.attr('cx', function(d) {
-					return projection(d.geometry.coordinates)[0];
+				.style('opacity', 0.66)
+				.style('left', function(d) {
+					return (projection(d.geometry.coordinates)[0]-10)+"px";
 				})
-				.attr('cy', function(d) {
-					return projection(d.geometry.coordinates)[1];
+				.style('top', function(d) {
+					return (projection(d.geometry.coordinates)[1]-10)+"px";
 				})
 				.on('mouseover', function(d) {
 					d3.select(this)
@@ -192,50 +233,17 @@
 					var URL = '/station/' + 
 						d.properties.type + '/' +
 						d.properties.stationID;
-
 					open(URL, '_self');
 				})
 		}
 		// this function queries backend for all stations
 		// and then updates $scope.stations variable in
 		// order to draw list of stations below map
-		function _getStationData(stateData) {
-			var URL = '/stations/wim/';
-			var id = stateData.id.toString();
-
-			var regex = /^\d$/;
-
-			if (id.match(regex)) {
-				id = '0' + id;
-			}
-
-		  	var stations = [];
-
-			wimXHR.get(URL + id, function(error, data) {
-            	if (error) {
-            		console.log(error);
-            		return;
-            	}
-            	if(data.rows != undefined){
-			  		data.rows.forEach(function(row){
-			  			var rowStation = row.f[0].v;
-			  			if(getStationIndex(rowStation) == -1) {
-			  				stations.push({'stationId':rowStation, years:[]})
-			  			}
-			  			stations[getStationIndex(rowStation)].years.push({'year':row.f[1].v,'percent':(row.f[4].v)*100,'AADT':Math.round(row.f[5].v)});
-			  		});
-			  	}
-		  		if (centered) {
-			  		$scope.$apply(function(){
-			  			//$scope.stations = stations;
-			  		});
-			  	}
-
-			});
-			URL = '/stations/class/'
+		function _getStationData(id) {
+			var URL = '/state/'+id+'/classStations';
 			var stationsClass = [];
 
-			wimXHR.get(URL + id, function(error, data) {
+			wimXHR.get(URL, function(error, data) {
 				if (error) {
             		console.log(error);
             		return;
@@ -253,10 +261,8 @@
 				  			
 			  		});
 		  		}
-		  		if (centered) {
-			  		$scope.$apply(function(){
-			  			$scope.stations = stationsClass;
-			  		});
+		  		if (clicked) {
+		  			_updateScopeStations(stationsClass)
 			  	}
 
 			});
@@ -270,32 +276,62 @@
 		  		}
 		  	}
 		}
+		function _updateScopeStations(data) {
+	  		$scope.$apply(function(){
+	  			$scope.stations = data;
+  			});
+		}
 	}
+
+    function _zoomToBounds(bounds, callback) {
+    	var	wdth = bounds[1][0] - bounds[0][0],
+    		hght = bounds[1][1] - bounds[0][1],
+    		center = projection.invert([bounds[0][0] + wdth/2,
+    								    bounds[0][1] + hght/2]),
+
+    		k = Math.min(width/wdth, height/hght),
+    		scale = zoom.scale()*k*0.95;
+
+		zoom.scale(scale);
+        projection
+            .scale(zoom.scale() / 2 / Math.PI)
+            .center(center)
+            .translate([width / 2, height / 2])
+            .translate(projection([0, 0]))
+            .center([0, 0]);
+
+        zoom.translate(projection.translate());
+
+        if (callback) {
+        	callback();
+        }
+
+        AVLmap.zoomMap();
+    }
 
 	function _popup(d) {
 		var wdth = parseInt(popup.style('width')),
 			hght = parseInt(popup.style('height'));
 
-		var xPos = d3.event.offsetX - wdth/2,
-			yPos = (d3.event.offsetY-hght-15);
+		var left = projection(d.geometry.coordinates)[0] - wdth - 5,
+			top = projection(d.geometry.coordinates)[1] - hght - 5;
 
-		if (yPos < 0) {
-			yPos = d3.event.offsetY + 20;
+		if (left < 0) {
+			left += wdth + 10;
 		}
-
-		popup.style('left', xPos + 'px')
-			.style('top', yPos + 'px')
+		if (top < 0) {
+			top += hght + 10;
+		}
+		popup.style('left', left + 'px')
+			.style('top', top + 'px')
 			.style('display', 'block')
-			.html('<b>Station ID:</b> ' + d.properties.stationID)
-	}
-	function _parseData(data){
-
-		return states;
+			.html('<b>Station ID:</b> ' + d.properties.stationID + '<br>' +
+				  '<b>Type:</b> ' + d.properties.type.toUpperCase())
 	}
 	wimstates.init = function(elem,$s){
 		var state2fips = {"01": "Alabama","02": "Alaska","04": "Arizona","05": "Arkansas","06": "California","08": "Colorado","09": "Connecticut","10": "Delaware","11": "District of Columbia","12": "Florida","13": "Geogia","15": "Hawaii","16": "Idaho","17": "Illinois","18": "Indiana","19": "Iowa","20": "Kansas","21": "Kentucky","22": "Louisiana","23": "Maine","24": "Maryland","25": "Massachusetts","26": "Michigan","27": "Minnesota","28": "Mississippi","29": "Missouri","30": "Montana","31": "Nebraska","32": "Nevada","33": "New Hampshire","34": "New Jersey","35": "New Mexico","36": "New York","37": "North Carolina","38": "North Dakota","39": "Ohio","40": "Oklahoma","41": "Oregon","42": "Pennsylvania","44": "Rhode Island","45": "South Carolina","46": "South Dakota","47": "Tennessee","48": "Texas","49": "Utah","50": "Vermont","51": "Virginia","53": "Washington","54": "West Virginia","55": "Wisconsin","56": "Wyoming"};
     	var states ={};
-		var URL = '/stations/wim',
+		var URL = '/stations/allWIMStations',
         dataSources = 0,
         numRoutes = 2;
 
@@ -331,7 +367,7 @@
 	        }
 	    })
 
-	    URL = '/stations/class';
+	    URL = '/stations/allClassStations';
 
 	    wimXHR.get(URL, function(error, data) {
 	        data.rows.forEach(function(row){
@@ -360,55 +396,68 @@
 	        }
 	    });
 	}
-
 	// states is an array of state objects
-	wimstates.drawMap = function(id, states, $s) {
-		mapDIV = d3.select(id)
+	wimstates.drawMap = function(id, states, $scp) {
+		mapDIV = d3.select(id);
 
 		width = parseInt(mapDIV.style('width'));
-		projection.translate([width/2, height/2]);
+		height = width*(2/3);
 
-		SVG = mapDIV.append('svg')
-			.attr('id', 'mapSVG')
-			.attr('height', height)
-			.attr('width', width)
-			.append('g');
+		mapDIV.style('height', height+"px");
 
 		popup = mapDIV.append('div')
-			.attr('class', 'station-popup')
+			.attr('class', 'station-popup');
 
-		$scope = $s;
+		$scope = $scp;
 
 		// states object
-		var obj = {};
+		var statesObj = {};
 
-		var domain = [];
+		var domain = []; // colorScale domain
 
 		// load scope states data into states object
 		for (var i in states) {
-			obj[states[i].state_fips] = {stations: states[i].stations, name: states[i].name}
+			statesObj[states[i].state_fips] = {stations: states[i].stations, name: states[i].name}
 			domain.push(states[i].stations.length);
 		}
 		colorScale.domain(d3.extent(domain));
 
-		d3.json('/data/us-states-10m.json', function(error, states) {
+		d3.json('./data/us-states-10m.json', function(error, data) {
 
-			geoJSON = topojson.feature(states, states.objects.states);
+			var statesJSON = topojson.feature(data, data.objects.states);
 
 			var props;
-			geoJSON.features.forEach(function(d) {
+			statesJSON.features.forEach(function(d) {
 				// pad single digit FIPS with a 0 for compatibility
 				if (d.id.toString().match(/^\d$/)) {
 					d.id = '0' + d.id;
 				}
 				d.properties.fips = d.id.toString();
-				if (d.id in obj) {
-					d.properties.stations = obj[d.id].stations;
-					d.properties.name = obj[d.id].name;
+				if (d.id in statesObj) {
+					d.properties.stations = statesObj[d.id].stations;
+					d.properties.name = statesObj[d.id].name;
+					dataCollection.features.push(d);
 				}
 			})
 
+			AVLmap = avl.Map({id: id, minZoom: 3})
+				.addControl("zoom")
+				.addControl("info");
+
+			resetZoom = AVLmap.customControl({name: 'Reset Zoom', position: 'avl-top-left'});
+			resetState = AVLmap.customControl({name: 'Zoom to State', position: 'avl-top-left'});
+			resetState.toggle();
+
+			projection = AVLmap.projection();
+			zoom = AVLmap.zoom();
+			path = d3.geo.path().projection(projection);
+
+			_zoomToBounds(path.bounds(dataCollection));
+
+			AVLmap.addLayer(avl.RasterLayer("http://{s}.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png"))
+
 			_drawMap();
+
 		})
 	}
 

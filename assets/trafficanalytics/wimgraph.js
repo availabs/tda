@@ -18,16 +18,21 @@
 		// truck weight, truck class, and the amount of trucks
 			formattedData = [],
 			weightDistributionData = {},
-			stationID,			// current station being viewed
-			stationType,		// type of current station
+			//stationID,			// current station being viewed
+			//stationType,		// type of current station
 			clicked = true,		// used to keep track of when users click on graph
+
+		// variable to keep track of class types present in current data set
+			classValues = [],
+		// variable to keep track of weight classes in current data set
+			weightValues = [],
 
 			_formatData,
 		
 			route,	// URL to retrieve graph data from
 
 		// depth is an array object that is treated as a stack.
-		// as users delve deeper into graph times, the year, month, or
+		// Ss users delve deeper into graph times, the year, month, or
 		// day being viewed is pushed onto depth. The stack is initialized
 		// to the root of the data.
 			depth = [0],
@@ -64,6 +69,9 @@
 				.classed('inactive', true)
 				.on('click', _selectorToggle);
 
+		// this function is used to toggle between
+		// the weight/class graph
+		// and the weight dist. graph
 		function _selectorToggle() {
 			var self = d3.select(this),
 				active = self.classed('active'),
@@ -84,7 +92,8 @@
 				}
 			}
 		}
-
+		// this function displays which ever svg was passed as a parameter
+		// and hides the other svg
 		function _toggleSVG(svg) {
 			var hide = (svg === cwSVG ? wdSVG : cwSVG);
 
@@ -117,40 +126,40 @@
 				.attr('class', 'graph-popup');
 
 		function _showPopup(json, DOMel) {
-			var xPos, yPos;
-
-			if ("offsetX" in d3.event) {
-			    xPos = d3.event.offsetX - DOMel.clientLeft;
-			    yPos = d3.event.offsetY - DOMel.clientTop;
-			} else {
-			    xPos = d3.event.layerX - DOMel.clientLeft;
-			    yPos = d3.event.layerY - DOMel.clientTop;
-			}
-
 			var html = '';
 			for (var key in json) {
 				html += '<b>'+key+'</b>: '+json[key]+'<br>';
 			}
+			// remove the final <br> added
 			html = html.replace(/<br>$/i, '');
 
-			popup.style('left', xPos + 'px')
-				.style('top', yPos + 'px')
-				.style('display', 'block')
+			popup.style('display', 'block')
 				.html(html)
+
+			_movePopup(DOMel);
 		}
 		function _movePopup(DOMel) {
 			var xPos, yPos;
 
 			if ("offsetX" in d3.event) {
-			    xPos = d3.event.offsetX - DOMel.clientLeft;
-			    yPos = d3.event.offsetY - DOMel.clientTop;
+			    xPos = d3.event.offsetX;
+			    yPos = d3.event.offsetY;
 			} else {
-			    xPos = d3.event.layerX - DOMel.clientLeft;
-			    yPos = d3.event.layerY - DOMel.clientTop;
+			    xPos = d3.event.layerX;
+			    yPos = d3.event.layerY;
 			}
+			xPos += 40;
+			yPos += 100;
 
-			popup.style('left', xPos + 'px')
-				.style('top', yPos + 'px')
+			if (xPos+parseInt(popup.style('width')) > parseInt(graphDIV.style('width'))) {
+				popup.style('right', xPos + 'px')
+					.style('left', (parseInt(graphDIV.style('width'))-parseInt(popup.style('width')))+'px')
+					.style('top', yPos + 'px')
+			} else {
+				popup.style('left', xPos + 'px')
+					.style('right', '0px')
+					.style('top', yPos + 'px')
+			}
 		}
 		function _hidePopup() {
 			popup.style('display', 'none')
@@ -184,7 +193,7 @@
 	    	.attr('class', 'x-axis')
 	        .attr('transform', 'translate(0, '+(height - margin.top - margin.bottom)+')');
 
-	    // initialize x scale and axis
+	    // initialize weight distribution x scale and axis
 	    var wdXscale = d3.scale.ordinal()
 	    	.rangePoints([0, wdth]);
 
@@ -298,7 +307,7 @@
 			WDnumBands = (WDmaxWeight+WDbandSize) / WDbandSize,
 			WDrange = [];
 
-		var wd2weight = bandSize / WDbandSize;
+		//var wd2weight = bandSize / WDbandSize;
 
 		for (var i = 0; i < WDnumBands; i++) {
 			WDrange.push(i);
@@ -321,6 +330,7 @@
 		// data filters for the weight classes
 		// indexes [0, 6] directly correspond to weight classes [0, 6]
 			weight: [false,false,false,false,false,false,false],
+			weightDistribution: [false,false,false,false,false,false,false]
 		}
 
 		// create legends
@@ -335,6 +345,10 @@
 			.style('text-align', 'left')
 			.style('top', '45px');
 
+		// this function creates the labels for the legend parameter
+		// values is an array of data the data contains
+		// 		labels for data not included in values are not created
+		// attr is the weight or class label
 		function _createLegendLabels(legend, values, attr) {
 			values.sort(function(a, b) { return a-b; });
 
@@ -385,10 +399,11 @@
 				.text(function(d, i) {
 					var text;
 					if (attr === 'weight') {
-						text = '0 lbs.';
-						if (d > 0) {
-							text = (d*20).toString() + 'k lbs.';
-						}
+						 if (d < weightScale.range().length-1) {
+							text = (d*20).toString() +'-'+((d+1)*20) +'k lbs.';
+						 } else {
+						 	text = (d*20).toString()+'k+ lbs.';
+						 }
 					} else {
 						text = 'Cls '+classScale.domain()[d];
 					}
@@ -412,7 +427,7 @@
 		function _getData() {
 			loader.style('display', 'inline')
 
-            wimXHR.post(route+stationID, {'depth': depth}, function(error, data) {
+            wimXHR.post(route, {'depth': depth}, function(error, data) {
             	if (error) {
             		console.log(error);
             		return;
@@ -427,16 +442,13 @@
 		}
 
 		function _formatClassData(data) {
-			console.log(data);
-			// variable to keep track of class types present in current data set
-			var classValues = [],
-			// variable to keep track of weight classes in current data set
-				weightValues = [],
+			classValues = [];
+			weightValues = [];
 
 			// array index for time data
-				timeIndex = 0,
-
+			var	timeIndex = 0,
 				schema = [];
+
 			for (var i in data.schema.fields) {
 				schema.push(data.schema.fields[i].name)
 			}
@@ -472,16 +484,18 @@
 		// into a more usable form. The formatted data is stored in the
 		// formattedData object variable.
 		function _formatWIMData(data) {
-			// variable to keep track of class types present in current data set
-			var classValues = [],
-			// variable to keep track of weight classes in current data set
-				weightValues = [],
+			classValues = [];
+			weightValues = [];
+
+			for (var weight in weightScale.range()) {
+				_FILTERS.weightDistribution[weight] = true;
+			}
 
 			// array index for time data
-				timeIndex = 0,
-
+			var	timeIndex = 0,
 			// get the names of attributes
 				schema = [];
+
 			for (var i in data.schema.fields) {
 				schema.push(data.schema.fields[i].name)
 			}
@@ -504,6 +518,8 @@
 
 					_populateWeightDistributionData(dataObj);
 
+					_FILTERS.weightDistribution[weightScale(dataObj.weight*_CONVERT)] = false;
+
 					dataObj.class = classScale(dataObj.class);
 					_pushUnique(classValues, dataObj.class);
 					dataObj.weight = weightScale(dataObj.weight*_CONVERT);
@@ -525,13 +541,15 @@
 			_createLegendLabels(classLegend, classValues, 'class')
 			_createLegendLabels(weightLegend, weightValues, 'weight')
 
-			return
+			return;
 
+			// populates weightDistributionData object with new, empty data objects
 			function _clearWeightDistributionData() {
 				for (var i in wdScale.range()) {
 					weightDistributionData[i] = _newWDobj();
 				}
 			}
+			// creates a new weight distribution data object
 			function _newWDobj() {
 				var obj = {};
 				for (var i in classScale.range()) {
@@ -545,7 +563,8 @@
 
 				weightDistributionData[index][cls] += data.amount;
 			}
-		}
+		} // end _formatWIMData
+
 		function _pushUnique(list, value) {
 			if (list.indexOf(value) === -1) {
 				list.push(value);
@@ -572,16 +591,18 @@
 			var obj = null,
 				current = null;
 
-			for (var i in weightDistributionData) {
-				current = weightDistributionData[i];
+			for (var wdIndex in weightDistributionData) {
+				current = weightDistributionData[wdIndex];
 
 				obj = {};
-				obj.weight = i;
+				obj.weight = wdIndex;
 				obj.amount = 0;
-				obj.extent = wdScale.invertExtent(+i);
+				obj.extent = wdScale.invertExtent(+wdIndex);
 
-				if (_FILTERS.weight[_WD2Weight(i)])
+				if (_FILTERS.weight[_WD2Weight(wdIndex)] ||
+					_FILTERS.weightDistribution[_WD2Weight(wdIndex)]) {
 					continue;
+				}
 
 				filtered.push(obj);
 
@@ -597,7 +618,7 @@
 		function _drawWDGraph() {
 			var data = _sortBy(_filterWeightDistributionData(), 'weight'),
 				Ymax = d3.max(data, function(d) {return d.amount; });
-
+//console.log(data.length)
 		   	var barWidth = Math.min((wdth-(data.length+1)*2) / data.length, 75),
 		   		space = wdth - (barWidth * data.length),
 		   		gap = space / (data.length+1);
@@ -818,7 +839,8 @@
 				.style('opacity', 0.75)
 		        .attr('fill', function(d) { return _LEGEND_COLORS[groupBy][d[groupBy]]; })
 		        .on('mouseover', function(d) {
-		        	d3.select(this).attr('fill', '#d73027');
+		        	var bar = d3.select(this)
+		        		.attr('fill', '#d73027');
 
 		        	var formatter = d3.format('<,'),
 		        		json = {
@@ -958,10 +980,10 @@
 		}
 
 		self.drawGraph = function(station, type) {
-			stationID = station;
-			stationType = type;
+			//stationID = station;
+			//stationType = type;
 
-			route = '/stations/graph'+type+'Data/';
+			route = '/station/'+station+'/graph'+type+'Data';
 
 			if (type == 'class') {
 				weightDistButton.classed('active', false)
@@ -973,7 +995,8 @@
 					.classed('deactivated', true);
 
 				_formatData = _formatClassData;
-			} else if (type == 'wim') {
+			}
+			else if (type == 'wim') {
 				_formatData = _formatWIMData;
 			}
 

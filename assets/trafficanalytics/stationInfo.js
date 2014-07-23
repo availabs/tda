@@ -101,9 +101,9 @@ var stationInfo = {
 			4:"Off-Interstate Business Marker",
 			9:"None of the above",
 		}
-		wimXHR.get('/stations/byStation/state/info/'+stationID, function(error, data) {
+		wimXHR.get('/station/'+stationID+'/stationInfo', function(error, data) {
 
-			$(elem).append("<table id='displayTable' class=\"table table-hover table-striped\"><thead><tr><th colspan=2><strong>Station Info</strong></th></thead><tbody></tbody></table>")
+			$(elem).append('<table id="displayTable" class="table table-hover table-striped"><thead><tr><th colspan=2><strong>Station Info</strong></th></thead><tbody></tbody></table>')
 			var xtag = '#displayTable tbody';
 			for(var i = 0;i<20;i++){
 				if(data.schema.fields[i].name === "national_highway_sys"){
