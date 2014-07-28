@@ -24,6 +24,29 @@
 		    </section>
 		  </div>
 		  <div class="col-md-4">
+		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
+		  		 	<header>
+			        <fieldset>
+	            	<legend>AADT Change<small>  by station</small>
+
+	            	<select ng-model='active_years.first'>
+	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
+	            	</select>
+	            	{{active_years.first}}
+	            	<select ng-model='active_years.max'>
+	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
+	            	</select>
+	            	{{active_years.max}}
+	            	</legend>
+	        		</fieldset>
+        		</header>
+		      <div class="body">
+		     
+			      <div id="changeAADTGraph"></div>
+			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+		      </div>
+		 	</section>
+
 		  	<section class="widget ui-sortable">
 		  		 	<header>
 			        <fieldset>

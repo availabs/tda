@@ -23,7 +23,8 @@ module.exports.policies = {
   '*': 'sessionAuth',
   User: {
 		'login': "flash",
-		'auth':"flash"
+		'auth':"flash",
+		'admin':["flash","sessionAuth"]
 	}
 
 
