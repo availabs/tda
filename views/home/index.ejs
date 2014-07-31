@@ -18,25 +18,33 @@
                     </div>
 		    	</header>
 			    <div class="body">
-			       
 			      	<div id="statesDIV"></div>
 			    </div>
 		    </section>
 		  </div>
 		  <div class="col-md-4">
+		  	<section class="widget ui-sortable" ng-show="!(stations.length > 0)">
+		  		<header>
+			        <fieldset>
+	            	<legend>Click a State<small> To View Data</small>
+	            	</legend>
+	        		</fieldset>
+        		</header>
+		      <div class="body">
+		      </div>
+		 	</section>
 		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
-		  		 	<header>
+		  		<header>
 			        <fieldset>
 	            	<legend>AADT Change<small>  by station</small>
 
 	            	<select ng-model='active_years.first'>
 	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
 	            	</select>
-	            	{{active_years.first}}
+	            	
 	            	<select ng-model='active_years.max'>
 	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
 	            	</select>
-	            	{{active_years.max}}
 	            	</legend>
 	        		</fieldset>
         		</header>
@@ -46,40 +54,30 @@
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>
-
-		  	<section class="widget ui-sortable">
+	
+		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
 		  		 	<header>
 			        <fieldset>
-	            	<legend>Car AADT<small>  by station</small></legend>
+	            	<legend>AADT<small>  by station</small> <select ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select><select ng-model='active_years2.id'>
+	            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
+	            	</select></legend>
 	        		</fieldset>
         		</header>
 		      <div class="body">
 		     
-			      <div id="povAADTGraph"></div>
+			      <div id="aadtGraph"></div>
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>
-		 	<section class="widget ui-sortable">
-		 		<header>
-		        <fieldset>
-            	<legend>Single Unit<small>  AADT by station</small></legend>
-        		</fieldset>
-        	</header>
+			<section class="widget ui-sortable" ng-show="stations.length > 0">
+		  		 	<header>
+			        <fieldset>
+	            	<legend>Line Graph<small>by time</small> <select ng-model="dispTime" ng-options="item2.id as item2.label for item2 in times"></select></legend>
+	        		</fieldset>
+        		</header>
 		      <div class="body">
-
-			      <div id="suAADTGraph"></div>
-			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
-		      </div>
-		 	</section>
-		 	<section class="widget ui-sortable">
-		 			<header>
-		 				<fieldset>
-            	<legend>Tractor Trailer<small> AADT by station</small></legend>
-        		</fieldset>
-        	</header>
-		      <div class="body">
-		        
-			      <div id="ttAADTGraph"></div>
+		     
+			      <div id="hrMonLineGraph"></div>
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>
@@ -93,6 +91,7 @@
 <script src="/trafficanalytics/wimstates.js"></script>
 <script src="/lib/colorbrewer.min.js"></script>
 <script src="/trafficanalytics/aadtGraph.js"></script>
+<script src="/trafficanalytics/monthlyLineChart.js"></script>
 <script src="/pages/index.js"></script>
 <script src="/lib/AVAILmap.js"></script>
 <script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>

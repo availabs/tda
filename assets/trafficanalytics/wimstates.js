@@ -262,7 +262,7 @@
 			  		});
 		  		}
 		  		if (clicked) {
-		  			_updateScopeStations(stationsClass)
+		  			_updateScopeStations(stationsClass,id)
 			  	}
 
 			});
@@ -276,9 +276,10 @@
 		  		}
 		  	}
 		}
-		function _updateScopeStations(data) {
+		function _updateScopeStations(data,id) {
 	  		$scope.$apply(function(){
 	  			$scope.stations = data;
+	  			$scope.state = id;
   			});
 		}
 	}

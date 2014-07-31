@@ -45,7 +45,6 @@ var AADTGraph ={
 
 	/*Below Block of code is used for making a graph that displays data based on year*/
 
-
 		var x = d3.scale.ordinal()
 		    .rangeRoundBands([0, AADTGraph.width], 0.1);
 
@@ -94,12 +93,18 @@ var AADTGraph ={
 							}
 						}
 						if(flagA && flagB){
-							graphData[z].AAPT = temp - graphData[z].AAPT
-							graphData[z].AAPT = graphData[z].AAPT/temp
-							graphData[z].AAPT = graphData[z].AAPT * 100
+							if(temp != 0){
+								graphData[z].AAPT = temp - graphData[z].AAPT
+								graphData[z].AAPT = graphData[z].AAPT/temp
+								graphData[z].AAPT = graphData[z].AAPT * 100
+							}
+							
 						}
-						else{
+						else if((flagA && year.length == 1) || year.length == 0){
 							graphData[z].AAPT = temp
+						}
+						else if(flagB){
+							graphData[z].AAPT = 0.0
 						}
 					}
 				}
@@ -124,12 +129,18 @@ var AADTGraph ={
 							}
 						}
 						if(flagA && flagB){
-							graphData[z].AASU = temp - graphData[z].AASU
-							graphData[z].AASU = graphData[z].AASU/temp
-							graphData[z].AASU = graphData[z].AASU * 100
+							if(temp != 0){
+								graphData[z].AASU = temp - graphData[z].AASU
+								graphData[z].AASU = graphData[z].AASU/temp
+								graphData[z].AASU = graphData[z].AASU * 100
+							}
+							
 						}
-						else{
+						else if((flagA && year.length == 1) || year.length == 0){
 							graphData[z].AASU = temp
+						}
+						else if(flagB){
+							graphData[z].AASU = 0.0
 						}
 					}
 				}
@@ -154,26 +165,84 @@ var AADTGraph ={
 							}
 						}
 						if(flagA && flagB){
-							graphData[z].AATT = temp - graphData[z].AATT
-							graphData[z].AATT = graphData[z].AATT/temp
-							graphData[z].AATT = graphData[z].AATT * 100
+							if(temp != 0){
+								graphData[z].AATT = temp - graphData[z].AATT
+								graphData[z].AATT = graphData[z].AATT/temp
+								graphData[z].AATT = graphData[z].AATT * 100
+							}
+							
 						}
-						else{
+						else if((flagA && year.length == 1) || year.length == 0){
 							graphData[z].AATT = temp
+						}
+						else if(flagB){
+							graphData[z].AATT = 0.0
 						}
 					}
 				}
 			}
-			graphData[z].heights[0].y1 = graphData[z].AAPT	
-			graphData[z].heights[1].y0 = graphData[z].heights[0].y1
-			graphData[z].heights[1].y1 = graphData[z].heights[0].y1 + graphData[z].AASU	
-			graphData[z].heights[2].y0 = graphData[z].heights[1].y1
-			graphData[z].heights[2].y1 = graphData[z].heights[1].y1 + graphData[z].AATT	
+			var AAPTS = true
+			var AASUS = true
+			var AATTS = true
+
+			if(graphData[z].AAPT < 0){
+				AAPTS = false
+			}
+			if(graphData[z].AASU < 0){
+				AASUS = false
+			}
+			if(graphData[z].AATT < 0){
+				AATTS = false
+			}
+
+			graphData[z].heights[0].y1 = graphData[z].AAPT
+
+
+			if(AAPTS == AASUS){
+				graphData[z].heights[1].y0 = graphData[z].heights[0].y1
+			}
+			else{
+				graphData[z].heights[1].y0 = 0.0	
+			}
+			if(graphData[z].heights[1].y0 == 0.0){
+				graphData[z].heights[1].y1 = graphData[z].AASU
+			}
+			else{
+				graphData[z].heights[1].y1 = graphData[z].heights[0].y1 + graphData[z].AASU	
+			}
+
+
+
+			if(AATTS == AASUS){
+				graphData[z].heights[2].y0 = graphData[z].heights[1].y1
+			}
+			else if(AATTS == AAPTS){
+				graphData[z].heights[2].y0 = graphData[z].heights[0].y1
+			}
+			else{
+				graphData[z].heights[2].y0 = 0.0
+			}
+			if(graphData[z].heights[2].y0 == 0.0){
+				graphData[z].heights[2].y1 = graphData[z].AATT
+			}
+			else if(AATTS == AASUS){
+				graphData[z].heights[2].y1 = graphData[z].heights[1].y1 + graphData[z].AATT
+			}
+			else if(AATTS == AAPTS){
+				graphData[z].heights[2].y1 = graphData[z].heights[0].y1 + graphData[z].AATT	
+			}
 			
 		}
 		graphData.sort(compareStations); 
+		//console.log(graphData)
 		x.domain(graphData.map(function(d,i) { return graphData[i].stationId; }));
-		y.domain([0, d3.max(graphData, function(d,i) { return graphData[i].heights[2].y1; })]);
+		if(year.length < 2){
+			y.domain([d3.min(graphData, function(d,i) { return graphData[i].heights[2].y1; }), d3.max(graphData, function(d,i) { return graphData[i].heights[2].y1; })]);
+		}
+		else{
+			y.domain([d3.min(graphData, function(d,i) { return d3.min(graphData[i].heights,function(d,i){return d.y1}) }),d3.max(graphData, function(d,i) { return d3.max(graphData[i].heights,function(d,i){return d.y1}) })]);
+			//console.log(y.domain())
+		}
 		//y.domain(d3.extent(function(d,i) { return graphData[i].heights[2].y1; })).nice();
 
 		var svg = d3.select(elem+" svg");
@@ -182,11 +251,13 @@ var AADTGraph ={
 		svg.append("g")
 		  .attr("transform", "translate(" + AADTGraph.margin.left + "," + AADTGraph.margin.top + ")")
 		  .attr("class", "y axis")
+		  .style("font-size","12px")
 		  .call(yAxis)
 		.append("text")
 		  .attr("transform", "rotate(-90)")
 		  .attr("y", 6)
 		  .attr("dy", ".71em")
+		  .style("font-size","12px")
 		  .style("text-anchor", "end")
 		  .text("AAADT");
 
@@ -213,17 +284,17 @@ var AADTGraph ={
 	      .attr("class", "g")
 	      .attr("transform", "translate(" + AADTGraph.margin.left + "," + AADTGraph.margin.top + ")")
 		  
-			  	
-	    rect.selectAll("rect")
+		rect.selectAll("rect")
 	      .data(function(d) { return d.heights; })
 	    .enter().append("rect")
-			  	.attr("class","enter")
+			  	//.attr("class","enter")
+			  	.attr("class",function(d,i,zz) { return "station_"+graphData[zz].stationId})
 			  	//Below is where bar is displayed on x axis
 			  	.attr("x", function(d,i) { if(i==0){++zz;}; return x(graphData[zz-1].stationId); })
 			  	//Below is the width of the bar
 			  	.attr("width", x.rangeBand())
 			  	//Below two values are used to set the height of the bar and make sure it displays upside down properly
-				.attr("y", function(d,i) { if(d.y1 == 0){return 0}; return y(Math.max(0,d.y1)); })
+				.attr("y", function(d,i) { if(d.y1 < 0){return y(d.y0)};return y(Math.max(0,d.y1)); })
 			  	.attr("height", function(d,i) {zz = 0; return Math.abs(y(d.y0) - y(d.y1)); })
 			  	//Below is used to set the color of the bar based on the data being examined.
 			  	.attr("style", function(d,i,zz) { 
@@ -237,7 +308,9 @@ var AADTGraph ={
 			  			.style('opacity', 1.0)
 			  			.style('background', 'yellow')//#a50026')
 			  			.style('z-index', 6);
-			  		$(this).attr('opacity',0.5);
+			  		$('.station_'+graphData[zz].stationId).attr('opacity',0.5);
+			  		$('#linegraph path').attr('opacity',0.1);
+			  		$('.stationLine_'+graphData[zz].stationId).attr('opacity',0.9);
 			  		$('#map_station_'+graphData[zz].stationId).attr('stroke-width','2px');
 			  		$('#map_station_'+graphData[zz].stationId).attr('stroke','yellow');
 			  		if(classT !== "class"){
@@ -258,15 +331,29 @@ var AADTGraph ={
 						else{
 							info = info+"<br> Years compared: "+year[0] + " VS " + year[1]
 						}
-						info = info +"<br> ADT: "+totalAADT(graphData[zz].years,"class");
-						if(i == 0){
-							info = info+"<br> APT: "+graphData[zz].AAPT+"</p>"
-						}
-						else if(i == 1){
-							info = info+"<br> ASU: "+graphData[zz].AASU+"</p>"
+						if(year.length == 2){
+							info = info +"<br>ADT: "+totalAADT(graphData[zz].years,"class");
+							if(i == 0){
+								info = info+"<br>% Change APT: "+graphData[zz].AAPT+"</p>"
+							}
+							else if(i == 1){
+								info = info+"<br>% ASU: "+graphData[zz].AASU+"</p>"
+							}
+							else{
+								info = info+"<br>% ATT: "+graphData[zz].AATT+"</p>"
+							}
 						}
 						else{
-							info = info+"<br> ATT: "+graphData[zz].AATT+"</p>"
+							info = info +"<br> ADT: "+totalAADT(graphData[zz].years,"class");
+							if(i == 0){
+								info = info+"<br> APT: "+graphData[zz].AAPT+"</p>"
+							}
+							else if(i == 1){
+								info = info+"<br> ASU: "+graphData[zz].AASU+"</p>"
+							}
+							else{
+								info = info+"<br> ATT: "+graphData[zz].AATT+"</p>"
+							}	
 						}
 
 					}
@@ -283,7 +370,8 @@ var AADTGraph ={
 						});
 			  		$('#map_station_'+graphData[zz].stationId).attr('stroke-width','none');
 			  		$('#map_station_'+graphData[zz].stationId).attr('stroke','none');
-			  		$(this).attr('opacity',1);
+			  		$('#linegraph path').attr('opacity',1);
+			  		$('.station_'+graphData[zz].stationId).attr('opacity',1);
 			  		$("#stationInfo").html('');
 			  		//$("#stationInfo").hide();
 			  	});
@@ -310,18 +398,7 @@ var AADTGraph ={
 		//Is used by the sorting function to sort given values
 		
 		function compareStations(a, b) {
-	      if((a.heights[2].y1 < 0) && (b.heights[2].y1 < 0) ){
-	      	return (-1 * a.heights[2].y1) - (-1 * b.heights[2].y1);
-	      }
-	      else if(b.heights[2].y1 < 0){
-	      	return a.heights[2].y1 - (-1* b.heights[2].y1);
-	      }
-	      else if(a.heights[2].y1 < 0){
-	      	return (-1 * a.heights[2].y1) - b.heights[2].y1;
-	      }
-	      else{
-		  	return a.heights[2].y1 - b.heights[2].y1;
-		  }
+	   		return Math.abs(Math.abs(a.AAPT)+Math.abs(a.AATT)+Math.abs(a.AASU)) - Math.abs(Math.abs(b.AAPT)+Math.abs(b.AATT)+Math.abs(b.AASU))
 		}	
 	},
 
