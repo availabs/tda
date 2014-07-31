@@ -19,12 +19,15 @@ var monthlyLineChart = {
 
 	//dataType: type of traffic being displayed
 
-	drawMonthlyLineChart:function(elem,dataType,id){
+	drawMonthlyLineChart:function(elem,dataType,id,yearS){
 
 
 		URL = '/stations/'+id+'/timeLine/'
 		var graphData = [];
-	    wimXHR.post(URL,{time:"month"},function(error, data) {
+		if(yearS !== 'All'){
+			yearS = parseInt(yearS) - 2000
+		}
+		wimXHR.post(URL,{time:"month",year:yearS},function(error, data) {
 			if (error) {
 				console.log(error);
         		return;
@@ -196,10 +199,13 @@ var monthlyLineChart = {
 
 	//Below is the function for drawing hourly data
 
-	drawHourlyLineChart:function(elem,dataType,id){
+	drawHourlyLineChart:function(elem,dataType,id,yearS){
 		URL = '/stations/'+id+'/timeLine/'
 		var graphData = []
-		wimXHR.post(URL,{time:"hour"},function(error, data) {
+		if(yearS !== 'All'){
+			yearS = parseInt(yearS) - 2000
+		}
+		wimXHR.post(URL,{time:"hour",year:yearS},function(error, data) {
 					if (error) {
 	            		console.log(error);
 	            		return;

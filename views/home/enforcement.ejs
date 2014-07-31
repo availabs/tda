@@ -1,0 +1,69 @@
+<%- partial('../partials/nav') %>
+<div class="wrap sidebar-icons">
+    <%- partial('../partials/header') %>
+	<div class="content container">  
+	  <div class="row" ng-controller="EnforcementController">
+		  <div class="col-md-8">
+		    <section class="widget">
+		    	<header>
+		    		<fieldset>
+	            	<legend>Station Map<small> Click a state to see their ATR sites</small></legend>
+	        		</fieldset>
+		    		<div class="widget-controls">
+                        <a data-widgster="expand" title="" href="#" style="display: none;" data-original-title="Expand"><i class="glyphicon glyphicon-plus"></i></a>
+                        <a data-widgster="collapse" title="" href="#" data-original-title="Collapse" style="display: inline;"><i class="glyphicon glyphicon-minus"></i></a>
+                        <a data-widgster="fullscreen" title="" href="#" data-original-title="Full Screen" style="display: inline;"><i class="glyphicon glyphicon-resize-full"></i></a>
+                        <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>
+                            
+                    </div>
+		    	</header>
+			    <div class="body">
+			      	<div id="statesDIV"></div>
+			    </div>
+		    </section>
+		  </div>
+		  <div class="col-md-4">
+		  	<section class="widget ui-sortable" ng-show="!(stations.length > 0)">
+		  		<header>
+			        <fieldset>
+	            	<legend>Click a State<small> To View Data</small>
+	            	</legend>
+	        		</fieldset>
+        		</header>
+		      <div class="body">
+		      </div>
+		 	</section>
+		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
+		  		<header>
+			        <fieldset>
+	            	<legend>AADT Change<small>  by station</small>
+
+	            	<select ng-model='active_years.first'>
+	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
+	            	</select>
+	            	
+	            	<select ng-model='active_years.max'>
+	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
+	            	</select>
+	            	</legend>
+	        		</fieldset>
+        		</header>
+		      <div class="body">
+		     
+			      <div id="changeAADTGraph"></div>
+			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+		      </div>
+		 	</section>
+		  </div>
+		</div>
+	</div>
+ 	<div class="loader-wrap hiding hide">
+        <i class="fa fa-spinner fa-spin"></i>
+  </div>
+</div>
+<script src="/trafficanalytics/wimstates.js"></script>
+<script src="/lib/colorbrewer.min.js"></script>
+<script src="/trafficanalytics/aadtGraph.js"></script>
+<script src="/lib/AVAILmap.js"></script>
+<script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
+<script src="/pages/enforcement.js"></script>

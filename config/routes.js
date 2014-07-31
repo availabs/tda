@@ -29,6 +29,7 @@ module.exports.routes = {
   // (Alternatively, remove this and add an `index.html` file in your `assets` directory)
   '/':'HomeController.index',
   '/hpms':'HomeController.hpms',
+  '/enforcement' :'HomeController.enforcement',
   '/station/:type/:id':'StationController.index',
   '/user/admin':'UserController.admin',
   '/user/db' : 'UserController.changeDatabase',

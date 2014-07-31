@@ -35,7 +35,7 @@ var jsFilesToInject = [
     // linked in the proper order order
 
     // Bring in the socket.io client
-    'js/socket.io.js',
+    //'js/socket.io.js',
 
     "lib/angular/angular.min.js",
     "lib/jquery/jquery-2.0.3.min.js",

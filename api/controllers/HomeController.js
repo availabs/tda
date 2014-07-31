@@ -12,6 +12,9 @@ module.exports = {
 	},
 	hpms:function(req,res){
 		res.view();
+	},
+	enforcement:function(req,res){
+		res.view();
 	}	
 };
 

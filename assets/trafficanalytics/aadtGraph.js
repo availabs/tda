@@ -44,7 +44,6 @@ var AADTGraph ={
 
 
 	/*Below Block of code is used for making a graph that displays data based on year*/
-
 		var x = d3.scale.ordinal()
 		    .rangeRoundBands([0, AADTGraph.width], 0.1);
 
@@ -70,10 +69,38 @@ var AADTGraph ={
 		for two specific years should be done.
 
 		*/
+		if(year.length == 2){
+			for(var z = 0;z<graphData.length;z++){
+				if(PST != undefined){
+					flagA = false
+					flagB = false
+					if( graphData[z].years.length < 2){
+							graphData.splice(z,1)
+					}
+					else{
+						for(var count = 0;count<graphData[z].years.length;count++){
+							if(graphData[z].years[count].year === year[0]){
+								flagA = true			
+							}
 
+							if(graphData[z].years[count].year === year[1]){
+								flagB = true
+							}
+							
+						}
+						if(!(flagA) && !(flagB)){
+							graphData.splice(z,1)
+						}
+					}
+				}
+			}
+		}
+		
 		for(var z = 0;z<graphData.length;z++){
 			if(PST != undefined){
 				if(PST[1] || PST[0]){
+					flagA = false
+					flagB = false
 					if( year.length == 0 || year == undefined){
 						graphData[z].AAPT = totalAADT(graphData[z].years,"APT")
 					}
@@ -98,13 +125,13 @@ var AADTGraph ={
 								graphData[z].AAPT = graphData[z].AAPT/temp
 								graphData[z].AAPT = graphData[z].AAPT * 100
 							}
-							
+							else{
+								graphData[z].AAPT = 0
+							}	
 						}
+						
 						else if((flagA && year.length == 1) || year.length == 0){
 							graphData[z].AAPT = temp
-						}
-						else if(flagB){
-							graphData[z].AAPT = 0.0
 						}
 					}
 				}
@@ -134,13 +161,13 @@ var AADTGraph ={
 								graphData[z].AASU = graphData[z].AASU/temp
 								graphData[z].AASU = graphData[z].AASU * 100
 							}
+							else{
+								graphData[z].AASU = 0
+							}
 							
 						}
 						else if((flagA && year.length == 1) || year.length == 0){
 							graphData[z].AASU = temp
-						}
-						else if(flagB){
-							graphData[z].AASU = 0.0
 						}
 					}
 				}
@@ -170,13 +197,13 @@ var AADTGraph ={
 								graphData[z].AATT = graphData[z].AATT/temp
 								graphData[z].AATT = graphData[z].AATT * 100
 							}
+							else{
+								graphData[z].AATT = 0
+							}
 							
 						}
 						else if((flagA && year.length == 1) || year.length == 0){
 							graphData[z].AATT = temp
-						}
-						else if(flagB){
-							graphData[z].AATT = 0.0
 						}
 					}
 				}
@@ -234,7 +261,6 @@ var AADTGraph ={
 			
 		}
 		graphData.sort(compareStations); 
-		//console.log(graphData)
 		x.domain(graphData.map(function(d,i) { return graphData[i].stationId; }));
 		if(year.length < 2){
 			y.domain([d3.min(graphData, function(d,i) { return graphData[i].heights[2].y1; }), d3.max(graphData, function(d,i) { return graphData[i].heights[2].y1; })]);
