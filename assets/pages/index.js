@@ -187,7 +187,7 @@ function IndexController ($scope) {
                 
             })
         })
-        //console.log('year list',output)
+        console.log('year list',output)
                 
         return output;
         //console.log()

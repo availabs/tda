@@ -442,96 +442,107 @@ var AADTGraph ={
 
 	*/
 
-	drawAADTGraphWeight:function(graphData,classT,truckClass){
-
-
-		//console.log('graphData',graphData);
-
-		var x = d3.scale.ordinal()
-		    .rangeRoundBands([0, AADTGraph.width], 0.1);
-
-		var y = d3.scale.linear()
-		    .rangeRound([AADTGraph.height, 0]);
-
-		var xAxis = d3.svg.axis()
-		    .scale(x)
-		    .orient("bottom");
-
-		var yAxis = d3.svg.axis()
-		    .scale(y)
-		    .orient("left")
-		var temp = 0
-		var flagA = false
-		var flagB = false
-		var zz = 0;
-
-		/*
-
+	drawAADTGraphWeight:function(elem,graphData,classT,truckClass){
 		
 
-		*/
-		
-		graphData.sort(compareStations); 
-		AADTGraph.graphData = graphData;
-		x.domain(graphData.map(function(d,i) { return graphData[i].stationId; }));
-		y.domain([0, d3.max(graphData, function(d,i) { return Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")); })]);
+			//console.log('graphData',graphData);
+			var x = d3.scale.ordinal()
+			    .rangeRoundBands([50, AADTGraph.width+50], 0.1);
 
-		var color = d3.scale.quantize()
-	        .domain([d3.min(graphData, function(d,i) { return Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")); }), d3.max(graphData, function(d,i) { return Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")); })])
-	        .range(colorbrewer.RdYlGn[11]);
+			var y = d3.scale.linear()
+			    .rangeRound([AADTGraph.height, 0]);
 
-	    AADTGraph.svg.selectAll("g").remove();
+			var xAxis = d3.svg.axis()
+			    .scale(x)
+			    .orient("bottom");
 
-		AADTGraph.svg.append("g")
-		  .attr("class", "y axis")
-		  .call(yAxis)
-		.append("text")
-		  .attr("transform", "rotate(-90)")
-		  .attr("y", 6)
-		  .attr("dy", ".71em")
-		  .style("text-anchor", "end")
-		  .text("AAADT");
+			var yAxis = d3.svg.axis()
+			    .scale(y)
+			    .orient("left")
+			
 
-		var rect =AADTGraph.svg.selectAll("rect");
-			rect.remove();
-			rect =AADTGraph.svg.selectAll("rect")
-		  		.data(graphData);
-		rect.enter().append("rect")
-		  	.attr("class","enter")
-		  	.attr("x", function(d,i) { return x(graphData[i].stationId); })
-		  	.attr("width", x.rangeBand())
-		  	.attr("y", function(d,i) { return y(Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour"))); })
-		  	.attr("style", function(d,i) { return  "fill:"+color(Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")))+";"; })
-		  	.attr("height", function(d,i) { return AADTGraph.height - y(Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour"))); })
-		  	.on("click",function(d,i) { window.location ="/station/wim/"+ graphData[i].stationId; })
-		  	.on("mouseover",function(d,i) {
-		  		$(this).attr('opacity',0.5);
-		  		$('#map_station_'+graphData[i].stationId).attr('stroke-width','2px');
-		  		$('#map_station_'+graphData[i].stationId).attr('stroke','yellow');
-			  		var info =  "<p class="+graphData[i].stationId+">Station: " +graphData[i].stationId+
-								"<br> Number of years of data: "+graphData[i].years.length+
-								"<br> Class: "+ truckClass +
-								"<br>AWeight/time: "+Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour"))+
-								"</p>";
-		  		$("#stationInfo").html(info);
-		  		//$("#stationInfo").show();
-		  	})
-		  	.on("mouseout",function(d,i) {
-		  		$('#map_station_'+graphData[i].stationId).attr('stroke-width','none');
-		  		$('#map_station_'+graphData[i].stationId).attr('stroke','none');
-		  		$(this).attr('opacity',1);
-		  		$("#stationInfo").html('');
-		  		//$("#stationInfo").hide();
-		  	});
+			/*
+
+			
+
+			*/
+			
+			graphData.sort(compareStations); 
+			x.domain(graphData.map(function(d,i) { return graphData[i].stationId; }));
+			y.domain([0, d3.max(graphData, function(d,i) { return Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")); })]);
+
+			var color = d3.scale.quantize()
+		        .domain([d3.min(graphData, function(d,i) { return Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")); }), d3.max(graphData, function(d,i) { return Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")); })])
+		        .range(colorbrewer.RdYlGn[11]);
+
+		    var svg = d3.select(elem+" svg");
+		    svg.selectAll("g").remove();
+
+			svg.append("g")
+			  .attr("transform", "translate(" + (AADTGraph.margin.left-20) + "," + AADTGraph.margin.top + ")")
+			  .attr("class", "y axis")
+			  .style("font-size","12px")
+			  .call(yAxis)
+			.append("text")
+			  .attr("transform", "rotate(-90)")
+			  .attr("y", 6)
+			  .attr("dy", ".71em")
+			  .style("font-size","12px")
+			  .style("text-anchor", "end")
+			  .text("AAADT");
+
+			var rect = svg.selectAll("rect");
+				rect.remove();
+				rect = svg.selectAll("rect")
+			  		.data(graphData);
+			rect.enter().append("rect")
+			  	.attr("class",function(d,i) { return "station_"+graphData[i].stationId})
+			  	.attr("x", function(d,i) { return x(graphData[i].stationId); })
+			  	.attr("width", x.rangeBand())
+			  	.attr("y", function(d,i) { return y(Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour"))); })
+			  	.attr("style", function(d,i) { return  "fill:"+color(Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")))+";"; })
+			  	.attr("height", function(d,i) { return AADTGraph.height - y(Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour"))); })
+			  	.on("click",function(d,i) { window.location ="/station/wim/"+ graphData[i].stationId; })
+			  	.on("mouseover",function(d,i) {
+			  		d3.select('#map_station_'+graphData[i].stationId)
+			  			.style('opacity', 1.0)
+			  			.style('background', 'yellow')//#a50026')
+			  			.style('z-index', 6);
+			  		$(".station_"+graphData[i].stationId).attr('opacity',0.5);
+			  		$('#map_station_'+graphData[i].stationId).attr('stroke-width','2px');
+			  		$('#map_station_'+graphData[i].stationId).attr('stroke','yellow');
+				  		var info =  "<p class="+graphData[i].stationId+">Station: " +graphData[i].stationId+
+									"<br> Number of years of data: "+graphData[i].years.length+
+									"<br> Class: "+ truckClass +
+									"<br>AWeight/time: "+Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour"))+
+									"</p>";
+			  		$("#stationInfo").html(info);
+			  		//$("#stationInfo").show();
+			  	})
+			  	.on("mouseout",function(d,i) {
+			  		d3.select('#map_station_'+graphData[i].stationId)
+			  			.style('opacity', 0.66)
+			  			.style('z-index', 5)
+			  			.style('background', function(d) {
+							return (d.properties.type == 'wim' ? '#081d58' : '#d94801');
+						});
+			  		$('#map_station_'+graphData[i].stationId).attr('stroke-width','none');
+			  		$('#map_station_'+graphData[i].stationId).attr('stroke','none');
+			  		$(".station_"+graphData[i].stationId).attr('opacity',1);
+			  		$("#stationInfo").html('');
+			  		//$("#stationInfo").hide();
+			  	});
+
 		
 		//Collects various forms of average trafic data.
 
 		function totalAADT(arr,check){
 			var total = 0;
-
 			for(var i = 0;i<arr.length;i++){
-				if(check === "weight"){ total = total + parseInt(arr[i].Weight)}
-				else if(check === "hour"){total = total + parseInt(arr[i].hours)}
+				if(truckClass === 'All' || parseInt(arr[i].Class) == parseInt(truckClass)){
+					if(check === "weight"){ total = total + parseInt(arr[i].Weight)}
+					else if(check === "hour"){total = total + parseInt(arr[i].hours)}
+				}
 			}
 			if(check != "hour"){
 				total = Math.round(total / arr.length);

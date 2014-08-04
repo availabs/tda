@@ -38,19 +38,16 @@
 			        <fieldset>
 	            	<legend>AADT Change<small>  by station</small>
 
-	            	<select ng-model='active_years.first'>
-	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
+	            	<select ng-model='active_TruckClass.value'>
+	            		<option ng-repeat="class in truckClass" value='{{class}}'>{{class}}</option>
 	            	</select>
-	            	
-	            	<select ng-model='active_years.max'>
-	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
-	            	</select>
+
 	            	</legend>
 	        		</fieldset>
         		</header>
 		      <div class="body">
 		     
-			      <div id="changeAADTGraph"></div>
+			      <div id="weightByHour"></div>
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>
