@@ -10,6 +10,7 @@ var lineChart = {
 		lineChart.svg = d3.select(elem).append("svg")
 		    .attr("width", lineChart.width + lineChart.margin.left + lineChart.margin.right)
 		    .attr("height", lineChart.height + lineChart.margin.top + lineChart.margin.bottom)
+		    .attr("id","linegraph")
 		  .append("g")
 		    .attr("transform", "translate(" + lineChart.margin.left + "," + lineChart.margin.top + ")");
 
@@ -161,10 +162,10 @@ var lineChart = {
 
 	//dataType: whether to display count or percent
 
-	drawlineChart:function(graphData,dataType){
-		lineChart.svg.selectAll("g").remove();
+	drawlineChart:function(elem,graphData,dataType){
+		
 		var x = d3.scale.linear()
-		    .range([0, lineChart.width]);
+		    .range([50, lineChart.width+50]);
 
 		var y = d3.scale.linear()
 		    .range([lineChart.height, 0]);
@@ -213,7 +214,9 @@ var lineChart = {
 	    	d3.max(graphData, function(c) { return d3.max(c.perOverWeight, function(v) { return v; }); })
 		  ]);	
 	  }
-	  lineChart.svg.append("g")
+	  var svg = d3.select(elem+" svg");
+	    svg.selectAll("g").remove();
+	    svg.append("g")
 	      .attr("class", "x axis")
 	      .attr("transform", "translate(0," + lineChart.height + ")")
 	      .call(xAxis)
@@ -223,8 +226,9 @@ var lineChart = {
 	      .attr("y", -6)
 	      .style("text-anchor", "end")
 
-	  lineChart.svg.append("g")
+	  svg.append("g")
 	      .attr("class", "y axis")
+	      .attr("transform", "translate(" + (lineChart.margin.left) + "," + lineChart.margin.top + ")")
 	      .call(yAxis)
 	    .append("text")
 	      .attr("class", "label")
@@ -234,12 +238,12 @@ var lineChart = {
 	      .style("text-anchor", "end")
 
 	  var zz = 0;
-	  var rect = lineChart.svg.selectAll(".graph")
+	  var rect = svg.selectAll(".graph")
 	      .data(graphData)
 	    .enter().append("g")
 	      .attr("class", "g")
 
-	      var focus = lineChart.svg.append("g")
+	      var focus = svg.append("g")
 		      .attr("transform", "translate(-100,-100)")
 		      .attr("class", "focus");
 
@@ -251,11 +255,13 @@ var lineChart = {
 	    //draws best fit line
 
 	    rect.append("path")
-		      .attr("class", "line")
+		      .attr("class", function(d){return "stationLine_"+d.stationId})
 		      .attr("d", function(d) { if(dataType === "count"){return line(d.avgOverWeight);} else{return line(d.perOverWeight);} }) //Must be passed an array
 		      .style("stroke", function(d) { return color2(parseInt(d.funcCode[0])); })
+		      .style("fill","none")
 			  .on("mouseover",function(d) {
-			  		$(this).attr('opacity',0.5);
+			  		$('#linegraph path').attr('opacity',0.1);
+			  		$('.stationLine_'+d.stationId).attr('opacity',0.9);
 			  		$('#map_station_'+d.stationId).attr('stroke-width','2px');
 			  		$('#map_station_'+d.stationId).attr('stroke','yellow');
 			  		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
@@ -268,7 +274,7 @@ var lineChart = {
 			  		$('#map_station_'+d.stationId).attr('stroke-width','none');
 			  		$('#map_station_'+d.stationId).attr('stroke','none');
 			  		//focus.attr("transform", "translate(-100,-100)");
-			  		$(this).attr('opacity',1);
+			  		$('#linegraph path').attr('opacity',1);
 			  		$("#stationInfo").html('');
 			  	});
 

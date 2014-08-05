@@ -36,9 +36,9 @@
 		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
 		  		<header>
 			        <fieldset>
-	            	<legend>AADT Change<small>  by station</small>
+	            	<legend>AVG weight/time<small>  by station</small>
 
-	            	<select ng-model='active_TruckClass.value'>
+	            	<select class="form-control" ng-model='active_TruckClass.value'>
 	            		<option ng-repeat="class in truckClass" value='{{class}}'>{{class}}</option>
 	            	</select>
 
@@ -48,6 +48,37 @@
 		      <div class="body">
 		     
 			      <div id="weightByHour"></div>
+			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+		      </div>
+		 	</section>
+		 	<section class="widget ui-sortable" ng-show="stations.length > 0">
+		  		<header>
+			        <fieldset>
+	            	<legend>Overweight Trucks<small>  by station</small>
+
+	            	<select class="form-control" ng-model="myTimePeriod" ng-options="item2.id as item2.label for item2 in timePeriod" style='width:75px;display:inline;margin-right:5px;'></select>
+	            	<select class="form-control" ng-model="myOrder" ng-options="item3.id as item3.label for item3 in time_order" style='width:75px;display:inline;margin-right:5px;'></select>
+
+	            	</legend>
+	        		</fieldset>
+        		</header>
+		      <div class="body">
+		     
+			      <div id="overweightBarGraph"></div>
+			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+		      </div>
+		 	</section>
+		 	<section class="widget ui-sortable" ng-show="stations.length > 0">
+		  		<header>
+			        <fieldset>
+	            	<legend>Overweight Trucks<small>  by station</small>
+
+	            	</legend>
+	        		</fieldset>
+        		</header>
+		      <div class="body">
+		     
+			      <div id="overweightLineGraph"></div>
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>
@@ -61,6 +92,8 @@
 <script src="/trafficanalytics/wimstates.js"></script>
 <script src="/lib/colorbrewer.min.js"></script>
 <script src="/trafficanalytics/aadtGraph.js"></script>
+<script src="/trafficanalytics/truckWeightGraph.js"></script>
+<script src="/trafficanalytics/lineChart.js"></script>
 <script src="/lib/AVAILmap.js"></script>
 <script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
 <script src="/pages/enforcement.js"></script>

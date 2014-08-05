@@ -509,6 +509,8 @@ var AADTGraph ={
 			  			.style('background', 'yellow')//#a50026')
 			  			.style('z-index', 6);
 			  		$(".station_"+graphData[i].stationId).attr('opacity',0.5);
+			  		$('#linegraph path').attr('opacity',0.1);
+			  		$('.stationLine_'+graphData[i].stationId).attr('opacity',0.9);
 			  		$('#map_station_'+graphData[i].stationId).attr('stroke-width','2px');
 			  		$('#map_station_'+graphData[i].stationId).attr('stroke','yellow');
 				  		var info =  "<p class="+graphData[i].stationId+">Station: " +graphData[i].stationId+
@@ -529,6 +531,7 @@ var AADTGraph ={
 			  		$('#map_station_'+graphData[i].stationId).attr('stroke-width','none');
 			  		$('#map_station_'+graphData[i].stationId).attr('stroke','none');
 			  		$(".station_"+graphData[i].stationId).attr('opacity',1);
+			  		$('#linegraph path').attr('opacity',1);
 			  		$("#stationInfo").html('');
 			  		//$("#stationInfo").hide();
 			  	});
