@@ -38,15 +38,17 @@
 		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
 		  		<header>
 			        <fieldset>
-	            	<legend>AADT Change<small>  by station</small>
-
+	            	<legend>AADT Change<small>  by station
+	            	<label>From:</label>
 	            	<select ng-model='active_years.first'>
 	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
 	            	</select>
 	            	
+	            	<label>To:</label>	            	
 	            	<select ng-model='active_years.max'>
 	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
 	            	</select>
+	            	</small>
 	            	</legend>
 	        		</fieldset>
         		</header>

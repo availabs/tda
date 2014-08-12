@@ -32,10 +32,10 @@ function IndexController ($scope) {
     $scope.currentYear = [];
     $scope.compareYear = [];
     $scope.graphs = [
-        {id:"All",label:"All",data:[true,false,false,false]},
-        {id:"AAPT",label:"AAPT",data:[false,true,false,false]},
-        {id:"AASU",label:"AASU",data:[false,false,true,false]},
-        {id:"AATT",label:"AATT",data:[false,false,false,true]},
+        {id:"All",label:"All",data:[false,true,false,false]},
+        {id:"AAPT",label:"Cars",data:[false,true,false,false]},
+        {id:"AASU",label:"Single Unit Trucks",data:[false,false,true,false]},
+        {id:"AATT",label:"Tractor Trailer Trucks",data:[false,false,false,true]},
     ];
     $scope.times = [
         {id:"month",label:"Monthly"},
@@ -56,7 +56,6 @@ function IndexController ($scope) {
     
 
     $scope.$watch('stations', function() {
-        console.log("a")
         if($scope.stations != undefined){
           if($scope.stations.length > 0){
             d3.select('#hrMonLineGraph'+" svg").selectAll("g").attr('opacity',0.1);
@@ -99,7 +98,6 @@ function IndexController ($scope) {
 
     //fix data being displayed to not be static
     $scope.$watchCollection('active_years', function() {
-        console.log("b")
         if($scope.stations.length > 0){
             if($scope.flagA){
                 $scope.active_years.first = parseInt($scope.active_years.first);
@@ -118,9 +116,7 @@ function IndexController ($scope) {
 
     //Year data is changed
     $scope.$watchCollection('active_years2', function() {
-
-        console.log("c")
-        if($scope.stations.length > 0){
+    if($scope.stations.length > 0){
             if($scope.flagB){
                 d3.select('#hrMonLineGraph'+" svg").selectAll("g").attr('opacity',0.1);
                 d3.select('#hrMonLineGraph'+" svg").append("g")
@@ -166,8 +162,7 @@ function IndexController ($scope) {
 
     //Type of vehicle data is changed
     $scope.$watchCollection('dispGraph', function() {
-        console.log("d")
-        if($scope.stations.length > 0){
+    if($scope.stations.length > 0){
             d3.select('#hrMonLineGraph'+" svg").selectAll("g").attr('opacity',0.1);
             d3.select('#hrMonLineGraph'+" svg").append("g")
             .append("text")
@@ -211,8 +206,7 @@ function IndexController ($scope) {
 
     //Below switches between hourly and monthly data. Only the line graph should change
     $scope.$watchCollection('dispTime', function() {
-        console.log("e")
-        if($scope.stations.length > 0){
+    if($scope.stations.length > 0){
             d3.select('#hrMonLineGraph'+" svg").selectAll("g").attr('opacity',0.1);
             d3.select('#hrMonLineGraph'+" svg").append("g")
             .append("text")
