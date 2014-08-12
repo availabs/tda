@@ -30,7 +30,9 @@
 	            	</legend>
 	        		</fieldset>
         		</header>
-		      <div class="body">
+		      <div class="body" ng-show="(getStations)">
+		      		<p>Loading {{stateName}}</p>
+		      		<img src="loading.gif">
 		      </div>
 		 	</section>
 		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
@@ -76,8 +78,9 @@
 	        		</fieldset>
         		</header>
 		      <div class="body">
-		     
-			      <div id="hrMonLineGraph"></div>
+		     	  	<div id="hrMonLineGraph" ng-show="!(getMonHour)"></div>
+		     	  	<!--<div id="hrMonLineGraph" ng-show="(getMonHour)">Loading</div>-->
+		     	  
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>

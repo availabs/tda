@@ -48,6 +48,7 @@ function EnforcementController ($scope) {
     ];
     $scope.myTimePeriod = $scope.timePeriod[0].id
     $scope.myOrder = $scope.time_order[0].id
+    $scope.getStations = false
     wimstates.init('#statesDIV',$scope);
     AADTGraph.initAADTGraph('#weightByHour');
     lineChart.initlineChart('#overweightLineGraph');
@@ -58,7 +59,23 @@ function EnforcementController ($scope) {
     $scope.$watch('stations', function() {
         if($scope.stations != undefined){
             if($scope.stations.length > 0){
-                if($scope.graphData.length == 0){
+                
+                    d3.select('#weightByHour'+" svg").selectAll("g").attr('opacity',0.1);
+                    d3.select('#weightByHour'+" svg").selectAll("rect").attr('opacity',0.1);
+                    d3.select('#weightByHour'+" svg").append("g")
+                    .append("text")
+                      .attr('opacity',1)
+                      .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + ((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2) + ")")
+                      .attr("y", 6)
+                      .attr("dy", ".71em")
+                      .style("font-size","36px")
+                      .style("text-anchor", "end")
+                      .text("Loading");
+                    d3.select('#weightByHour'+" svg").append("g").append("svg:image")
+                    .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
+                    .attr("xlink:href", "loading.gif")
+                    .attr("width", 67)
+                    .attr("height", 40);
                     URL = '/stations/'+$scope.state+'/weight/'
                     wimXHR.get(URL, function(error, data) {
                                 if (error) {
@@ -81,13 +98,33 @@ function EnforcementController ($scope) {
                                     });
 
                                 }
-                        $scope.truckClass = getClassRange(angular.copy($scope.graphData))
-                        $scope.active_TruckClass = {value:$scope.truckClass[0]}
+                                else{
+                                    $scope.graphData = []
+                                }
+                        $scope.$apply(function(){
+                            $scope.truckClass = getClassRange(angular.copy($scope.graphData))
+                            $scope.active_TruckClass = {value:$scope.truckClass[0]}
+                        });
                         AADTGraph.drawAADTGraphWeight('#weightByHour',angular.copy($scope.graphData),"weight","All")
                     });
 
                     //line graph
-                    
+
+                    d3.select('#overweightLineGraph'+" svg").selectAll("g").attr('opacity',0.1);
+                    d3.select('#overweightLineGraph'+" svg").append("g")
+                    .append("text")
+                      .attr('opacity',1)
+                      .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + ((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2) + ")")
+                      .attr("y", 6)
+                      .attr("dy", ".71em")
+                      .style("font-size","36px")
+                      .style("text-anchor", "end")
+                      .text("Loading");
+                    d3.select('#overweightLineGraph'+" svg").append("g").append("svg:image")
+                    .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
+                    .attr("xlink:href", "loading.gif")
+                    .attr("width", 67)
+                    .attr("height", 40);
                     URL = '/stations/'+$scope.state+'/overweight/'
                     wimXHR.post(URL,{timeType:"on",threshold:80000} ,function(error, data) {
                         if (error) {
@@ -123,10 +160,29 @@ function EnforcementController ($scope) {
                             }
                             lineChart.drawlineChart('#overweightLineGraph',angular.copy($scope.overWeightLine),$scope.myOrder);
                         }
+                        else{
+                            $scope.overWeightLine = []
+                            lineChart.drawlineChart('#overweightLineGraph',angular.copy($scope.overWeightLine),$scope.myOrder);
+                        }
                     });
 
                     //Bar graph
-
+                    d3.select('#overweightBarGraph'+" svg").selectAll("g").attr('opacity',0.1);
+                    d3.select('#overweightBarGraph'+" svg").selectAll("rect").attr('opacity',0.1);
+                    d3.select('#overweightBarGraph'+" svg").append("g")
+                    .append("text")
+                      .attr('opacity',1)
+                      .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + ((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2) + ")")
+                      .attr("y", 6)
+                      .attr("dy", ".71em")
+                      .style("font-size","36px")
+                      .style("text-anchor", "end")
+                      .text("Loading");
+                    d3.select('#overweightBarGraph'+" svg").append("g").append("svg:image")
+                    .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
+                    .attr("xlink:href", "loading.gif")
+                    .attr("width", 67)
+                    .attr("height", 40);
                     wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000} ,function(error, data) {
                         if (error) {
                             console.log(error);
@@ -147,28 +203,45 @@ function EnforcementController ($scope) {
                             });
                             truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
                         }
+                        else{
+                            $scope.overWeightBar = []
+                            truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
+                        }
                     });
 
-                }
+                
             }
         }
     });
 
     $scope.$watchCollection('active_TruckClass', function() {
-        if($scope.graphData.length > 0){
             AADTGraph.drawAADTGraphWeight('#weightByHour',angular.copy($scope.graphData),"weight",$scope.active_TruckClass.value)      
-        }
+        
         //console.log($scope.active_TruckClass)
     });
     $scope.$watchCollection('myOrder', function() {
-        if($scope.overWeightBar.length > 0 && $scope.overWeightLine.length > 0){
             truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
             lineChart.drawlineChart('#overweightLineGraph',angular.copy($scope.overWeightLine),$scope.myOrder);
-        }
+        
         //console.log($scope.active_TruckClass)
     });
     $scope.$watchCollection('myTimePeriod', function() {
-        if($scope.overWeightBar.length > 0){
+            d3.select('#overweightBarGraph'+" svg").selectAll("g").attr('opacity',0.1);
+            d3.select('#overweightBarGraph'+" svg").selectAll("rect").attr('opacity',0.1);
+            d3.select('#overweightBarGraph'+" svg").append("g")
+            .append("text")
+              .attr('opacity',1)
+              .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + ((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2) + ")")
+              .attr("y", 6)
+              .attr("dy", ".71em")
+              .style("font-size","36px")
+              .style("text-anchor", "end")
+              .text("Loading");
+            d3.select('#overweightBarGraph'+" svg").append("g").append("svg:image")
+                .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
+                .attr("xlink:href", "loading.gif")
+                .attr("width", 67)
+                .attr("height", 40);
             URL = '/stations/'+$scope.state+'/overweight/'
             wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000} ,function(error, data) {
                 if (error) {
@@ -190,8 +263,12 @@ function EnforcementController ($scope) {
                     });
                     truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
                 }
+                else{
+                    $scope.overWeightBar = []
+                    truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);    
+                }
             });
-        }
+        
         //console.log($scope.active_TruckClass)
     });
    

@@ -128,6 +128,9 @@
 				resetState.toggle(false);
 				return;
 			}
+			$scope.$apply(function(){
+				$scope.getStations = true
+  			});
 			var name = marker.name();
 
 			// set resetState control button to reset to bounds of current state on click
@@ -242,7 +245,6 @@
 		function _getStationData(id) {
 			var URL = '/state/'+id+'/classStations';
 			var stationsClass = [];
-
 			wimXHR.get(URL, function(error, data) {
 				if (error) {
             		console.log(error);
@@ -278,6 +280,7 @@
 		}
 		function _updateScopeStations(data,id) {
 	  		$scope.$apply(function(){
+	  			$scope.getStations = false
 	  			$scope.stations = data;
 	  			$scope.state = id;
   			});
@@ -337,8 +340,7 @@
         numRoutes = 2;
 
 	    wimXHR.get(URL, function(error, data) {
-
-	        data.rows.forEach(function(row){
+	    	data.rows.forEach(function(row){
 	            var rowState = row.f[0].v;
 	            var rowStation = row.f[1].v;
 

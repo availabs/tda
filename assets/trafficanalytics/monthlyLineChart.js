@@ -20,8 +20,6 @@ var monthlyLineChart = {
 	//dataType: type of traffic being displayed
 
 	drawMonthlyLineChart:function(elem,dataType,id,yearS){
-
-
 		URL = '/stations/'+id+'/timeLine/'
 		var graphData = [];
 		if(yearS !== 'All'){
@@ -189,7 +187,8 @@ var monthlyLineChart = {
 			  .attr("cy", function(d) { return y(d); })
 		      .style("fill", function() {zz++;return color(Math.floor((zz-1)/12)); });
 
-		 }); //end get
+		 
+		}); //end get
 		 function getStationIndex(stationID){
 		  		return graphData.map(function(el){return el.stationId;}).indexOf(stationID)
 		  	}
@@ -200,6 +199,7 @@ var monthlyLineChart = {
 	//Below is the function for drawing hourly data
 
 	drawHourlyLineChart:function(elem,dataType,id,yearS){
+		
 		URL = '/stations/'+id+'/timeLine/'
 		var graphData = []
 		if(yearS !== 'All'){
@@ -335,12 +335,13 @@ var monthlyLineChart = {
 	    //draws best fit line
 
 	    rect.append("path")
-		      .attr("class", "line")
+		      .attr("class", function(d){return "stationLine_"+d.stationId})
 		      .attr("d", function(d) { if(dataType === "All"){return line(d.hoursAll);} else if(dataType === "AAPT"){return line(d.hoursAPT);} else if(dataType === "AASU"){return line(d.hoursASU);} else if(dataType === "AATT"){return line(d.hoursATT);} }) //Must be passed an array
 		      .style("stroke", function(d) { return color2(parseInt(d.funcCode[0])); })
 		      .style("fill","none")
 			  .on("mouseover",function(d) {
-			  		$(this).attr('opacity',0.5);
+			  		$('#linegraph path').attr('opacity',0.1);
+			  		$('.stationLine_'+d.stationId).attr('opacity',0.9);
 			  		$('#map_station_'+d.stationId).attr('stroke-width','2px');
 			  		$('#map_station_'+d.stationId).attr('stroke','yellow');
 			  		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
@@ -354,8 +355,9 @@ var monthlyLineChart = {
 			  		$('#map_station_'+d.stationId).attr('stroke-width','none');
 			  		$('#map_station_'+d.stationId).attr('stroke','none');
 			  		//focus.attr("transform", "translate(-100,-100)");
-			  		$(this).attr('opacity',1);
+			  		$('#linegraph path').attr('opacity',1);
 			  		$("#stationInfo").html('');
+
 			  	});
 
 
@@ -370,7 +372,9 @@ var monthlyLineChart = {
 			  .attr("cy", function(d) { return y(d); })
 		      .style("fill", function() {zz++;return color(Math.floor((zz-1)/24)); });
 
-		 });
+		 
+
+		 }); //end get
 		function getStationIndex(stationID){
 			return graphData.map(function(el){return el.stationId;}).indexOf(stationID)
 		}

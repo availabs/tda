@@ -75,7 +75,7 @@ var truckWeightGraph = {
 		  .attr("y", 6)
 		  .attr("dy", ".71em")
 		  .style("text-anchor", "end")
-		  .text("AAADT");
+		  //.text("AAADT");
 
 		var rect =svg.selectAll("rect");
 			rect.remove();
@@ -107,7 +107,7 @@ var truckWeightGraph = {
 		  .attr("y", 6)
 		  .attr("dy", ".71em")
 		  .style("text-anchor", "end")
-		  .text("AAADT");
+		  //.text("AAADT");
 
 		var rect =svg.selectAll("rect");
 			rect.remove();

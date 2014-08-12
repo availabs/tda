@@ -30,7 +30,9 @@
 	            	</legend>
 	        		</fieldset>
         		</header>
-		      <div class="body">
+		      <div class="body" ng-show="(getStations)">
+		      		<p>Loading {{stateName}}</p>
+		      		<img src="loading.gif">
 		      </div>
 		 	</section>
 		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
@@ -38,9 +40,7 @@
 			        <fieldset>
 	            	<legend>AVG weight/time<small>  by station</small>
 
-	            	<select class="form-control" ng-model='active_TruckClass.value'>
-	            		<option ng-repeat="class in truckClass" value='{{class}}'>{{class}}</option>
-	            	</select>
+	            	
 
 	            	</legend>
 	        		</fieldset>
@@ -48,6 +48,9 @@
 		      <div class="body">
 		     
 			      <div id="weightByHour"></div>
+			      <select class="form-control" ng-model='active_TruckClass.value'>
+	            		<option ng-repeat="class in truckClass" value='{{class}}'>{{class}}</option>
+	            	</select>
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>
