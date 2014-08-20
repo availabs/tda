@@ -73,7 +73,7 @@ function EnforcementController ($scope) {
                       .text("Loading");
                     d3.select('#weightByHour'+" svg").append("g").append("svg:image")
                     .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
-                    .attr("xlink:href", "loading.gif")
+                    .attr("xlink:href", "/img/loading.gif")
                     .attr("width", 67)
                     .attr("height", 40);
                     URL = '/stations/'+$scope.state+'/weight/'
@@ -93,7 +93,7 @@ function EnforcementController ($scope) {
                                         if(parseInt(row.f[1].v) < 10){
                                             row.f[1].v = "0"+row.f[1].v
                                         }
-                                        $scope.graphData[getStationIndex(rowStation)].years.push({'year':row.f[1].v,'hours':row.f[2].v,'Weight':row.f[3].v,'Class':row.f[4].v});
+                                        $scope.graphData[getStationIndex(rowStation)].years.push({'year':row.f[1].v,'hours':row.f[2].v,'Weight':(parseInt(row.f[3].v)*220.462),'Class':row.f[4].v});
                                     
                                     });
 
@@ -122,11 +122,14 @@ function EnforcementController ($scope) {
                       .text("Loading");
                     d3.select('#overweightLineGraph'+" svg").append("g").append("svg:image")
                     .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
-                    .attr("xlink:href", "loading.gif")
+                    .attr("xlink:href", "/img/loading.gif")
                     .attr("width", 67)
                     .attr("height", 40);
                     URL = '/stations/'+$scope.state+'/overweight/'
                     wimXHR.post(URL,{timeType:"on",threshold:80000} ,function(error, data) {
+                        while($scope.overWeightLine.length > 0){
+                            $scope.overWeightLine.pop()
+                        }
                         if (error) {
                             console.log(error);
                             return;
@@ -180,7 +183,7 @@ function EnforcementController ($scope) {
                       .text("Loading");
                     d3.select('#overweightBarGraph'+" svg").append("g").append("svg:image")
                     .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
-                    .attr("xlink:href", "loading.gif")
+                    .attr("xlink:href", "/img/loading.gif")
                     .attr("width", 67)
                     .attr("height", 40);
                     wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000} ,function(error, data) {
@@ -239,7 +242,7 @@ function EnforcementController ($scope) {
               .text("Loading");
             d3.select('#overweightBarGraph'+" svg").append("g").append("svg:image")
                 .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
-                .attr("xlink:href", "loading.gif")
+                .attr("xlink:href", "/img/loading.gif")
                 .attr("width", 67)
                 .attr("height", 40);
             URL = '/stations/'+$scope.state+'/overweight/'
@@ -294,6 +297,15 @@ function EnforcementController ($scope) {
         //console.log()
         
     }
+
+    $('#my-affix').affix({
+    offset: {
+    top: 0
+    , bottom: function () {
+        return (this.bottom = $('.content container').outerHeight(true))
+      }
+    }
+  })
 
     function getStateIndex(state_fips){
       return $scope.states.map(function(el) {return el.state_fips;}).indexOf(state_fips);

@@ -119,7 +119,6 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           .domain([d3.min(values), d3.max(values)])
           .range(colorbrewer.RdYlGn[11]);
 
-     
         var data = wimCal.colorDays(svg,input_data,monthPath,rect,color,dispType)
         
         
@@ -211,9 +210,20 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           { id: "Freight", label:'Freight'},
           { id: "Class", label:'Class'},
         ];
+        $scope.values4 = [
+          {id: "percent", label:'Percent'},
+          {id: "count", label:'Count'},
+          ];
       $scope.myClass = 0;
       $scope.myDisp = "Count";
       $scope.myDataDisp = "Class";
+      $scope.directionValues = [];
+      $scope.myTableDisp = $scope.values4[0].id
+      $scope.myDir = -1
+      $scope.loading = true
+      $scope.loading2 = true
+      var dir1 = -1
+      var dir2 = -1
 
            $scope.minYear = ""
            $scope.maxYear = ""
@@ -221,10 +231,9 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
           var URL = '/station/'+$scope.station+'/yearsActive';
 
-          wimXHR.get(URL, function(error, data) {
+          wimXHR.post(URL, {isClass:$scope.stationType},function(error, data) {
               $scope.minYear = data.rows[0].f[0].v;
               $scope.maxYear = data.rows[0].f[1].v;
-
               $scope.drawVars = _init($scope.minYear,$scope.maxYear);
 
               $scope.stationData = [];
@@ -235,21 +244,67 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
               wimXHR.get(/station/+$scope.station+'/classAmounts', function(error, data) {
                 $scope.stationDataAll = data;
+                if($scope.stationType === "class"){
+                    $scope.myDataDisp = $scope.values3[1].id
+                    calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
+                    $scope.$apply(function(){
+                        $scope.loading2 = false
+                      });
+                  }
               });
               
-              wimXHR.get('/station/'+$scope.station+'/dailyWeights', function(error, data) {
-                  $scope.stationData = data;
-                  stationInfo.drawTable($scope.station,'#infoTable')
-                  calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"trucks","Freight")
-              });
+                wimXHR.get('/station/'+$scope.station+'/dailyWeights', function(error, data) {
+                    $scope.stationData = data;
+                    stationInfo.drawTable($scope.station,'#infoTable')
+                    if($scope.stationType === "wim"){
+                      $scope.myDataDisp = $scope.values3[0].id
+                      calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"trucks",$scope.myDataDisp)
+                    }
+                    $scope.$apply(function(){
+                      $scope.loading2 = false
+                      $scope.myDataDisp = $scope.values3[0].id
+                      
+                    });
+                });
+                if($scope.stationType === "wim"){
+                  wimXHR.get('/stations/'+$scope.station+'/byWeightTableInfo/', function(error,data) {
+                    $scope.stationWeightData = data;
+                      $scope.stationWeightData.rows.forEach(function(row){
+                        if(dir1 == -1){
+                            dir1 = parseInt(row.f[3].v)
+                          }
+                        if(dir1 != parseInt(row.f[3].v) && dir2 == -1){
+                            dir2 = parseInt(row.f[3].v)
+                          }
+                        })
+                      if(dir2 != -1){
+                       $scope.$apply(function(){
+                          $scope.directionValues.push({id:-1,label:'combined'})
+                          $scope.directionValues.push({id:dir1,label:getDir(dir1)})
+                          $scope.directionValues.push({id:dir2,label:getDir(dir2)})
+                          $scope.myDir = $scope.directionValues[0].id
+                          $scope.loading = false
+                        });
+                      }
+                      //weightTable.tableCreate($scope.stationWeightData,$scope.myTableDisp,$scope.myDir)
+                      
+                      $scope.reloadTable()
+                  });
+              }
+              $scope.reloadTable = function(){
+                weightTable.removeTable('#stationTable')
+                weightTable.tableCreate($scope.stationWeightData,$scope.myTableDisp,$scope.myDir,'#stationTable')
+                
+              }
+
               
               $scope.loadCalendar = function(){
                 if($scope.myDataDisp === "Freight"){
-                    calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationData,$scope.drawVars[0],$scope.drawVars[4],$scope.myDisp,$scope.myDataDisp)
+                  calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationData,$scope.drawVars[0],$scope.drawVars[4],$scope.myDisp,$scope.myDataDisp)
                 
                 }
                 else{
-                    calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationDataAll,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
+                  calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationDataAll,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
                 }
               }
           });
@@ -300,6 +355,39 @@ function parseDataA(input,classInfo){
               output.push(item);
   });
   return output
+};
+
+function getDir(dir){
+  if(dir == 0){
+    return "EW/SENW"
+  }
+  else if(dir == 1){
+    return "North"
+  }
+  else if(dir == 2){
+    return "Northeast"
+  }
+  else if(dir == 3){
+    return "East"
+  }
+  else if(dir == 4){
+    return "Southeast"
+  }
+  else if(dir == 5){
+    return "South"
+  }
+  else if(dir == 6){
+    return "Southwest"
+  }
+  else if(dir == 7){
+    return "West"
+  }
+  else if(dir == 8){
+    return "Northwest"
+  }
+  else{
+    return "NS/NESW"
+  }
 };
 
 function parseDataF(input,classInfo){

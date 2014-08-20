@@ -73,9 +73,13 @@ var monthlyLineChart = {
 
 
 		var line = d3.svg.line()
-		    .interpolate("basis")
+		    .interpolate("linear")
 		    .x(function(d,i) { return x(i+1); })
 		    .y(function(d) { return y(d); });
+
+		var voronoi = d3.geom.voronoi()
+		    .x(function(d) { return x(d.xax+1) })
+		    .y(function(d) { return y(d.value) })  
 
 		    
 		//graphData.sort(compareStations); 
@@ -123,69 +127,173 @@ var monthlyLineChart = {
 
 	    svg.append("g")
 	      .attr("class", "y axis")
-	      .style("font-size","10px")
 	      .attr("transform", "translate(50,0)") //For positioning y axis
+	      .style("font-size","10px")
 	      .call(yAxis)
 	    .append("text")
 	      .attr("class", "label")
+	      .style("font-size","10px")
 	      .attr("transform", "rotate(-90)")
 	      .attr("y", 6)
 	      .attr("dy", ".71em")
 	      .style("text-anchor", "end")
 
 	  var zz = 0;
-	  var rect = svg.selectAll(".graph")
-	      .data(graphData)
-	    .enter().append("g")
-	      .attr("class", "g")
 
-	   //    var focus = monthlyLineChart.svg.append("g")
-		  //     .attr("transform", "translate(-100,-100)")
-		  //     .attr("class", "focus");
-
-		  // //creates focus dot on line
-
-		  // focus.append("circle")
-		  //     .attr("r", 3.5);
-
-	    //draws best fit line
-	    rect.append("path")
-		      .attr("class", function(d){return "stationLine_"+d.stationId})
-		      .attr("d", function(d) { if(dataType === "All"){return line(d.monthsAll);} else if(dataType === "AAPT"){return line(d.monthsAPT);} else if(dataType === "AASU"){return line(d.monthsASU);} else if(dataType === "AATT"){return line(d.monthsATT);} }) //Must be passed an array
+	  var rect = svg.append("g")
+		   .attr("class", "stations")
+		   .selectAll("path")
+		      .data(graphData)
+		    .enter().append("path")
+			  .attr("class", function(d){return "stationLine_"+d.stationId})
+		      .attr("d", function(d) { if(dataType === "All"){return line(d.monthsAll);} else if(dataType === "AAPT"){return line(d.monthsAPT);} else if(dataType === "AASU"){return line(d.monthsASU);} else if(dataType === "AATT"){return line(d.monthsATT);} })
 		      .style("stroke", function(d) { return color2(parseInt(d.funcCode[0])); })
+		      .style("fill","none");
+	   //console.log(graphData)
+	      //Used for dots
+		  var focus = svg.append("g")
+		      .attr("transform", "translate(-100,-100)")
+		      .attr("class", "focus");
+
+		  focus.append("circle")
+		      .attr("r", 3.5);
+
+		//Below builds voronoi but needs hover for most important part?
+		var temp = []
+		for(var h = 0;h<graphData.length;h++){
+			if(dataType === "All"){
+				for(var hh = 0;hh < graphData[h].monthsAll.length;hh++){
+					temp.push({'value':graphData[h].monthsAll[hh],'xax':hh,'graphData':graphData[h]})
+				}
+			}
+			else if(dataType === "AAPT"){
+				for(var hh = 0;hh < graphData[h].monthsAPT.length;hh++){
+					temp.push({'value':graphData[h].monthsAPT[hh],'xax':hh,'graphData':graphData[h]})
+				}
+			}
+			else if(dataType === "AASU"){
+				for(var hh = 0;hh < graphData[h].monthsASU.length;hh++){
+					temp.push({'value':graphData[h].monthsASU[hh],'xax':hh,'graphData':graphData[h]})
+				}
+			}
+			else if(dataType === "AATT"){
+				for(var hh = 0;hh < graphData[h].monthsATT.length;hh++){
+					temp.push({'value':graphData[h].monthsATT[hh],'xax':hh,'graphData':graphData[h]})
+				}
+			}
+		}
+		  var voronoiGroup = svg.append("g")
+		      .attr("class", "voronoi");
+
+		  voronoiGroup.selectAll("path")
+		      .data(voronoi(temp))
+		    .enter().append("path")
+		      .attr("d", function(d) { if(d != undefined && d.length != 0){return "M" + d.join("L") + "Z"}; })
+		      .datum(function(d) { if(d != undefined && d.length != 0){return d.point;} })
+		      .on("mouseover", mouseover)
+		      .on("mouseout", mouseout)
 		      .style("fill","none")
-			  .on("mouseover",function(d) {
-			  		$('#linegraph path').attr('opacity',0.1);
-			  		$('.stationLine_'+d.stationId).attr('opacity',0.9);
-			  		$('#map_station_'+d.stationId).attr('stroke-width','2px');
-			  		$('#map_station_'+d.stationId).attr('stroke','yellow');
-			  		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
-									"<br>Class: "+dataType+
-									"<br>Class Code: "+d.funcCode+
-									"</p>";
-					//focus.attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
-			  		$("#stationInfo").html(info);
-			  	})
-			  	.on("mouseout",function(d) {
-			  		$('#map_station_'+d.stationId).attr('stroke-width','none');
-			  		$('#map_station_'+d.stationId).attr('stroke','none');
-			  		//focus.attr("transform", "translate(-100,-100)");
-			  		$('#linegraph path').attr('opacity',1);
-			  		//$('.station_'+d.stationId).attr('opacity',1);
-			  		$("#stationInfo").html('');
-			  	});
+		      .style("pointer-events","all")
+
+		  //Below is hover info
+
+		  //NOTE This data is already formatted in a way so that drawing all dots on hover may actually doable. Probably.
+
+		  function mouseover(d) {
+		  	//d3.select(".stationLine_"+d.graphData.stationId).classed("station--hover", true); //Really only used to highlight a line
+		    //d.graphData.line.parentNode.appendChild(d.graphData.line); //???
+    		$('#map_station_'+d.graphData.stationId).attr('stroke-width','2px');
+	  		$('#map_station_'+d.graphData.stationId).attr('stroke','yellow');
+    		$('#linegraph path').attr('opacity',0.1);
+	  		$('.stationLine_'+d.graphData.stationId).attr('opacity',0.9);
+	  		$('.station_'+d.graphData.stationId).attr('opacity',0.1);
+	  		d3.select('#map_station_'+d.graphData.stationId)
+			  			.style('opacity', 1.0)
+			  			.style('background', 'yellow')//#a50026')
+			  			.style('z-index', 6);
+	  // 		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
+			// 				"<br>Class: "+d.funcCode+
+			// 				"</p>";
+			// $("#stationInfo").html(info);
+		    focus.attr("transform", "translate(" + x(d.xax+1) + "," + y(d.value) + ")"); //What's really used in voronoi dot formation
+		  }
+
+		  function mouseout(d) {
+		    //d3.select(".stationLine_"+d.graphData.stationId).classed("station--hover", false);
+		    d3.select('#map_station_'+d.graphData.stationId)
+			  			.style('opacity', 0.66)
+			  			.style('z-index', 5)
+			  			.style('background', function(d) {
+							return (d.properties.type == 'wim' ? '#081d58' : '#d94801');
+						});
+    		$('#map_station_'+d.graphData.stationId).attr('stroke-width','none');
+	  		$('#map_station_'+d.graphData.stationId).attr('stroke','none');
+	  		$('.station_'+d.graphData.stationId).attr('opacity',1);
+	  		$('#linegraph path').attr('opacity',1);
+		    focus.attr("transform", "translate(-100,-100)");
+		  }
 
 
-		//draws dots
 
-		rect.selectAll("rect")
-	      .data(function(d) { if(dataType === "All"){return d.monthsAll;} else if(dataType === "AAPT"){return d.monthsAPT;} else if(dataType === "AASU"){return d.monthsASU;} else if(dataType === "AATT"){return d.monthsATT;} })
-		.enter().append("circle")
-			  .attr("class","dot")
-			  .attr("r", 3.5)
-			  .attr("cx", function(d,i) { return x(i+1); })
-			  .attr("cy", function(d) { return y(d); })
-		      .style("fill", function() {zz++;return color(Math.floor((zz-1)/12)); });
+
+
+
+
+
+
+
+	 //  var rect = svg.selectAll(".graph")
+	 //      .data(graphData)
+	 //    .enter().append("g")
+	 //      .attr("class", "g")
+
+	 //   //    var focus = monthlyLineChart.svg.append("g")
+		//   //     .attr("transform", "translate(-100,-100)")
+		//   //     .attr("class", "focus");
+
+		//   // //creates focus dot on line
+
+		//   // focus.append("circle")
+		//   //     .attr("r", 3.5);
+
+	 //    //draws best fit line
+	 //    rect.append("path")
+		//       .attr("class", function(d){return "stationLine_"+d.stationId})
+		//       .attr("d", function(d) { if(dataType === "All"){return line(d.monthsAll);} else if(dataType === "AAPT"){return line(d.monthsAPT);} else if(dataType === "AASU"){return line(d.monthsASU);} else if(dataType === "AATT"){return line(d.monthsATT);} }) //Must be passed an array
+		//       .style("stroke", function(d) { return color2(parseInt(d.funcCode[0])); })
+		//       .style("fill","none")
+		// 	  .on("mouseover",function(d) {
+		// 	  		$('#linegraph path').attr('opacity',0.1);
+		// 	  		$('.stationLine_'+d.stationId).attr('opacity',0.9)
+		// 	  		$('#map_station_'+d.stationId).attr('stroke-width','2px');
+		// 	  		$('#map_station_'+d.stationId).attr('stroke','yellow');
+		// 	  		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
+		// 							"<br>Class: "+dataType+
+		// 							"<br>Class Code: "+d.funcCode+
+		// 							"</p>";
+		// 			//focus.attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
+		// 	  		$("#stationInfo").html(info);
+		// 	  	})
+		// 	  	.on("mouseout",function(d) {
+		// 	  		$('#map_station_'+d.stationId).attr('stroke-width','none');
+		// 	  		$('#map_station_'+d.stationId).attr('stroke','none');
+		// 	  		//focus.attr("transform", "translate(-100,-100)");
+		// 	  		$('#linegraph path').attr('opacity',1);
+		// 	  		//$('.station_'+d.stationId).attr('opacity',1);
+		// 	  		$("#stationInfo").html('');
+		// 	  	});
+
+
+		// //draws dots
+
+		// rect.selectAll("rect")
+	 //      .data(function(d) { if(dataType === "All"){return d.monthsAll;} else if(dataType === "AAPT"){return d.monthsAPT;} else if(dataType === "AASU"){return d.monthsASU;} else if(dataType === "AATT"){return d.monthsATT;} })
+		// .enter().append("circle")
+		// 	  .attr("class","dot")
+		// 	  .attr("r", 3.5)
+		// 	  .attr("cx", function(d,i) { return x(i+1); })
+		// 	  .attr("cy", function(d) { return y(d); })
+		//       .style("fill", function() {zz++;return color(Math.floor((zz-1)/12)); });
 
 		 
 		}); //end get
@@ -257,11 +365,13 @@ var monthlyLineChart = {
 
 
 		var line = d3.svg.line()
-		    .interpolate("basis")
+		    .interpolate("linear")
 		    .x(function(d,i) { return x(i+1); })
 		    .y(function(d) { return y(d); });
 
-		    
+		var voronoi = d3.geom.voronoi()
+		    .x(function(d) { return x(d.xax+1) })
+		    .y(function(d) { return y(d.value) })    
 		//graphData.sort(compareStations); 
 
 	  x.domain([1,24]);
@@ -308,7 +418,7 @@ var monthlyLineChart = {
 	  svg.append("g")
 	      .attr("class", "y axis")
 	      .attr("transform", "translate(50,0)") //For positioning y axis
-	      .style("font-size","12px")
+	      .style("font-size","10px")
 	      .call(yAxis)
 	    .append("text")
 	      .attr("class", "label")
@@ -318,59 +428,159 @@ var monthlyLineChart = {
 	      .style("text-anchor", "end")
 
 	  var zz = 0;
-	  var rect = svg.selectAll(".graph")
-	      .data(graphData)
-	    .enter().append("g")
-	      .attr("class", "g")
+	  
+	  var rect = svg.append("g")
+		   .attr("class", "stations")
+		   .selectAll("path")
+		      .data(graphData)
+		    .enter().append("path")
+			  .attr("class", function(d){return "stationLine_"+d.stationId})
+		      .attr("d", function(d) { if(dataType === "All"){return line(d.hoursAll);} else if(dataType === "AAPT"){return line(d.hoursAPT);} else if(dataType === "AASU"){return line(d.hoursASU);} else if(dataType === "AATT"){return line(d.hoursATT);} }) //Must be passed an array
+		      .style("stroke", function(d) { return color2(parseInt(d.funcCode[0])); })
+		      .style("fill","none");
+	  // console.log(graphData)
+	      //Used for dots
+		  var focus = svg.append("g")
+		      .attr("transform", "translate(-100,-100)")
+		      .attr("class", "focus");
 
-	   //    var focus = monthlyLineChart.svg.append("g")
-		  //     .attr("transform", "translate(-100,-100)")
-		  //     .attr("class", "focus");
+		  focus.append("circle")
+		      .attr("r", 3.5);
 
-		  // //creates focus dot on line
+		//Below builds voronoi but needs hover for most important part?
+		var temp = []
+		for(var h = 0;h<graphData.length;h++){
+			if(dataType === "All"){
+				for(var hh = 0;hh < graphData[h].hoursAll.length;hh++){
+					temp.push({'value':graphData[h].hoursAll[hh],'xax':hh,'graphData':graphData[h]})
+				}
+			}
+			else if(dataType === "AAPT"){
+				for(var hh = 0;hh < graphData[h].hoursAPT.length;hh++){
+					temp.push({'value':graphData[h].hoursAPT[hh],'xax':hh,'graphData':graphData[h]})
+				}
+			}
+			else if(dataType === "AASU"){
+				for(var hh = 0;hh < graphData[h].hoursASU.length;hh++){
+					temp.push({'value':graphData[h].hoursASU[hh],'xax':hh,'graphData':graphData[h]})
+				}
+			}
+			else if(dataType === "AATT"){
+				for(var hh = 0;hh < graphData[h].hoursATT.length;hh++){
+					temp.push({'value':graphData[h].hoursATT[hh],'xax':hh,'graphData':graphData[h]})
+				}
+			}
+		}
+		  var voronoiGroup = svg.append("g")
+		      .attr("class", "voronoi");
 
-		  // focus.append("circle")
-		  //     .attr("r", 3.5);
+		  voronoiGroup.selectAll("path")
+		      .data(voronoi(temp))
+		    .enter().append("path")
+		      .attr("d", function(d) { if(d != undefined && d.length != 0){return "M" + d.join("L") + "Z"}; })
+		      .datum(function(d) { if(d != undefined && d.length != 0){return d.point;} })
+		      .on("mouseover", mouseover)
+		      .on("mouseout", mouseout)
+		      .style("fill","none")
+		      .style("pointer-events","all")
+
+		  //Below is hover info
+
+		  //NOTE This data is already formatted in a way so that drawing all dots on hover may actually doable. Probably.
+
+		  function mouseover(d) {
+		  	//d3.select(".stationLine_"+d.graphData.stationId).classed("station--hover", true); //Really only used to highlight a line
+		    //d.graphData.line.parentNode.appendChild(d.graphData.line); //???
+    		$('#map_station_'+d.graphData.stationId).attr('stroke-width','2px');
+	  		$('#map_station_'+d.graphData.stationId).attr('stroke','yellow');
+    		$('#linegraph path').attr('opacity',0.1);
+	  		$('.stationLine_'+d.graphData.stationId).attr('opacity',0.9);
+	  		$('.station_'+d.graphData.stationId).attr('opacity',0.1);
+	  		d3.select('#map_station_'+d.graphData.stationId)
+			  			.style('opacity', 1.0)
+			  			.style('background', 'yellow')//#a50026')
+			  			.style('z-index', 6);
+	  // 		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
+			// 				"<br>Class: "+d.funcCode+
+			// 				"</p>";
+			// $("#stationInfo").html(info);
+		    //focus.attr("transform", "translate(" + x(d.xax+1) + "," + y(d.value) + ")"); //What's really used in voronoi dot formation
+		  }
+
+		  function mouseout(d) {
+		    //d3.select(".stationLine_"+d.graphData.stationId).classed("station--hover", false);
+		    d3.select('#map_station_'+d.graphData.stationId)
+			  			.style('opacity', 0.66)
+			  			.style('z-index', 5)
+			  			.style('background', function(d) {
+							return (d.properties.type == 'wim' ? '#081d58' : '#d94801');
+						});
+    		$('#map_station_'+d.graphData.stationId).attr('stroke-width','none');
+	  		$('#map_station_'+d.graphData.stationId).attr('stroke','none');
+	  		$('.station_'+d.graphData.stationId).attr('opacity',1);
+	  		$('#linegraph path').attr('opacity',1);
+		    //focus.attr("transform", "translate(-100,-100)");
+		  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	  // var rect = svg.selectAll(".graph")
+	  //     .data(graphData)
+	  //   .enter().append("g")
+	  //     .attr("class", "g")
+
+	   
 
 	    //draws best fit line
 
-	    rect.append("path")
-		      .attr("class", function(d){return "stationLine_"+d.stationId})
-		      .attr("d", function(d) { if(dataType === "All"){return line(d.hoursAll);} else if(dataType === "AAPT"){return line(d.hoursAPT);} else if(dataType === "AASU"){return line(d.hoursASU);} else if(dataType === "AATT"){return line(d.hoursATT);} }) //Must be passed an array
-		      .style("stroke", function(d) { return color2(parseInt(d.funcCode[0])); })
-		      .style("fill","none")
-			  .on("mouseover",function(d) {
-			  		$('#linegraph path').attr('opacity',0.1);
-			  		$('.stationLine_'+d.stationId).attr('opacity',0.9);
-			  		$('#map_station_'+d.stationId).attr('stroke-width','2px');
-			  		$('#map_station_'+d.stationId).attr('stroke','yellow');
-			  		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
-									"<br>Class: "+dataType+
-									"<br>Class Code: "+d.funcCode+
-									"</p>";
-					//focus.attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
-			  		$("#stationInfo").html(info);
-			  	})
-			  	.on("mouseout",function(d) {
-			  		$('#map_station_'+d.stationId).attr('stroke-width','none');
-			  		$('#map_station_'+d.stationId).attr('stroke','none');
-			  		//focus.attr("transform", "translate(-100,-100)");
-			  		$('#linegraph path').attr('opacity',1);
-			  		$("#stationInfo").html('');
+	 //    rect.append("path")
+		//       .attr("class", function(d){return "stationLine_"+d.stationId})
+		//       .attr("d", function(d) { if(dataType === "All"){return line(d.hoursAll);} else if(dataType === "AAPT"){return line(d.hoursAPT);} else if(dataType === "AASU"){return line(d.hoursASU);} else if(dataType === "AATT"){return line(d.hoursATT);} }) //Must be passed an array
+		//       .style("stroke", function(d) { return color2(parseInt(d.funcCode[0])); })
+		//       .style("fill","none")
+		// 	  .on("mouseover",function(d) {
+		// 	  		$('#linegraph path').attr('opacity',0.1);
+		// 	  		$('.stationLine_'+d.stationId).attr('opacity',0.9);
+		// 	  		$('#map_station_'+d.stationId).attr('stroke-width','2px');
+		// 	  		$('#map_station_'+d.stationId).attr('stroke','yellow');
+		// 	  		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
+		// 							"<br>Class: "+dataType+
+		// 							"<br>Class Code: "+d.funcCode+
+		// 							"</p>";
+		// 			//focus.attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
+		// 	  		$("#stationInfo").html(info);
+		// 	  	})
+		// 	  	.on("mouseout",function(d) {
+		// 	  		$('#map_station_'+d.stationId).attr('stroke-width','none');
+		// 	  		$('#map_station_'+d.stationId).attr('stroke','none');
+		// 	  		//focus.attr("transform", "translate(-100,-100)");
+		// 	  		$('#linegraph path').attr('opacity',1);
+		// 	  		$("#stationInfo").html('');
 
-			  	});
+		// 	  	});
 
 
-		//draws dots
+		// //draws dots
 
-		rect.selectAll("rect")
-	      .data(function(d) { if(dataType === "All"){return d.hoursAll;} else if(dataType === "AAPT"){return d.hoursAPT;} else if(dataType === "AASU"){return d.hoursASU;} else if(dataType === "AATT"){return d.hoursATT;} })
-		.enter().append("circle")
-			  .attr("class","dot")
-			  .attr("r", 3.5)
-			  .attr("cx", function(d,i) { return x(i+1); })
-			  .attr("cy", function(d) { return y(d); })
-		      .style("fill", function() {zz++;return color(Math.floor((zz-1)/24)); });
+		// rect.selectAll("rect")
+	 //      .data(function(d) { if(dataType === "All"){return d.hoursAll;} else if(dataType === "AAPT"){return d.hoursAPT;} else if(dataType === "AASU"){return d.hoursASU;} else if(dataType === "AATT"){return d.hoursATT;} })
+		// .enter().append("circle")
+		// 	  .attr("class","dot")
+		// 	  .attr("r", 3.5)
+		// 	  .attr("cx", function(d,i) { return x(i+1); })
+		// 	  .attr("cy", function(d) { return y(d); })
+		//       .style("fill", function() {zz++;return color(Math.floor((zz-1)/24)); });
 
 		 
 

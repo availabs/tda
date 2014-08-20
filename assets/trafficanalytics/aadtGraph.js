@@ -42,7 +42,6 @@ var AADTGraph ={
 
 	drawAADTGraph:function(elem,graphData,classT,PST,year){
 
-
 	/*Below Block of code is used for making a graph that displays data based on year*/
 		var x = d3.scale.ordinal()
 		    .rangeRoundBands([0, AADTGraph.width], 0.1);
@@ -69,6 +68,7 @@ var AADTGraph ={
 		for two specific years should be done.
 
 		*/
+
 		if(year.length == 2){
 			for(var z = 0;z<graphData.length;z++){
 				if(PST != undefined){
@@ -76,6 +76,7 @@ var AADTGraph ={
 					flagB = false
 					if( graphData[z].years.length < 2){
 							graphData.splice(z,1)
+							z--
 					}
 					else{
 						for(var count = 0;count<graphData[z].years.length;count++){
@@ -95,10 +96,10 @@ var AADTGraph ={
 				}
 			}
 		}
-		
+
 		for(var z = 0;z<graphData.length;z++){
 			if(PST != undefined){
-				if(PST[1] || PST[0]){
+				if(PST[0]){
 					flagA = false
 					flagB = false
 					if( year.length == 0 || year == undefined){
@@ -135,7 +136,7 @@ var AADTGraph ={
 						}
 					}
 				}
-				if(PST[2] || PST[0]){
+				if(PST[1]){
 					flagA = false
 					flagB = false
 					if( year == undefined || year.length == 0){
@@ -171,7 +172,7 @@ var AADTGraph ={
 						}
 					}
 				}
-				if(PST[3] || PST[0]){
+				if(PST[2]){
 					flagA = false
 					flagB = false
 					if( year == undefined || year.length == 0){
@@ -277,13 +278,13 @@ var AADTGraph ={
 		svg.append("g")
 		  .attr("transform", "translate(" + AADTGraph.margin.left + "," + AADTGraph.margin.top + ")")
 		  .attr("class", "y axis")
-		  .style("font-size","12px")
+		  .style("font-size","10px")
 		  .call(yAxis)
 		.append("text")
 		  .attr("transform", "rotate(-90)")
 		  .attr("y", 6)
 		  .attr("dy", ".71em")
-		  .style("font-size","12px")
+		  .style("font-size","10px")
 		  .style("text-anchor", "end")
 		  .text("AAADT");
 
@@ -479,9 +480,9 @@ var AADTGraph ={
 		    svg.selectAll("g").remove();
 
 			svg.append("g")
-			  .attr("transform", "translate(" + (AADTGraph.margin.left-20) + "," + AADTGraph.margin.top + ")")
+			  .attr("transform", "translate(" + (AADTGraph.margin.left) + "," + AADTGraph.margin.top + ")")
 			  .attr("class", "y axis")
-			  .style("font-size","12px")
+			  .style("font-size","10px")
 			  .call(yAxis)
 			.append("text")
 			  .attr("transform", "rotate(-90)")
@@ -489,7 +490,7 @@ var AADTGraph ={
 			  .attr("dy", ".71em")
 			  .style("font-size","12px")
 			  .style("text-anchor", "end")
-			  //.text("AAADT");
+			  .text("Pounds");
 
 			var rect = svg.selectAll("rect");
 				rect.remove();

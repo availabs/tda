@@ -13,7 +13,6 @@ function StationController ($scope) {
     $scope.stationType = window.stationType;
 
     wimgraph.grapher('#wimgraph').drawGraph($scope.station, $scope.stationType);
-
     wimCal.init($scope);
 }
 

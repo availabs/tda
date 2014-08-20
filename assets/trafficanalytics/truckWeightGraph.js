@@ -68,14 +68,15 @@ var truckWeightGraph = {
 	    svg.selectAll("g").remove();
 	    svg.append("g")
 	      .attr("class", "y axis")
-	      .attr("transform", "translate(" + (AADTGraph.margin.left) + "," + AADTGraph.margin.top + ")")
+	      .style("font-size","10px")
+	      .attr("transform", "translate(" + (truckWeightGraph.margin.left) + "," + truckWeightGraph.margin.top + ")")
 		  .call(yAxis)
 		.append("text")
 		  .attr("transform", "rotate(-90)")
 		  .attr("y", 6)
 		  .attr("dy", ".71em")
 		  .style("text-anchor", "end")
-		  //.text("AAADT");
+		  .text("Number of trucks overweight");
 
 		var rect =svg.selectAll("rect");
 			rect.remove();
@@ -100,14 +101,16 @@ var truckWeightGraph = {
 	    svg.selectAll("g").remove();
 	    svg.append("g")
 		  .attr("class", "y axis")
-		  .attr("transform", "translate(" + (AADTGraph.margin.left) + "," + AADTGraph.margin.top + ")")
+		  .style("font-size","10px")
+		  .attr("transform", "translate(" + (truckWeightGraph.margin.left) + "," + truckWeightGraph.margin.top + ")")
 		  .call(yAxis)
 		.append("text")
 		  .attr("transform", "rotate(-90)")
+		  .style("font-size","10px")
 		  .attr("y", 6)
 		  .attr("dy", ".71em")
 		  .style("text-anchor", "end")
-		  //.text("AAADT");
+		  .text("% of trucks overweight");
 
 		var rect =svg.selectAll("rect");
 			rect.remove();

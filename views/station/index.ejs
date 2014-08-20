@@ -3,18 +3,24 @@
     <%- partial('../partials/header') %>
 	<div class="content container">
 	    <div class="row" ng-controller="StationController">
-		  <div class="col-md-8">
-		    <section class="widget">
+	    	<div class="col-md-12">
+		    <section class="widget col-md-12">
 		    	<header>
 		    		<fieldset>
             			<legend>Station: <%= station %></legend>
         			</fieldset>
 		    	</header>
-		    	<div class="body">
-		    		<div id="wimgraph"></div>
+		    	<div class="body row">
+		    		<div class="col-md-8" id="wimgraph"></div>
+		    		<div class="col-md-4" id="infoTable"></div>
 		      	</div>
 		    </section>
-		    <section class="widget">
+		   <!--  <section class="widget col-md-3" style="margin-left:25px">
+		      <div class="body">
+		       
+		      </div>
+		    </section> -->
+		    <section class="widget col-md-12" >
 		    	<header>
 		    		<fieldset>
             			<legend>Calendar View</legend>
@@ -25,30 +31,55 @@
 		              <label>Class:
 		              <select  class="form-control" ng-model="myClass" ng-options="item.id as item.label for item in values" style='width:75px;display:inline;margin-right:5px;'></select>
 		              </label>
+		              <span ng-hide="stationType=='class'">
 		              <label>Data:
-		              <select  class="form-control2" ng-model="myDataDisp" ng-options="item3.id as item3.label for item3 in values3" style='width:75px;display:inline;margin-right:5px;'></select>
+		              <select  class="form-control" ng-model="myDataDisp" ng-options="item3.id as item3.label for item3 in values3" style='width:75px;display:inline;margin-right:5px;'></select>
 		              </label>
+		          	  </span>
 		              <span ng-hide="myDataDisp=='Class'">
 		              <label>Display:
-		              <select  class="form-control2" ng-model="myDisp" ng-options="item2.id as item2.label for item2 in values2" style='width:75px;display:inline;margin-right:5px;'></select>
+		              <select  class="form-control" ng-model="myDisp" ng-options="item2.id as item2.label for item2 in values2" style='width:75px;display:inline;margin-right:5px;'></select>
 		              </label>
 		              </span>
-		                <button class='btn btn-info' type="button" ng-click="loadCalendar()">Apply</button>
+		                <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="loadCalendar()">Apply</button>
 		            </div>
 		    		<div id="caldiv" class="ratings">
 		                <div id="legend"></div>
+		                <div class="body" ng-show="(loading2)">
+			      		<p>Loading</p>
+			      		<img src="/img/loading.gif">
+		      		</div>
 		            </div>
-		      	</div>
+		        </div>
+	        </section>
+	        
+	        <section class="widget  col-md-12" ng-hide="stationType=='class'">
+		            <div class="body">
+		            	<label>Bar Table Type:
+			              <select  class="form-control" ng-model="myTableDisp" ng-options="item4.id as item4.label for item4 in values4" style='width:75px;display:inline;margin-right:5px;'></select>
+			              </label>
+			            <label>Direction:
+			              <select  class="form-control" ng-model="myDir" ng-options="item5.id as item5.label for item5 in directionValues" style='width:75px;display:inline;margin-right:5px;'></select>
+			            </label>
+			            <button ng-show="!(loading)" class='btn btn-info' type="button" ng-click="reloadTable()">Apply</button>
+		            </div>
+		            <div id="stationTable">
+		            </div>
+		            <div class="body" ng-show="(loading)">
+			      		<p>Loading</p>
+			      		<img src="/img/loading.gif">
+		      		</div>
 		    </section>
-		  </div>
-		  <div class="col-md-4">
-		  	<section class="widget">
-		      <div class="body">
-		       <div id="infoTable"></div>
-		      </div>
-		    </section>
-		  </div>
-		</div>
+		
+
+
+
+
+		  
+			</div>
+		  	
+		  </div><!-- end of row-->
+		
 	</div>
  	<div class="loader-wrap hiding hide">
         <i class="fa fa-spinner fa-spin"></i>
@@ -61,5 +92,6 @@
 <script src="/trafficanalytics/wimgraph.js"></script>
 <script src="/trafficanalytics/stationInfo.js"></script>
 <script src="/trafficanalytics/wimCalendar.js"></script>
+<script src="/trafficanalytics/weightTable.js"></script>
 <script type="text/javascript" src="/lib/colorbrewer.js"></script>
 <script src="/pages/station.js"></script>

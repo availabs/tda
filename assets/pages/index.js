@@ -31,11 +31,12 @@ function IndexController ($scope) {
     $scope.barGraph = null;
     $scope.currentYear = [];
     $scope.compareYear = [];
+    $scope.maxYears = [];
     $scope.graphs = [
-        {id:"All",label:"All",data:[false,true,false,false]},
-        {id:"AAPT",label:"Cars",data:[false,true,false,false]},
-        {id:"AASU",label:"Single Unit Trucks",data:[false,false,true,false]},
-        {id:"AATT",label:"Tractor Trailer Trucks",data:[false,false,false,true]},
+        {id:"All",label:"All",data:[true,true,true]},
+        {id:"AAPT",label:"Cars",data:[true,false,false]},
+        {id:"AASU",label:"Single Unit Trucks",data:[false,true,false]},
+        {id:"AATT",label:"Tractor Trailer Trucks",data:[false,false,true]},
     ];
     $scope.times = [
         {id:"month",label:"Monthly"},
@@ -46,13 +47,16 @@ function IndexController ($scope) {
     $scope.dispGraph = $scope.graphs[0].id;
     $scope.curYear = "All";
     $scope.getStations = false
+    //$scope.myMaxYear = ""
     $scope.stateName = ""
     $scope.flagA = false
     $scope.flagB = false
+    $scope.flagC = false
     wimstates.init('#statesDIV',$scope);
     AADTGraph.initAADTGraph('#changeAADTGraph');
     AADTGraph.initAADTGraph('#aadtGraph');
     monthlyLineChart.initMonthlylLineChart("#hrMonLineGraph");
+    
     
 
     $scope.$watch('stations', function() {
@@ -70,7 +74,7 @@ function IndexController ($scope) {
                   .text("Loading");
             d3.select('#hrMonLineGraph'+" svg").append("g").append("svg:image")
                 .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
-                .attr("xlink:href", "loading.gif")
+                .attr("xlink:href", "/img/loading.gif")
                 .attr("width", 67)
                 .attr("height", 40);
             //$scope.getMonHour = true
@@ -80,17 +84,14 @@ function IndexController ($scope) {
             $scope.years2 = ["All"]
             for(var x = 0;x<$scope.years.length;x++){
                 $scope.years2.push($scope.years[x])
+                $scope.maxYears.push({id:$scope.years[x],label:$scope.years[x]})
             }
+            $scope.myMaxYear = $scope.maxYears[$scope.maxYears.length-1].id
             $scope.active_years2 = {id:$scope.years2[0]}
             //var pov={},tt={};
-            AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',[true,false,false,false],[$scope.active_years.first,$scope.active_years.max]);
-            AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',[true,false,false,false],[]);
-            monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',"All",$scope.state,"All",function(){
-                        $scope.$apply(function(){
-			                  $scope.getMonHour = false
-  		    	            });
-                    });
-            
+            AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',[true,true,true],[$scope.active_years.first,$scope.active_years.max]);
+            AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',[true,true,true],[]);
+            monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',"All",$scope.state,"All");
           }
           
         }
@@ -101,15 +102,26 @@ function IndexController ($scope) {
         if($scope.stations.length > 0){
             if($scope.flagA){
                 $scope.active_years.first = parseInt($scope.active_years.first);
-                $scope.active_years.max = parseInt($scope.active_years.max);
                 //console.log('first_year',$scope.active_years)
-                if(parseInt($scope.active_years.first) != parseInt($scope.active_years.max)){
-                    AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[$scope.active_years.first,$scope.active_years.max]);      
+                if(parseInt($scope.active_years.first) != parseInt($scope.myMaxYear)){
+                    AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[$scope.active_years.first,parseInt($scope.myMaxYear)]);      
                 }
             }
             else{
-                console.log("B")
                 $scope.flagA = true
+            }
+        }
+    });
+    $scope.$watchCollection('myMaxYear', function() {
+        if($scope.stations.length > 0){
+            if($scope.flagC){
+                if(parseInt($scope.active_years.first) != parseInt($scope.myMaxYear)){
+                    AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[$scope.active_years.first,parseInt($scope.myMaxYear)]);      
+                }
+            }
+            else{
+                $scope.flagC = true
+                
             }
         }
     });
@@ -130,7 +142,7 @@ function IndexController ($scope) {
                   .text("Loading");
                 d3.select('#hrMonLineGraph'+" svg").append("g").append("svg:image")
                 .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
-                .attr("xlink:href", "loading.gif")
+                .attr("xlink:href", "/img/loading.gif")
                 .attr("width", 67)
                 .attr("height", 40);
                 $scope.curYear = $scope.active_years2.id
@@ -175,7 +187,7 @@ function IndexController ($scope) {
               .text("Loading");
             d3.select('#hrMonLineGraph'+" svg").append("g").append("svg:image")
                 .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
-                .attr("xlink:href", "loading.gif")
+                .attr("xlink:href", "/img/loading.gif")
                 .attr("width", 67)
                 .attr("height", 40);
             if($scope.curYear === "All"){
@@ -219,7 +231,7 @@ function IndexController ($scope) {
               .text("Loading");
              d3.select('#hrMonLineGraph'+" svg").append("g").append("svg:image")
                 .attr("transform", "translate(" + ((AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)/1.25) + "," + (((AADTGraph.height + AADTGraph.margin.top + AADTGraph.margin.bottom)/2)-20) + ")")
-                .attr("xlink:href", "loading.gif")
+                .attr("xlink:href", "/img/loading.gif")
                 .attr("width", 67)
                 .attr("height", 40);
             if($scope.curYear === "All"){
@@ -241,7 +253,14 @@ function IndexController ($scope) {
             }
         }
     });
-    
+    $('#my-affix').affix({
+    offset: {
+      top: 0
+    , bottom: function () {
+        return (this.bottom = $('.content container').outerHeight(true))
+      }
+    }
+  })
 
 
     function getYearRange(stations){
@@ -257,15 +276,15 @@ function IndexController ($scope) {
                 
             })
         })
-        console.log('year list',output)
+  
                 
         return output;
         //console.log()
         
     }
 
-    function getStateIndex(state_fips){
-      return $scope.states.map(function(el) {return el.state_fips;}).indexOf(state_fips);
-    }
+    // function getStateIndex(state_fips){
+    //   return $scope.states.map(function(el) {return el.state_fips;}).indexOf(state_fips);
+    // }
 };
 

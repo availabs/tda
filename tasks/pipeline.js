@@ -65,6 +65,7 @@ var jsFilesToInject = [
     "lib/bootstrap/button.js",
     "lib/bootstrap/tab.js",
     "lib/bootstrap/dropdown.js",
+    "lib/bootstrap/affix.js",
 
     //<!-- basic application js-->
     "js/app.js",

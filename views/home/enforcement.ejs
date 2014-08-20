@@ -1,27 +1,30 @@
 <%- partial('../partials/nav') %>
+
 <div class="wrap sidebar-icons">
     <%- partial('../partials/header') %>
 	<div class="content container">  
 	  <div class="row" ng-controller="EnforcementController">
 		  <div class="col-md-8">
-		    <section class="widget">
-		    	<header>
-		    		<fieldset>
-	            	<legend>Station Map<small> Click a state to see their ATR sites</small></legend>
-	        		</fieldset>
-		    		<div class="widget-controls">
-                        <a data-widgster="expand" title="" href="#" style="display: none;" data-original-title="Expand"><i class="glyphicon glyphicon-plus"></i></a>
-                        <a data-widgster="collapse" title="" href="#" data-original-title="Collapse" style="display: inline;"><i class="glyphicon glyphicon-minus"></i></a>
-                        <a data-widgster="fullscreen" title="" href="#" data-original-title="Full Screen" style="display: inline;"><i class="glyphicon glyphicon-resize-full"></i></a>
-                        <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>
-                            
-                    </div>
-		    	</header>
-			    <div class="body">
-			      	<div id="statesDIV"></div>
-			    </div>
-		    </section>
+		  	<div id="my-affix">
+			    <section class="widget">
+			    	<header>
+			    		<fieldset>
+		            	<legend>Station Map<small> Click a state to see their ATR sites</small></legend>
+		        		</fieldset>
+			    		<div class="widget-controls">
+	                        <a data-widgster="expand" title="" href="#" style="display: none;" data-original-title="Expand"><i class="glyphicon glyphicon-plus"></i></a>
+	                        <a data-widgster="collapse" title="" href="#" data-original-title="Collapse" style="display: inline;"><i class="glyphicon glyphicon-minus"></i></a>
+	                        <a data-widgster="fullscreen" title="" href="#" data-original-title="Full Screen" style="display: inline;"><i class="glyphicon glyphicon-resize-full"></i></a>
+	                        <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>
+	                            
+	                    </div>
+			    	</header>
+				    <div class="body">
+				      	<div id="statesDIV"></div>
+				    </div>
+			    </section>
 		  </div>
+		</div>
 		  <div class="col-md-4">
 		  	<section class="widget ui-sortable" ng-show="!(stations.length > 0)">
 		  		<header>
@@ -32,7 +35,7 @@
         		</header>
 		      <div class="body" ng-show="(getStations)">
 		      		<p>Loading {{stateName}}</p>
-		      		<img src="loading.gif">
+		      		<img src="/img/loading.gif">
 		      </div>
 		 	</section>
 		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
@@ -58,12 +61,21 @@
 		  		<header>
 			        <fieldset>
 	            	<legend>Overweight Trucks<small>  by station</small>
-
-	            	<select class="form-control" ng-model="myTimePeriod" ng-options="item2.id as item2.label for item2 in timePeriod" style='width:75px;display:inline;margin-right:5px;'></select>
-	            	<select class="form-control" ng-model="myOrder" ng-options="item3.id as item3.label for item3 in time_order" style='width:75px;display:inline;margin-right:5px;'></select>
-
 	            	</legend>
 	        		</fieldset>
+	        		<div class="row">
+	            		<div class="col-md-6 form-inline">
+	            			<div class="form-group">
+				            	<select class="form-control" ng-model="myTimePeriod" ng-options="item2.id as item2.label for item2 in timePeriod" style='width:75px;display:inline;margin-right:5px;'></select>
+				            </div>
+				        </div>
+				        <div class="col-md-6 form-inline">
+	            			<div class="form-group">
+					        	<select class="form-control" ng-model="myOrder" ng-options="item3.id as item3.label for item3 in time_order" style='width:75px;display:inline;margin-right:5px;'></select>
+					        </div>
+				        </div>
+				    </div>
+	            	
         		</header>
 		      <div class="body">
 		     
@@ -85,18 +97,34 @@
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>
+		 	
 		  </div>
+		 <!--  <div class="col-md-12 form-inline">
+		  	<section class="widget ui-sortable">
+		  	<div class="body">
+		     
+			      <div id="voronoi-testing"></div>
+			  </div>
+		 	</section>
+		  </div> -->
 		</div>
 	</div>
  	<div class="loader-wrap hiding hide">
         <i class="fa fa-spinner fa-spin"></i>
   </div>
 </div>
+
+
+
+
+
 <script src="/trafficanalytics/wimstates.js"></script>
 <script src="/lib/colorbrewer.min.js"></script>
 <script src="/trafficanalytics/aadtGraph.js"></script>
 <script src="/trafficanalytics/truckWeightGraph.js"></script>
 <script src="/trafficanalytics/lineChart.js"></script>
 <script src="/lib/AVAILmap.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
 <script src="/pages/enforcement.js"></script>
+

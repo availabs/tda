@@ -4,24 +4,28 @@
 	<div class="content container">  
 	  <div class="row" ng-controller="IndexController">
 		  <div class="col-md-8">
-		    <section class="widget">
-		    	<header>
-		    		<fieldset>
-	            	<legend>Station Map<small> Click a state to see their ATR sites</small></legend>
-	        		</fieldset>
-		    		<div class="widget-controls">
-                        <a data-widgster="expand" title="" href="#" style="display: none;" data-original-title="Expand"><i class="glyphicon glyphicon-plus"></i></a>
-                        <a data-widgster="collapse" title="" href="#" data-original-title="Collapse" style="display: inline;"><i class="glyphicon glyphicon-minus"></i></a>
-                        <a data-widgster="fullscreen" title="" href="#" data-original-title="Full Screen" style="display: inline;"><i class="glyphicon glyphicon-resize-full"></i></a>
-                        <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>
-                            
-                    </div>
-		    	</header>
-			    <div class="body">
-			      	<div id="statesDIV"></div>
-			    </div>
-		    </section>
+		  	<div id="my-affix">
+			    <section class="widget">
+			    	<header>
+			    		<fieldset>
+		            	<legend>Station Map<small> Click a state to see their ATR sites</small></legend>
+		        		</fieldset>
+			    		<div class="widget-controls">
+	                        <a data-widgster="expand" title="" href="#" style="display: none;" data-original-title="Expand"><i class="glyphicon glyphicon-plus"></i></a>
+	                        <a data-widgster="collapse" title="" href="#" data-original-title="Collapse" style="display: inline;"><i class="glyphicon glyphicon-minus"></i></a>
+	                        <a data-widgster="fullscreen" title="" href="#" data-original-title="Full Screen" style="display: inline;"><i class="glyphicon glyphicon-resize-full"></i></a>
+	                        <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>
+	                            
+	                    </div>
+			    	</header>
+			    	
+				    	<div class="body">
+				    		<div id="statesDIV"></div>
+				      	
+				    </div>
+			    </section>
 		  </div>
+		</div>
 		  <div class="col-md-4">
 		  	<section class="widget ui-sortable" ng-show="!(stations.length > 0)">
 		  		<header>
@@ -32,25 +36,33 @@
         		</header>
 		      <div class="body" ng-show="(getStations)">
 		      		<p>Loading {{stateName}}</p>
-		      		<img src="loading.gif">
+		      		<img src="/img/loading.gif">
 		      </div>
 		 	</section>
 		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
 		  		<header>
 			        <fieldset>
-	            	<legend>AADT Change<small>  by station
-	            	<label>From:</label>
-	            	<select ng-model='active_years.first'>
-	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
-	            	</select>
-	            	
-	            	<label>To:</label>	            	
-	            	<select ng-model='active_years.max'>
-	            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
-	            	</select>
-	            	</small>
-	            	</legend>
+	            	<legend>AADT Change<small>  by station</small></legend>
 	        		</fieldset>
+	            	<div class="row">
+	            		
+	            		<div class="col-md-6 form-inline">
+	            			<div class="form-group">
+				            	<label>From:</label>
+				            	<select ng-model='active_years.first' class="form-control">
+				            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
+				            	</select>
+			            	</div>
+	            		</div>
+	            		<div class="col-md-6 form-inline">
+	            			<div class="form-group">
+				            	<label>To:</label>	            	
+				            	<select class="form-control" ng-model="myMaxYear" ng-options="item3.id as item3.label for item3 in maxYears"></select>
+				            	</select>
+				            </div>
+		            	</div>
+		            </div>
+	            	
         		</header>
 		      <div class="body">
 		     
@@ -62,10 +74,21 @@
 		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
 		  		 	<header>
 			        <fieldset>
-	            	<legend>AADT<small>  by station</small> <select ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select><select ng-model='active_years2.id'>
-	            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
-	            	</select></legend>
-	        		</fieldset>
+	            	<legend>AADT<small>  by station</small></legend></fieldset>
+	            	<div class="row">
+		            	<div class="col-md-6 form-inline">
+		            			<div class="form-group">
+					            	 <select class="form-control" ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select>
+					           	</div>
+					    </div>
+					    <div class="col-md-6 form-inline">
+		            			<div class="form-group">
+					            	 <select class="form-control" ng-model='active_years2.id'>
+					            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
+					            	</select>
+		        				</div>
+		        		</div>
+		        	</div>
         		</header>
 		      <div class="body">
 		     
@@ -76,9 +99,15 @@
 			<section class="widget ui-sortable" ng-show="stations.length > 0">
 		  		 	<header>
 			        <fieldset>
-	            	<legend>Line Graph<small>by time</small> <select ng-model="dispTime" ng-options="item2.id as item2.label for item2 in times"></select></legend>
-	        		</fieldset>
-        		</header>
+	            	<legend>Line Graph<small>by time</small></legend></fieldset>
+	            	<div class="row">
+		            	<div class="col-md-6 form-inline">
+		            			<div class="form-group">
+		            	 			<select class="form-control" ng-model="dispTime" ng-options="item2.id as item2.label for item2 in times"></select>
+		            	 		</div>
+		            	</div>
+		            </div>
+        			</header>
 		      <div class="body">
 		     	  	<div id="hrMonLineGraph" ng-show="!(getMonHour)"></div>
 		     	  	<!--<div id="hrMonLineGraph" ng-show="(getMonHour)">Loading</div>-->
