@@ -302,11 +302,22 @@ var lineChart = {
 			  			.style('opacity', 1.0)
 			  			.style('background', 'yellow')//#a50026')
 			  			.style('z-index', 6);
+			var dotData;
+			if(dataType === "count"){dotData = d.graphData.avgOverWeight}
+			else if(dataType === "percent"){dotData = d.graphData.perOverWeight}
+			rect.select("rect")
+			  .data(dotData)
+			.enter().append("circle")
+				  .attr("class","dot")
+				  .attr("r", 3.5)
+				  .attr("cx", function(d,i) { return x(i+1); })
+				  .attr("cy", function(d) { return y(d); })
+			      .style("fill", function(d,i) {return color(i); }); //Color has no specific functionality for now
 	  // 		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
 			// 				"<br>Class: "+d.funcCode+
 			// 				"</p>";
 			// $("#stationInfo").html(info);
-		    focus.attr("transform", "translate(" + x(d.xax+1) + "," + y(d.value) + ")"); //What's really used in voronoi dot formation
+		    //focus.attr("transform", "translate(" + x(d.xax+1) + "," + y(d.value) + ")"); //What's really used in voronoi dot formation
 		  }
 
 		  function mouseout(d) {
@@ -317,11 +328,12 @@ var lineChart = {
 			  			.style('background', function(d) {
 							return (d.properties.type == 'wim' ? '#081d58' : '#d94801');
 						});
+			svg.selectAll("circle").remove()
     		$('#map_station_'+d.graphData.stationId).attr('stroke-width','none');
 	  		$('#map_station_'+d.graphData.stationId).attr('stroke','none');
 	  		$('.station_'+d.graphData.stationId).attr('opacity',1);
 	  		$('#linegraph path').attr('opacity',1);
-		    focus.attr("transform", "translate(-100,-100)");
+		    //focus.attr("transform", "translate(-100,-100)");
 		  }
 
 	    //draws best fit line
