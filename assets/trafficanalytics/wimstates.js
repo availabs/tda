@@ -255,6 +255,11 @@
             	if(data.rows != undefined){
 			  		data.rows.forEach(function(row){
 				  			var rowStation = row.f[0].v;
+				  			for(var x = 0;x<rowStation.length;x++){
+                                            if(rowStation[x] === " "){
+                                                rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+                                            }
+                                        }
 				  			if(getStationIndex(rowStation,"class") == -1) {
 				  				stationsClass.push({'stationId':rowStation, years:[],heights:[],'AAPT':0,'AASU':0,'AATT':0})
 				  				stationsClass[getStationIndex(rowStation,"class")].heights.push({'y0':0,'y1':0})

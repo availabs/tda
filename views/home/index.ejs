@@ -3,7 +3,7 @@
     <%- partial('../partials/header') %>
 	<div class="content container">  
 	  <div class="row" ng-controller="IndexController">
-		  <div class="col-md-8">
+		  <div id="nav-wrapper" class="col-md-8">
 		  	<div id="my-affix">
 			    <section class="widget">
 			    	<header>
@@ -70,7 +70,31 @@
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>
-	
+			<section class="widget ui-sortable" ng-show="stations.length > 0">
+		  		 	<header>
+			        <fieldset>
+	            	<legend>Tonage<small>  by station</small></legend></fieldset>
+	            	<div class="row">
+		            	<div class="col-md-6 form-inline">
+		            			<div class="form-group">
+					            	 <!-- <select class="form-control" ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select> -->
+					           	</div>
+					    </div>
+					    <div class="col-md-6 form-inline">
+		            			<div class="form-group">
+					            	 <!-- <select class="form-control" ng-model='active_years2.id'>
+					            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
+					            	</select> -->
+		        				</div>
+		        		</div>
+		        	</div>
+        		</header>
+		      <div class="body">
+		     
+			      <div id="tonageGraph"></div>
+			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+		      </div>
+		 	</section>
 		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
 		  		 	<header>
 			        <fieldset>
@@ -125,6 +149,7 @@
 <script src="/trafficanalytics/wimstates.js"></script>
 <script src="/lib/colorbrewer.min.js"></script>
 <script src="/trafficanalytics/aadtGraph.js"></script>
+<script src="/trafficanalytics/tonageGraph.js"></script>
 <script src="/trafficanalytics/monthlyLineChart.js"></script>
 <script src="/pages/index.js"></script>
 <script src="/lib/AVAILmap.js"></script>

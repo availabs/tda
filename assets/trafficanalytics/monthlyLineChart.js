@@ -33,6 +33,11 @@ var monthlyLineChart = {
         	if(data.rows != undefined){
         		data.rows.forEach(function(row){
 					var rowStation = row.f[0].v;
+					for(var x = 0;x<rowStation.length;x++){
+						if(rowStation[x] === " "){
+							rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+						}
+					}
 					if(getStationIndex(rowStation) == -1) {
 						graphData.push({'stationId':rowStation, 'funcCode':row.f[6].v,monthsAll:[0,0,0,0,0,0,0,0,0,0,0,0], monthsAPT:[0,0,0,0,0,0,0,0,0,0,0,0], monthsASU:[0,0,0,0,0,0,0,0,0,0,0,0], monthsATT:[0,0,0,0,0,0,0,0,0,0,0,0]})
 						
@@ -336,6 +341,11 @@ var monthlyLineChart = {
 
 	            		data.rows.forEach(function(row){
 							var rowStation = row.f[0].v;
+							for(var x = 0;x<rowStation.length;x++){
+								if(rowStation[x] === " "){
+									rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+								}
+							}
 							if(getStationIndex(rowStation) == -1) {
 								graphData.push({'stationId':rowStation, 'funcCode':row.f[6].v,hoursAll:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], hoursAPT:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], hoursASU:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], hoursATT:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]})
 								

@@ -56,6 +56,7 @@ function IndexController ($scope) {
     AADTGraph.initAADTGraph('#changeAADTGraph');
     AADTGraph.initAADTGraph('#aadtGraph');
     monthlyLineChart.initMonthlylLineChart("#hrMonLineGraph");
+    tonageGraph.initTonageGraph('#tonageGraph')
     
     
 
@@ -88,7 +89,38 @@ function IndexController ($scope) {
             }
             $scope.myMaxYear = $scope.maxYears[$scope.maxYears.length-1].id
             $scope.active_years2 = {id:$scope.years2[0]}
-            //var pov={},tt={};
+            
+            //Tonnage graph below
+
+            d3.select('#tonageGraph'+" svg").selectAll("g").attr('opacity',0.1);
+                    d3.select('#tonageGraph'+" svg").selectAll("rect").attr('opacity',0.1);
+                    d3.select('#tonageGraph'+" svg").append("g")
+                    .append("text")
+                      .attr('opacity',1)
+                      .attr("transform", "translate(" + ((tonageGraph.width + tonageGraph.margin.left + tonageGraph.margin.right)/1.25) + "," + ((tonageGraph.height + tonageGraph.margin.top + tonageGraph.margin.bottom)/2) + ")")
+                      .attr("y", 6)
+                      .attr("dy", ".71em")
+                      .style("font-size","36px")
+                      .style("text-anchor", "end")
+                      .text("Loading");
+                    d3.select('#tonageGraph'+" svg").append("g").append("svg:image")
+                    .attr("transform", "translate(" + ((tonageGraph.width + tonageGraph.margin.left + tonageGraph.margin.right)/1.25) + "," + (((tonageGraph.height + tonageGraph.margin.top + tonageGraph.margin.bottom)/2)-20) + ")")
+                    .attr("xlink:href", "/img/loading.gif")
+                    .attr("width", 67)
+                    .attr("height", 40);
+                    wimXHR.get('/station/'+$scope.state+'/byTonageStations/', function(error, data) {  
+                        // $scope.$apply(function(){
+                        //     $scope.truckClass = getClassRange(angular.copy($scope.graphData))
+                        //     $scope.active_TruckClass = {value:$scope.truckClass[0]}
+                        // });
+                        tonageGraph.drawtonageGraph('#tonageGraph',data)
+                        
+
+                    });
+
+            //End tonageGraph
+
+
             AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',[true,true,true],[$scope.active_years.first,$scope.active_years.max]);
             AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',[true,true,true],[]);
             monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',"All",$scope.state,"All");
@@ -253,6 +285,7 @@ function IndexController ($scope) {
             }
         }
     });
+    $('#nav-wrapper').height($("#my-affix").height());
     $('#my-affix').affix({
     offset: {
       top: 0

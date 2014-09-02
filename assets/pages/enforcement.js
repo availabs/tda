@@ -86,6 +86,11 @@ function EnforcementController ($scope) {
 
                                     data.rows.forEach(function(row){
                                         var rowStation = row.f[0].v;
+                                        for(var x = 0;x<rowStation.length;x++){
+                                            if(rowStation[x] === " "){
+                                                rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+                                            }
+                                        }
                                         if(getStationIndex(rowStation) == -1) {
                                             $scope.graphData.push({'stationId':rowStation, years:[]})
                                             
@@ -137,6 +142,11 @@ function EnforcementController ($scope) {
                         if(data.rows != undefined){
                             data.rows.forEach(function(row){
                                 var rowStation = row.f[0].v;
+                                for(var x = 0;x<rowStation.length;x++){
+                                            if(rowStation[x] === " "){
+                                                rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+                                            }
+                                        }
                                 if(getStationIndex(rowStation,"line") == -1) {
                                     $scope.overWeightLine.push({'stationId':rowStation, 'funcCode': row.f[4].v,perOverWeight:[0,0,0,0,0,0,0,0,0,0,0,0],avgOverWeight:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]})
                                     
@@ -194,6 +204,11 @@ function EnforcementController ($scope) {
                         if(data.rows != undefined){
                             data.rows.forEach(function(row){
                                 var rowStation = row.f[0].v;
+                                for(var x = 0;x<rowStation.length;x++){
+                                            if(rowStation[x] === " "){
+                                                rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+                                            }
+                                        }
                                 if(getStationIndex(rowStation,"bar") == -1) {
                                     $scope.overWeightBar.push({'stationId':rowStation, years:[]})                         
                                     
@@ -254,6 +269,11 @@ function EnforcementController ($scope) {
                 if(data.rows != undefined){
                     data.rows.forEach(function(row){
                         var rowStation = row.f[0].v;
+                        for(var x = 0;x<rowStation.length;x++){
+                                            if(rowStation[x] === " "){
+                                                rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+                                            }
+                                        }
                         if(getStationIndex(rowStation,"bar") == -1) {
                             $scope.overWeightBar.push({'stationId':rowStation, years:[]})                         
                             
@@ -297,7 +317,7 @@ function EnforcementController ($scope) {
         //console.log()
         
     }
-
+    $('#nav-wrapper').height($("#my-affix").height());
     $('#my-affix').affix({
     offset: {
     top: 0

@@ -3,9 +3,9 @@
     version: "0.2-reloaded"
   }
 
-  function _init(min,max){
+  function _init(min,max,caltype){
     var html = [];
-    var caldiv = d3.select("#caldiv");
+    var caldiv = d3.select("#caldiv"+caltype);
     var m = {top: 10, right: 10, bottom: 25, left: 80},
       w = parseInt(caldiv.style('width'))-m.right,
       z = parseInt(w/54),
@@ -16,8 +16,6 @@
           //percent = d3.format(".1%"),
           format = d3.time.format("%Y-%m-%d");
 
-      
-
       if(parseInt(min) < 10){
             min = "0"+min
           }
@@ -25,7 +23,7 @@
             max = "0"+max
           }
 
-          var svg = d3.select("#caldiv").selectAll("svg")
+          var svg = d3.select("#caldiv"+caltype).selectAll("svg")
               .data(d3.range(2000+parseInt(min), 2001+parseInt(max)))
             .enter().append("svg")
               .attr("width", w + m.right + m.left + 100)
@@ -37,7 +35,7 @@
               .attr("transform", "translate(-6," + z * 3.5 + ")rotate(-90)")
               .attr("text-anchor", "middle")
               .text(String);
-          var svg2 = d3.select("#legend").selectAll("svg")
+          var svg2 = d3.select("#legend"+caltype).selectAll("svg")
               .data(d3.range(0, 1))
             .enter().append("svg")
               .style("width", 800)
@@ -78,8 +76,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
       .enter().append("path")
         .attr("class", "month")
         .attr("d", monthPath);
-
-    var data = d3.nest() 
+  var data = d3.nest() 
         .key(function(d) {  return d.date; }) //Creates key value
         .rollup(function(d) { 
           if(dispType === "Weight"){
@@ -90,7 +87,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           }
         }) //create pair value
         .map(input_data); //Turns code into an array of objects
-
+    console.log(data)
         svg.selectAll('rect.day').attr('style','fill:#fff');
 
         //Below code colors in the calendar
@@ -104,7 +101,14 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
   }//end colorDays
 
-  wimCal.drawCalendar = function(rect,svg,input_data,day,week,z,svg2,dispType){
+  wimCal.drawCalendar = function(rect,svg,input_data,day,week,z,svg2,dispType,caltype){
+      console.log(rect)
+      console.log(svg)
+      console.log(input_data)
+      console.log(day)
+      console.log(week)
+      console.log(z)
+
       var values = [];
       input_data.forEach(function(input){
         if(dispType === "Weight"){
@@ -127,9 +131,9 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
 
           //truckData should contain strings detailing which truck goes where
-          if(typeof wimCal.legend != 'undefined'){
-            wimCal.legend.remove();
-          }
+          // if(typeof wimCal.legend != 'undefined'){
+          //   wimCal.legend.remove();
+          // }
 
           var truckData = [Math.floor(color.invertExtent("#a50026")[0]) + " - " + Math.floor(color.invertExtent("#a50026")[1]),
                            Math.floor(color.invertExtent("#d73027")[0]) + " - " + Math.floor(color.invertExtent("#d73027")[1]),
@@ -145,8 +149,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
           var color2 = d3.scale.ordinal()
           .range(["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]);
-
-          wimCal.legend = svg2.selectAll(".legend")
+          wimCal.legend = svg2.selectAll("#legend"+caltype)
           .data(truckData.slice())
         .enter().append("g")
           .attr("class", "legend")
@@ -234,10 +237,11 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           wimXHR.post(URL, {isClass:$scope.stationType},function(error, data) {
               $scope.minYear = data.rows[0].f[0].v;
               $scope.maxYear = data.rows[0].f[1].v;
-              $scope.drawVars = _init($scope.minYear,$scope.maxYear);
+              $scope.drawVars = _init($scope.minYear,$scope.maxYear,"");
 
               $scope.stationData = [];
               $scope.stationDataAll = [];
+              $scope.stationTonageData = [];
               $scope.myClass = $scope.values[0].id;
               $scope.myDisp = $scope.values2[1].id;
               $scope.myDataDisp = $scope.values3[0].id;
@@ -265,6 +269,21 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                       $scope.myDataDisp = $scope.values3[0].id
                       
                     });
+                });
+
+                //doesn't work with class stations
+                wimXHR.get('/station/'+$scope.station+'/byTonageInfo/', function(error, data) {
+                    $scope.stationTonageData = data;
+                    $scope.drawVars2 = _init($scope.minYear,$scope.maxYear,"ton");
+                    //if($scope.stationType === "wim"){
+                      //$scope.myDataDisp = $scope.values3[0].id
+                    calCreate($scope.drawVars2[5],$scope.drawVars2[3],9,$scope.drawVars2[1],$scope.drawVars2[2],$scope.stationTonageData,$scope.drawVars2[0],$scope.drawVars2[4],"trucks","Ton")
+                    //}
+                    // $scope.$apply(function(){
+                    //   $scope.loading2 = false
+                    //   $scope.myDataDisp = $scope.values3[0].id
+                      
+                    // });
                 });
                 if($scope.stationType === "wim"){
                   wimXHR.get('/stations/'+$scope.station+'/byWeightTableInfo/', function(error,data) {
@@ -311,11 +330,15 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
   }// end init
 
 function calCreate(rect,svg,classT,day,week,data,z,svg2,dispType,dispType2){
+      console.log(dispType2)
       if(dispType2 === "Freight"){
-        wimCal.drawCalendar(rect,svg,parseDataF(data,classT),day,week,z,svg2,dispType);
+        wimCal.drawCalendar(rect,svg,parseDataF(data,classT),day,week,z,svg2,dispType,"");
+      }
+      else if(dispType2 === "Ton"){
+        wimCal.drawCalendar(rect,svg,parseDataT(data,classT),day,week,z,svg2,dispType,"ton");
       }
       else{
-        wimCal.drawCalendar(rect,svg,parseDataA(data,classT),day,week,z,svg2,dispType); 
+        wimCal.drawCalendar(rect,svg,parseDataA(data,classT),day,week,z,svg2,dispType,""); 
       }
   };
 
@@ -440,6 +463,41 @@ function parseDataF(input,classInfo){
  
   return output
 };
+
+function parseDataT(input,classInfo){
+  var output = [];
+  input.rows.forEach(function(row){
+
+        var item = {}
+        var string = ""
+        var totalTrucks = parseInt(row.f[0].v) + parseInt(row.f[4].v) + parseInt(row.f[5].v) + parseInt(row.f[6].v) + parseInt(row.f[7].v) + parseInt(row.f[8].v) + parseInt(row.f[9].v) + parseInt(row.f[10].v) + parseInt(row.f[11].v) + parseInt(row.f[12].v) + parseInt(row.f[13].v);
+        
+        if(row.f[1].v < 10){
+          string = "200"+row.f[1].v
+        }
+        else{
+          string = "20"+row.f[1].v
+        }
+        if(row.f[2].v < 10){
+          string = string+"-0"+row.f[2].v
+        }
+        else{
+          string = string+"-"+row.f[2].v 
+        }
+        if(row.f[3].v < 10){
+          string = string+"-0"+row.f[3].v
+        }
+        else{
+          string = string+"-"+row.f[3].v 
+        }
+
+              item.date = string;
+              item.numTrucks = totalTrucks;
+              output.push(item);
+  });
+  return output
+};
+
 
   this.wimCal = wimCal;
 })()
