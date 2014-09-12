@@ -37,6 +37,29 @@ module.exports.http = {
     // See http://www.senchalabs.org/connect/multipart.html for other options.
     // bodyParser: require('skipper')
 
+    //Below should initiate
+
+    // loadMiddleware: function(app, defaultMiddleware, sails) {
+
+    //     // Use the middleware in the correct order
+    //     app.use(defaultMiddleware.startRequestTimer);
+    //     app.use(defaultMiddleware.cookieParser);
+    //     app.use(defaultMiddleware.session);
+    //     // Insert upload file handler
+    //     app.use('/data/gtfs/upload', upload.fileHandler());
+    //     app.use(defaultMiddleware.bodyParser);
+    //     app.use(defaultMiddleware.handleBodyParserError);
+    //     app.use(defaultMiddleware.methodOverride);
+    //     app.use(defaultMiddleware.poweredBy);
+    //     app.use(defaultMiddleware.router);
+    //     app.use(defaultMiddleware.www);
+    //     app.use(defaultMiddleware.favicon);
+    //     app.use(defaultMiddleware[404]);
+    //     app.use(defaultMiddleware[500]);
+    // },
+
+  
+
   },
 
   // The number of seconds to cache flat files on disk being served by

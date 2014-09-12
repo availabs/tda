@@ -25,18 +25,7 @@ var cssFilesToInject = [
 // (uses Grunt-style wildcard/glob/splat expressions)
 var jsFilesToInject = [
 
-  // Dependencies like sails.io.js, jQuery, or Angular
-  // are brought in here
-  //'js/dependencies/**/*.js',
-
-  // All of the rest of your client-side js files
-  // will be injected here in no particular order.
-  // Below, as a demonstration, you'll see the built-in dependencies 
-    // linked in the proper order order
-
-    // Bring in the socket.io client
-    //'js/socket.io.js',
-
+    "/js/dependencies/sails.io.js",
     "lib/angular/angular.min.js",
     "lib/jquery/jquery-2.0.3.min.js",
     "lib/jquery-pjax/jquery.pjax.js",

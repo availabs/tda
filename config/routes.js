@@ -33,6 +33,8 @@ module.exports.routes = {
   '/station/:type/:id':'StationController.index',
   '/user/admin':'UserController.admin',
   '/user/db' : 'UserController.changeDatabase',
+  '/upload' : 'DataLoaderController.index',
+  '/upload/data' : 'FileController.upload',
 
   '/login':'UserController.login',
   '/login/auth':'UserController.auth',
