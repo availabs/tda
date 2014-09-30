@@ -425,6 +425,8 @@
 
 		// this function retrieves the requested data from the back end API
 		function _getData() {
+			console.log("getData",route,depth)
+			console.time("getData");
 			loader.style('display', 'inline')
 
             wimXHR.post(route, {'depth': depth}, function(error, data) {
@@ -435,6 +437,7 @@
             	time = TIMES[depth.length];
 
             	_formatData(data);
+            	console.timeEnd("getData");
 
             	_drawGraph();
 	            _drawWDGraph();
