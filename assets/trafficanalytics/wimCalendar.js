@@ -1,6 +1,6 @@
 (function() {
   var wimCal = {
-    version: "0.2-reloaded"
+    version: "0.2.0"
   }
 
   function _init(min,max,caltype){
@@ -87,7 +87,6 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           }
         }) //create pair value
         .map(input_data); //Turns code into an array of objects
-    console.log(data)
         svg.selectAll('rect.day').attr('style','fill:#fff');
 
         //Below code colors in the calendar
@@ -102,13 +101,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
   }//end colorDays
 
   wimCal.drawCalendar = function(rect,svg,input_data,day,week,z,svg2,dispType,caltype){
-      console.log(rect)
-      console.log(svg)
-      console.log(input_data)
-      console.log(day)
-      console.log(week)
-      console.log(z)
-
+     
       var values = [];
       input_data.forEach(function(input){
         if(dispType === "Weight"){
@@ -259,7 +252,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
               
                 wimXHR.get('/station/'+$scope.station+'/dailyWeights', function(error, data) {
                     $scope.stationData = data;
-                    stationInfo.drawTable($scope.station,'#infoTable')
+                    
                     if($scope.stationType === "wim"){
                       $scope.myDataDisp = $scope.values3[0].id
                       calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"trucks",$scope.myDataDisp)
@@ -330,7 +323,6 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
   }// end init
 
 function calCreate(rect,svg,classT,day,week,data,z,svg2,dispType,dispType2){
-      console.log(dispType2)
       if(dispType2 === "Freight"){
         wimCal.drawCalendar(rect,svg,parseDataF(data,classT),day,week,z,svg2,dispType,"");
       }
