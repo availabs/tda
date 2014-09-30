@@ -1,0 +1,20 @@
+<%- partial('../partials/nav') %>
+<div class="wrap sidebar-icons">
+    <%- partial('../partials/header') %>
+    <div class="content container">  
+        <div class="row" ng-controller="parsedDataController">
+            <div class="col-md-12">
+                <section class="widget">
+                    <header>
+                        <h4>
+                        Upload Zip file
+                        </h4>
+                    </header>
+                    <div class="body">
+                        <%= jobs %>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

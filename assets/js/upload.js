@@ -31,16 +31,31 @@ function parsedDataController($scope){
 
     io.socket.on('connect',function(){
         $scope.processedFiles = [];
-        io.socket.on('file_parsed',function(data){
-            console.log(data)
-            // $scope.processedFiles.push(data)
-            // // for(var i = 0;i<data.length;i++){
-            // //     $scope.processedFiles.push(["StateFips Code: "+data[i].state+" Station: "+data[i].station+" Date:"+data[i].month+"/"+data[i].day+"/"+data[i].year]);
-            // // }
-            // console.log($scope.processedFiles)
-            // $scope.$apply();
+        $scope.givenError = ""
+        $scope.loadingData = false
+        $scope.showError = false
+        io.socket.on('load_start',function(data){
+            $scope.$apply(function(){
+                $scope.loadingData = true
+                $scope.showError = false
+            });
         })
-
+        io.socket.on('file_parsed',function(data){
+            $scope.processedFiles = []
+            $scope.processedFiles.push(data)
+            //$scope.$apply();
+            $scope.$apply(function(){
+                $scope.loadingData = false
+            });
+        })
+        io.socket.on('error_occured',function(data){
+            $scope.givenError = data
+            $scope.$apply(function(){
+                $scope.loadingData = false
+                $scope.showError = true
+            });
+        })
+        
     })
 
 }
