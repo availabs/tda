@@ -2,19 +2,38 @@
 <div class="wrap sidebar-icons">
     <%- partial('../partials/header') %>
     <div class="content container">  
-        <div class="row" ng-controller="parsedDataController">
-            <div class="col-md-12">
+        <div class="row" ng-controller="uploadJobShowController">
+            <div class="col-md-6">
                 <section class="widget">
                     <header>
-                        <h4>
-                        Upload Zip file
-                        </h4>
+                        <table class="table table-hover">
+                          <tr><th><b>Running jobs</b></th></tr>
+                          <tr ng-repeat="job in jobs"><td ng-if="!(job.isFinished)">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}</td></tr>
+                        </table>
+                    
                     </header>
                     <div class="body">
-                        <%= jobs %>
+
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-6">
+                <section class="widget">
+                    <header>
+                        <table class="table table-hover">
+                          <tr><th><b>Finished jobs</b></th></tr>
+                          <tr ng-repeat="job in jobs"><td ng-if="job.isFinished">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}</td></tr>
+                        </table>
+                    </header>
+                    <div class="body">
+
                     </div>
                 </section>
             </div>
         </div>
     </div>
 </div>
+<script>
+jobs = <%- JSON.stringify(jobs) %>
+</script>
+<script src="/controllers/uploadjob/showController.js"></script>

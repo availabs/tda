@@ -57,16 +57,11 @@
                     <img src="/img/loading.gif">
             </div>
         </section>
-        <section class="widget" ng-show="(showError)">
-            <div class="body">
-                    <p>The following error occured: {{givenError}}</p>
-            </div>
-        </section>
         <section class="widget" ng-repeat="file in processedFiles">
             <div class="body">
                 <form class="ng-pristine ng-valid" enctype="multipart/form-data">
                     <table class="table table-hover">
-                      <tr><th>Newly Uploaded Data</th></tr>
+                      <tr><th>System Response</th></tr>
                       <tr ng-repeat="station in file"><td>{{station}}</td></tr>
                     </table>
                 </form>

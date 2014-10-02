@@ -31,30 +31,25 @@ function parsedDataController($scope){
 
     io.socket.on('connect',function(){
         $scope.processedFiles = [];
-        $scope.givenError = ""
         $scope.loadingData = false
-        $scope.showError = false
+        $scope.doneLoading = 0
         io.socket.on('load_start',function(data){
+            $scope.processedFiles = []
             $scope.$apply(function(){
+                $scope.doneLoading = $scope.doneLoading + 1
                 $scope.loadingData = true
-                $scope.showError = false
             });
         })
         io.socket.on('file_parsed',function(data){
-            $scope.processedFiles = []
             $scope.processedFiles.push(data)
-            //$scope.$apply();
+            $scope.doneLoading = $scope.doneLoading -1
             $scope.$apply(function(){
-                $scope.loadingData = false
+                if($scope.doneLoading == 0){
+                    $scope.loadingData = false
+                }
             });
         })
-        io.socket.on('error_occured',function(data){
-            $scope.givenError = data
-            $scope.$apply(function(){
-                $scope.loadingData = false
-                $scope.showError = true
-            });
-        })
+        
         
     })
 
