@@ -1,0 +1,13 @@
+<html>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+d3.csv('allStations.csv',function(stations){
+	
+	var output = {}
+	stations.forEach(function(station){
+		console.log(station);
+		output[station.station_id] = station;
+	})
+	d3.select('body').html(JSON.stringify(output))
+})
+</script>

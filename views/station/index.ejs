@@ -1,13 +1,13 @@
 <%- partial('../partials/nav') %>
 <div class="wrap sidebar-icons">
     <%- partial('../partials/header') %>
-	<div class="content container">
+	<div class="content container"  ng-controller="StationController">
 		<div class="row">
 		    <div class="col-md-12">
-		        <h2 class="page-title"><small>Station:</small> <%= station %></h2>
+		        <h2 class="page-title">Station: <%= station %><small> - {{stationData.station_location}}</small></h2>
 		    </div>
 		</div>
-	    <div class="row" ng-controller="StationController">
+	    <div class="row">
 
 	    	<div class="col-md-12">
 		    <section class="widget widget-tabs col-md-12">
@@ -141,6 +141,7 @@
 <script>
 	station="<%=station%>";
 	stationType="<%=stationType%>";
+	stationData=<%- JSON.stringify(station_data) %>;
 </script>
 <script type="text/javascript" src="/lib/colorbrewer.js"></script>
 <script src="/trafficanalytics/wimgraph.js"></script>

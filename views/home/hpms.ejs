@@ -5,7 +5,7 @@
 	  <div class="row" >
 		  <div class="col-md-12">
 		    <section class="widget">
-		    	<header>
+		    	<!-- <header>
 		    		<fieldset>
 	            	<legend style="margin-bottom:0px;">HPMS Network<small></small></legend>
 	        		</fieldset>
@@ -16,19 +16,12 @@
                         <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>
                             
                     </div>
-		    	</header>
+		    	</header> -->
 			    <div class="body">
-			      	<div id="navBarBack">
-						<div id="navBar">
-							<div id="dropDown"></div>
-						</div>
-						<div id="selector">
-							<div id="selectorLabel">Road Types:</div>
-						</div>
-						<div id="loading">LOADING</div>
-					</div>
-					<div id="mapDiv"></div></div>
-					<div id="mapLegend">
+			      	<div id="hpms-menubar"></div>
+					<div id="hpms-map"></div>
+					<div id="hpms-interstates"></div>
+					<div id="hpms-data"></div>
 			    </div>
 		    </section>
 		  </div>
@@ -38,12 +31,32 @@
         <i class="fa fa-spinner fa-spin"></i>
   </div>
 </div>
-<script type="text/javascript" src="/lib/d3.js"></script>
-<script type="text/javascript" src="/lib/topojson.js"></script>
-<script type="text/javascript" src="/lib/colorbrewer.js"></script>
-<script type="text/javascript" src="/trafficanalytics/hpmsViewer.js"></script>
-<script type="text/javascript" src="/lib/leaflet-src.js"></script>
-<script type="text/javascript" src="/lib/esc.js"></script>
-<script type="text/javascript" src="/pages/hpms.js"></script>
-<link rel="stylesheet" type="text/css" href="/css/viewer.css">
-<link rel="stylesheet" type="text/css" href="/css/leaflet.css">
+<script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+
+<!-- AVL libraries -->
+<script src="/lib/avlmap.js"></script>
+<script src="/lib/avlmenu.js"></script>
+<script src="/lib/avlminimap.js"></script>
+
+<!-- other libraries -->
+<script src="/lib/esc.js"></script>
+<script src="/lib/objects.js"></script>
+<script src="/lib/input.js"></script>
+
+<!-- HPMS modules -->
+<script src="/js/hpms/hpms_map.js"></script>
+<script src="/js/hpms/interstates_map_overlay.js"></script>
+<script src="/js/hpms/hpms_interstates.js"></script>
+<script src="/js/hpms/hpms_menu.js"></script>
+<script src="/js/hpms/hpms_data.js"></script>
+<script src="/js/hpms/myJS.js"></script>
+<script src="/js/hpms/grapher.js"></script>
+<script src="/js/hpms/data_object.js"></script>
+<script src="/js/hpms/page_loader.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="/css/hpms/avlmap.css">
+<link rel="stylesheet" type="text/css" href="/css/hpms/avlminimap.css">
+<link rel="stylesheet" type="text/css" href="/css/hpms/avlmenu.css">
+<link rel="stylesheet" type="text/css" href="/css/hpms/myCSS.css">

@@ -1,5 +1,5 @@
 var stationInfo = {
-	drawTable:function(stationID,elem){
+	drawTable:function(elem,data){
 		var nameMap = { func_class_code : 'Functional Class Code',
 			num_lanes_direc_indicated:"Num Lanes",
 			sample_type_for_traffic_vol:"Traffic Volume Trends Site",
@@ -101,54 +101,51 @@ var stationInfo = {
 			4:"Off-Interstate Business Marker",
 			9:"None of the above",
 		}
-		wimXHR.get('/station/'+stationID+'/stationInfo', function(error, data) {
+		
 
 			$(elem).append('<table id="displayTable" class="table table-hover table-striped"><thead><tr><th colspan=2><strong>Station Info</strong></th></thead><tbody></tbody></table>')
 			var xtag = '#displayTable tbody';
-			for(var i = 0;i<20;i++){
-				if(data.schema.fields[i].name === "national_highway_sys"){
-					$(xtag).append("<tr><th><strong>Route</strong></th><td>"+posted_route_sign[data.rows[0].f[i].v]+" "+parseInt(data.rows[0].f[i+1].v)+"</td></tr>")
-					i++
-				}
-				else if(data.schema.fields[i].name === "latitude"){
-					$(xtag).append("<tr><th><strong>Lat/Long</strong></th><td>"+data.rows[0].f[i].v+","+data.rows[0].f[i+1].v+"</td></tr>")
-					i++	
-				}
-				else if(nameMap[data.schema.fields[i].name] == undefined){
-					if(data.schema.fields[i].name === "method_of_weghing"){
-						$(xtag).append("<tr><th><strong>"+data.schema.fields[i].name+"</strong></th><td>"+method_of_weghing[data.rows[0].f[i].v]+"</td></tr>")
-					}
-					else{
-							$(xtag).append("<tr><th><strong>"+data.schema.fields[i].name+"</strong></th><td>"+data.rows[0].f[i].v+"</td></tr>")
-						
-					}
+			if(data.schema.fields[i].name === "national_highway_sys"){
+				$(xtag).append("<tr><th><strong>Route</strong></th><td>"+posted_route_sign[data.rows[0].f[i].v]+" "+parseInt(data.rows[0].f[i+1].v)+"</td></tr>")
+				i++
+			}
+			else if(data.schema.fields[i].name === "latitude"){
+				$(xtag).append("<tr><th><strong>Lat/Long</strong></th><td>"+data.rows[0].f[i].v+","+data.rows[0].f[i+1].v+"</td></tr>")
+				i++	
+			}
+			else if(nameMap[data.schema.fields[i].name] == undefined){
+				if(data.schema.fields[i].name === "method_of_weghing"){
+					$(xtag).append("<tr><th><strong>"+data.schema.fields[i].name+"</strong></th><td>"+method_of_weghing[data.rows[0].f[i].v]+"</td></tr>")
 				}
 				else{
-					if(data.schema.fields[i].name === "sample_type_for_traffic_vol" ){
-						$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+sample_type_for_traffic_vol[data.rows[0].f[i].v]+"</td></tr>")
-					}
-					else if(data.schema.fields[i].name ==="method_of_traffic_vol_counting" ){
-						$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+method_of_traffic_vol_counting[data.rows[0].f[i].v]+"</td></tr>")
-					}
-					else if(data.schema.fields[i].name === "alg_for_vehicle_class" ){
-						$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+alg_for_vehicle_class[data.rows[0].f[i].v]+"</td></tr>")
-					}
-					else if(data.schema.fields[i].name === "calibration_of_weighing_sys" ){
-						$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+calibration_of_weighing_sys[data.rows[0].f[i].v]+"</td></tr>")
-					}
-					else if(data.schema.fields[i].name === "type_of_sensor" ){
-						$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+type_of_sensor[data.rows[0].f[i].v]+"</td></tr>")
-					}
-					else if(data.schema.fields[i].name === "primary_purpose"){
-						$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+primary_purpose[data.rows[0].f[i].v]+"</td></tr>")
-					}
-					else{
-						$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+data.rows[0].f[i].v+"</td></tr>")
-					}
+						$(xtag).append("<tr><th><strong>"+data.schema.fields[i].name+"</strong></th><td>"+data.rows[0].f[i].v+"</td></tr>")
 					
 				}
-			}//end loop
-		});
-	}
+			}
+			else{
+				if(data.schema.fields[i].name === "sample_type_for_traffic_vol" ){
+					$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+sample_type_for_traffic_vol[data.rows[0].f[i].v]+"</td></tr>")
+				}
+				else if(data.schema.fields[i].name ==="method_of_traffic_vol_counting" ){
+					$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+method_of_traffic_vol_counting[data.rows[0].f[i].v]+"</td></tr>")
+				}
+				else if(data.schema.fields[i].name === "alg_for_vehicle_class" ){
+					$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+alg_for_vehicle_class[data.rows[0].f[i].v]+"</td></tr>")
+				}
+				else if(data.schema.fields[i].name === "calibration_of_weighing_sys" ){
+					$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+calibration_of_weighing_sys[data.rows[0].f[i].v]+"</td></tr>")
+				}
+				else if(data.schema.fields[i].name === "type_of_sensor" ){
+					$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+type_of_sensor[data.rows[0].f[i].v]+"</td></tr>")
+				}
+				else if(data.schema.fields[i].name === "primary_purpose"){
+					$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+primary_purpose[data.rows[0].f[i].v]+"</td></tr>")
+				}
+				else{
+					$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+data.rows[0].f[i].v+"</td></tr>")
+				}
+				
+	
+			}
 
 }
