@@ -7,7 +7,7 @@
     var html = [];
     var caldiv = d3.select("#caldiv"+caltype);
     var m = {top: 10, right: 10, bottom: 25, left: 80},
-      w = parseInt(caldiv.style('width'))-m.right,
+      w = parseInt($('.body').width())-m.right,
       z = parseInt(w/54),
       h = parseInt(z*7);
       
@@ -31,10 +31,12 @@
               .attr("class", "RdYlGn")
             .append("g")
               .attr("transform", "translate(" + (m.bottom + (w - z * 53) / 2) + "," + (m.top + (h - z * 7) / 2) + ")");
+          
           svg.append("text")
               .attr("transform", "translate(-6," + z * 3.5 + ")rotate(-90)")
               .attr("text-anchor", "middle")
               .text(String);
+          
           var svg2 = d3.select("#legend"+caltype).selectAll("svg")
               .data(d3.range(0, 1))
             .enter().append("svg")
@@ -43,6 +45,7 @@
               .attr("class", "RdYlGn")
             .append("g")
               .attr("transform", "translate(60,0)");
+          
           var rect = svg.selectAll("rect.day")
               .data(function(d) { 
                 return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })

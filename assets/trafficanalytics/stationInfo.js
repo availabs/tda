@@ -1,5 +1,5 @@
 var stationInfo = {
-	drawTable:function(stationID,elem){
+	drawTable:function(stationID,elem,scope){
 		var nameMap = { func_class_code : 'Functional Class Code',
 			num_lanes_direc_indicated:"Num Lanes",
 			sample_type_for_traffic_vol:"Traffic Volume Trends Site",
@@ -15,6 +15,7 @@ var stationInfo = {
 			fips_county_code:"County Fips"
 		}
 
+		var stationData = {};
 		var method_of_weghing= {
 			1:"Portable static scale",
 			2:"Chassis-mounted, towed static scale",
@@ -102,17 +103,19 @@ var stationInfo = {
 			9:"None of the above",
 		}
 		wimXHR.get('/station/'+stationID+'/stationInfo', function(error, data) {
-
+			
 			$(elem).append('<table id="displayTable" class="table table-hover table-striped"><thead><tr><th colspan=2><strong>Station Info</strong></th></thead><tbody></tbody></table>')
 			var xtag = '#displayTable tbody';
 			for(var i = 0;i<20;i++){
 				if(data.schema.fields[i].name === "national_highway_sys"){
 					$(xtag).append("<tr><th><strong>Route</strong></th><td>"+posted_route_sign[data.rows[0].f[i].v]+" "+parseInt(data.rows[0].f[i+1].v)+"</td></tr>")
 					i++
+					stationData['route'] == posted_route_sign[data.rows[0].f[i].v]+" "+parseInt(data.rows[0].f[i+1].v);
 				}
 				else if(data.schema.fields[i].name === "latitude"){
 					$(xtag).append("<tr><th><strong>Lat/Long</strong></th><td>"+data.rows[0].f[i].v+","+data.rows[0].f[i+1].v+"</td></tr>")
 					i++	
+					//stationData['coords']=data.rows[0].f[i].v+","+data.rows[0].f[i+1].v
 				}
 				else if(nameMap[data.schema.fields[i].name] == undefined){
 					if(data.schema.fields[i].name === "method_of_weghing"){
@@ -144,11 +147,17 @@ var stationInfo = {
 					}
 					else{
 						$(xtag).append("<tr><th><strong>"+nameMap[data.schema.fields[i].name]+"</strong></th><td>"+data.rows[0].f[i].v+"</td></tr>")
+						stationData[data.schema.fields[i].name]	= data.rows[0].f[i].v
 					}
 					
 				}
+				///console.log('end loop info');
 			}//end loop
+			//console.log('end loop info2');	
+			scope.stationData = stationData;
+			scope.$apply();
 		});
+	
 	}
-
+	
 }
