@@ -4,7 +4,7 @@
 	<div class="content container"  ng-controller="StationController">
 		<div class="row">
 		    <div class="col-md-12">
-		        <h2 class="page-title">Station: <%= station %><small> - {{stationData.station_location}}</small></h2>
+		        <h2 class="page-title">Station: <%= station %><small> - {{stationData.route+" "+stationData.station_location}}</small></h2>
 		    </div>
 		</div>
 	    <div class="row">
@@ -23,10 +23,10 @@
 	                        <a href="#calendar" data-toggle="tab">Calendar View</a>
 	                    </li>
 	                    <li>
-	                        <a href="#enforcement" data-toggle="tab">Overweight Enforcement</a>
+	                        <a href="#enforcement" data-toggle="tab" ng-hide='stationType=="class"'>Overweight Enforcement</a>
 	                    </li>
 	                    <li>
-	                        <a href="#tonnage" data-toggle="tab">Cargo Tonnage</a>
+	                        <a href="#tonnage" data-toggle="tab"  ng-hide='stationType=="class"'>Freight Volume</a>
 	                    </li>
 	                   
 	                </ul>

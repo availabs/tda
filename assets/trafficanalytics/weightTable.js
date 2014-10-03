@@ -89,7 +89,7 @@ var weightTable = {
 			if(organizationType === "percent"){
 					var color = d3.scale.quantize()
 						.domain([0,max])
-						.range(colorbrewer.RdYlGn[11]);	
+						.range(colorbrewer.RdYlGn[11].reverse());	
 				}
 			else{
 				var color = d3.scale.quantize()

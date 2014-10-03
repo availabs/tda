@@ -425,7 +425,7 @@
 
 		// this function retrieves the requested data from the back end API
 		function _getData() {
-			console.log("getData",route,depth)
+			//console.log("getData",route,depth)
 			console.time("getData");
 			loader.style('display', 'inline')
 
