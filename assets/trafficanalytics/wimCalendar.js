@@ -117,7 +117,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
       var color = d3.scale.quantize()
           .domain([d3.min(values), d3.max(values)])
-          .range(colorbrewer.RdYlGn[11]);
+          .range(colorbrewer.RdYlGn[11].reverse());
 
         var data = wimCal.colorDays(svg,input_data,monthPath,rect,color,dispType)
         
