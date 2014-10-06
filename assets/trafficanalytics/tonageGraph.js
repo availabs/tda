@@ -42,23 +42,25 @@ var tonageGraph ={
 
 	drawtonageGraph:function(elem,graphData){
 		var output = [];
-		if(graphData.rows != undefined){
-			graphData.rows.forEach(function(row){
+		if(graphData != null){
+			if(graphData.rows != undefined){
+				graphData.rows.forEach(function(row){
 
-			        var totalTrucks = parseInt(row.f[3].v) + parseInt(row.f[4].v) + parseInt(row.f[5].v) + parseInt(row.f[6].v) + parseInt(row.f[7].v) + parseInt(row.f[8].v) + parseInt(row.f[9].v) + parseInt(row.f[10].v) + parseInt(row.f[0].v) + parseInt(row.f[1].v) + parseInt(row.f[2].v)
-			        if(output.map(function(el) {return el.stationId;}).indexOf(row.f[11].v) == -1) {
-			        	var item = {}
-			        	item.numTrucks = totalTrucks;
-				        item.stationId = row.f[11].v;
-				        item.count = 1
-				        item.avg = 0
-			            output.push(item);
-			        }
-			        else{
-			        	output[output.map(function(el) {return el.stationId;}).indexOf(row.f[11].v)].numTrucks += totalTrucks
-			        	output[output.map(function(el) {return el.stationId;}).indexOf(row.f[11].v)].count++
-			        }
-			  });
+				        var totalTrucks = parseInt(row.f[3].v) + parseInt(row.f[4].v) + parseInt(row.f[5].v) + parseInt(row.f[6].v) + parseInt(row.f[7].v) + parseInt(row.f[8].v) + parseInt(row.f[9].v) + parseInt(row.f[10].v) + parseInt(row.f[0].v) + parseInt(row.f[1].v) + parseInt(row.f[2].v)
+				        if(output.map(function(el) {return el.stationId;}).indexOf(row.f[11].v) == -1) {
+				        	var item = {}
+				        	item.numTrucks = totalTrucks;
+					        item.stationId = row.f[11].v;
+					        item.count = 1
+					        item.avg = 0
+				            output.push(item);
+				        }
+				        else{
+				        	output[output.map(function(el) {return el.stationId;}).indexOf(row.f[11].v)].numTrucks += totalTrucks
+				        	output[output.map(function(el) {return el.stationId;}).indexOf(row.f[11].v)].count++
+				        }
+				  });
+				}
 			}
 		
 		for(var i = 0;i<output.length;i++){

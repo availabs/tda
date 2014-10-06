@@ -282,28 +282,33 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                     // });
                 });
                 if($scope.stationType === "wim"){
+                  //Below route seems to cause crash?
                   wimXHR.get('/stations/'+$scope.station+'/byWeightTableInfo/', function(error,data) {
-                    $scope.stationWeightData = data;
-                      $scope.stationWeightData.rows.forEach(function(row){
-                        if(dir1 == -1){
-                            dir1 = parseInt(row.f[3].v)
+                    if(data != null){
+                      if(data.rows != undefined){
+                        $scope.stationWeightData = data;
+                          $scope.stationWeightData.rows.forEach(function(row){
+                            if(dir1 == -1){
+                                dir1 = parseInt(row.f[3].v)
+                              }
+                            if(dir1 != parseInt(row.f[3].v) && dir2 == -1){
+                                dir2 = parseInt(row.f[3].v)
+                              }
+                            })
+                          if(dir2 != -1){
+                           $scope.$apply(function(){
+                              $scope.directionValues.push({id:-1,label:'combined'})
+                              $scope.directionValues.push({id:dir1,label:getDir(dir1)})
+                              $scope.directionValues.push({id:dir2,label:getDir(dir2)})
+                              $scope.myDir = $scope.directionValues[0].id
+                              $scope.loading = false
+                            });
                           }
-                        if(dir1 != parseInt(row.f[3].v) && dir2 == -1){
-                            dir2 = parseInt(row.f[3].v)
-                          }
-                        })
-                      if(dir2 != -1){
-                       $scope.$apply(function(){
-                          $scope.directionValues.push({id:-1,label:'combined'})
-                          $scope.directionValues.push({id:dir1,label:getDir(dir1)})
-                          $scope.directionValues.push({id:dir2,label:getDir(dir2)})
-                          $scope.myDir = $scope.directionValues[0].id
-                          $scope.loading = false
-                        });
+                          //weightTable.tableCreate($scope.stationWeightData,$scope.myTableDisp,$scope.myDir)
+                          
+                          $scope.reloadTable()
                       }
-                      //weightTable.tableCreate($scope.stationWeightData,$scope.myTableDisp,$scope.myDir)
-                      
-                      $scope.reloadTable()
+                    }
                   });
               }
               $scope.reloadTable = function(){
@@ -339,39 +344,43 @@ function calCreate(rect,svg,classT,day,week,data,z,svg2,dispType,dispType2){
 
 function parseDataA(input,classInfo){
   var output = [];
-  input.rows.forEach(function(row){
+  if(input != null){
+    if(input.rows != undefined){
+      input.rows.forEach(function(row){
 
-        var item = {}
-        var string = ""
-        var yearStr = row.f[0].v
-        var totalTrucks = 0;
-        if(classInfo == 0){
-          totalTrucks = parseInt(row.f[3].v) + parseInt(row.f[4].v) + parseInt(row.f[5].v) + parseInt(row.f[6].v) + parseInt(row.f[7].v) + parseInt(row.f[8].v) + parseInt(row.f[9].v) + parseInt(row.f[10].v) + parseInt(row.f[11].v) + parseInt(row.f[12].v) + parseInt(row.f[13].v) + parseInt(row.f[14].v) + parseInt(row.f[15].v)
-        }
-        else{
-          totalTrucks = parseInt(row.f[classInfo+2].v);
-        }
-        if(row.f[0].v < 10){
-          yearStr = "0"+row.f[0].v
-        }
-        if(row.f[1].v < 10){
-              if(row.f[2].v < 10){
-                string= "20"+yearStr+"-0"+row.f[1].v+"-0"+row.f[2].v
-              }else{
-                string = "20"+yearStr+"-0"+row.f[1].v+"-"+row.f[2].v
-              }
-        }else{
-              if(row.f[2].v < 10){
-                string = "20"+yearStr+"-"+row.f[1].v+"-0"+row.f[2].v
-              }else{
-                string = "20"+yearStr+"-"+row.f[1].v+"-"+row.f[2].v
-              }
-        }
+            var item = {}
+            var string = ""
+            var yearStr = row.f[0].v
+            var totalTrucks = 0;
+            if(classInfo == 0){
+              totalTrucks = parseInt(row.f[3].v) + parseInt(row.f[4].v) + parseInt(row.f[5].v) + parseInt(row.f[6].v) + parseInt(row.f[7].v) + parseInt(row.f[8].v) + parseInt(row.f[9].v) + parseInt(row.f[10].v) + parseInt(row.f[11].v) + parseInt(row.f[12].v) + parseInt(row.f[13].v) + parseInt(row.f[14].v) + parseInt(row.f[15].v)
+            }
+            else{
+              totalTrucks = parseInt(row.f[classInfo+2].v);
+            }
+            if(row.f[0].v < 10){
+              yearStr = "0"+row.f[0].v
+            }
+            if(row.f[1].v < 10){
+                  if(row.f[2].v < 10){
+                    string= "20"+yearStr+"-0"+row.f[1].v+"-0"+row.f[2].v
+                  }else{
+                    string = "20"+yearStr+"-0"+row.f[1].v+"-"+row.f[2].v
+                  }
+            }else{
+                  if(row.f[2].v < 10){
+                    string = "20"+yearStr+"-"+row.f[1].v+"-0"+row.f[2].v
+                  }else{
+                    string = "20"+yearStr+"-"+row.f[1].v+"-"+row.f[2].v
+                  }
+            }
 
-              item.date = string;
-              item.numTrucks = totalTrucks;
-              output.push(item);
-  });
+                  item.date = string;
+                  item.numTrucks = totalTrucks;
+                  output.push(item);
+      });
+    }
+  }
   return output
 };
 
@@ -410,52 +419,53 @@ function getDir(dir){
 
 function parseDataF(input,classInfo){
   var output = [];
-  if(input.rows != undefined){
-    input.rows.forEach(function(row){
-      if(classInfo == 0 || classInfo == row.f[4].v){
-          var item = {}
-          var x = 0
-          var string = ""
-          var yearStr = row.f[5].v
-          if(row.f[5].v < 10){
-            yearStr = "0"+row.f[5].v
-          }
-          if(row.f[2].v < 10){
-                if(row.f[3].v < 10){
-                  string= "20"+yearStr+"-0"+row.f[2].v+"-0"+row.f[3].v
-                }else{
-                  string = "20"+yearStr+"-0"+row.f[2].v+"-"+row.f[3].v
-                }
-          }else{
-                if(row.f[3].v < 10){
-                  string = "20"+yearStr+"-"+row.f[2].v+"-0"+row.f[3].v
-                }else{
-                  string = "20"+yearStr+"-"+row.f[2].v+"-"+row.f[3].v
-                }
-          }
+  if(input != null){
+    if(input.rows != undefined){
+      input.rows.forEach(function(row){
+        if(classInfo == 0 || classInfo == row.f[4].v){
+            var item = {}
+            var x = 0
+            var string = ""
+            var yearStr = row.f[5].v
+            if(row.f[5].v < 10){
+              yearStr = "0"+row.f[5].v
+            }
+            if(row.f[2].v < 10){
+                  if(row.f[3].v < 10){
+                    string= "20"+yearStr+"-0"+row.f[2].v+"-0"+row.f[3].v
+                  }else{
+                    string = "20"+yearStr+"-0"+row.f[2].v+"-"+row.f[3].v
+                  }
+            }else{
+                  if(row.f[3].v < 10){
+                    string = "20"+yearStr+"-"+row.f[2].v+"-0"+row.f[3].v
+                  }else{
+                    string = "20"+yearStr+"-"+row.f[2].v+"-"+row.f[3].v
+                  }
+            }
 
-              for(var i = 0;i<output.length;i++){
-                if(output[i].date == string){
-                  output[i].numTrucks = parseInt(row.f[1].v) + parseInt(output[i].numTrucks)
-                  output[i].totalWeight = parseInt(row.f[6].v) + parseInt(output[i].totalWeight)
-                  x = 1
-                  break
+                for(var i = 0;i<output.length;i++){
+                  if(output[i].date == string){
+                    output[i].numTrucks = parseInt(row.f[1].v) + parseInt(output[i].numTrucks)
+                    output[i].totalWeight = parseInt(row.f[6].v) + parseInt(output[i].totalWeight)
+                    x = 1
+                    break
+                  }
                 }
-              }
-              if(x == 0){
-                item.date = string;
-                item.numTrucks = parseInt(row.f[1].v);
-                item.totalWeight = parseInt(row.f[6].v)
-                item.averageWeight = parseInt(row.f[6].v) / parseInt(row.f[1].v)
-                output.push(item);
-              }
-              x = 0 
-           }
+                if(x == 0){
+                  item.date = string;
+                  item.numTrucks = parseInt(row.f[1].v);
+                  item.totalWeight = parseInt(row.f[6].v)
+                  item.averageWeight = parseInt(row.f[6].v) / parseInt(row.f[1].v)
+                  output.push(item);
+                }
+                x = 0 
+             }
 
-          
-    });
+            
+      });
+    }
   }
- 
   return output
 };
 

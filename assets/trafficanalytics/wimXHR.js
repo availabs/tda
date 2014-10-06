@@ -7,8 +7,8 @@
 	var _DATABASE = 'allWim';
 
 	// domain where API is located
-	var _URLbase = 'http://api.availabs.org/wim';
-	//var _URLbase = 'http://localhost:1338';
+	//var _URLbase = 'http://lor.availabs.org:50000';
+	var _URLbase = 'http://localhost:1338';
 
 
 	wimXHR.setDatabase = function(database){
