@@ -8,7 +8,7 @@
 
 	// domain where API is located
 	//var _URLbase = 'http://lor.availabs.org:50000';
-	var _URLbase = 'http://localhost:1338';
+	//var _URLbase = 'http://localhost:1338';
 
 
 	wimXHR.setDatabase = function(database){
@@ -25,12 +25,15 @@
 	// callback is optional
 	// url should not contain a domain name, just a route
 	// data shoud be contained within a json
-	wimXHR.post = function(url, data, callback) {
+	wimXHR.post = function(url, data, callback,test) {
 		data.database = _DATABASE;
-		_getXHR(_URLbase+url).post(JSON.stringify(data), function(error, data) {
+		console.log(url)
+		_getXHR(url).post(JSON.stringify(data), function(error, data) {
 			if (typeof callback !== undefined)
 				callback(error, data);
 		});
+		
+		
 	}
 
 	function _getXHR(url) {

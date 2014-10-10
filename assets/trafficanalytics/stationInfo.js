@@ -102,7 +102,7 @@ var stationInfo = {
 			4:"Off-Interstate Business Marker",
 			9:"None of the above",
 		}
-		wimXHR.get('/station/'+stationID+'/stationInfo', function(error, data) {
+		wimXHR.post('/station/stationInfo', {'id':stationID},function(error, data) {
 			
 			$(elem).append('<table id="displayTable" class="table table-hover table-striped"><thead><tr><th colspan=2><strong>Station Info</strong></th></thead><tbody></tbody></table>')
 			var xtag = '#displayTable tbody';

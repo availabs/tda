@@ -108,11 +108,12 @@ function IndexController ($scope) {
                     .attr("xlink:href", "/img/loading.gif")
                     .attr("width", 67)
                     .attr("height", 40);
-                    wimXHR.get('/station/'+$scope.state+'/byTonageStations/', function(error, data) {  
+                    wimXHR.post('/station/byTonageStations/', {stateFips:$scope.state},function(error, data) {  
                         // $scope.$apply(function(){
                         //     $scope.truckClass = getClassRange(angular.copy($scope.graphData))
                         //     $scope.active_TruckClass = {value:$scope.truckClass[0]}
                         // });
+                        console.log(data)
                         tonageGraph.drawtonageGraph('#tonageGraph',data)
                         
 

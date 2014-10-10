@@ -424,12 +424,12 @@
 			.text('Loading...\nPlease wait')
 
 		// this function retrieves the requested data from the back end API
-		function _getData() {
+		function _getData(station) {
 			//console.log("getData",route,depth)
 			console.time("getData");
 			loader.style('display', 'inline')
 
-            wimXHR.post(route, {'depth': depth}, function(error, data) {
+            wimXHR.post(route, {'depth': depth,'id':station}, function(error, data) {
             	if (error) {
             		console.log(error);
             		return;
@@ -986,7 +986,7 @@
 			//stationID = station;
 			//stationType = type;
 
-			route = '/station/'+station+'/graph'+type+'Data';
+			route = '/station/graph'+type+'Data';
 
 			if (type == 'class') {
 				weightDistButton.classed('active', false)
@@ -1003,7 +1003,7 @@
 				_formatData = _formatWIMData;
 			}
 
-			_getData();
+			_getData(station);
 		}
 	}
 

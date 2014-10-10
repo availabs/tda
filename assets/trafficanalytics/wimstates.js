@@ -157,9 +157,13 @@
 			_getStationData(name);
 
 			function _getStationPoints() {
-				var URL = '/state/'+name+'/allStationsGeo/';
-				XHR = wimXHR.get(URL, function(error, data) {
-	            	XHR = null;
+				var URL = '/state/allStationsGeo/';
+				var sf = name
+				console.time('time')
+				wimXHR.post(URL, {statefips:sf},function(error, data) { //This route keeps failing
+					console.timeEnd('time')
+					console.log(data)
+	            	//XHR = null;
 	            	if (error) {
 	            		console.log(error);
 	            		return;
@@ -245,9 +249,9 @@
 		// and then updates $scope.stations variable in
 		// order to draw list of stations below map
 		function _getStationData(id) {
-			var URL = '/state/'+id+'/classStations';
+			var URL = '/state/classStations';
 			var stationsClass = [];
-			wimXHR.get(URL, function(error, data) {
+			wimXHR.post(URL, {statefips:id},function(error, data) {
 				if (error) {
             		console.log(error);
             		return;

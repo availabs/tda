@@ -35,6 +35,178 @@ module.exports.routes = {
   '/user/db' : 'UserController.changeDatabase',
   '/upload' : 'DataLoaderController.index',
   '/upload/data' : 'FileController.upload',
+  '/stations/geo':{
+    controller : 'StationsController',
+    action : 'stationsGeo',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/stations/ClassGeo':{
+    controller : 'StationsController',
+    action : 'ClassStationsGeo',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+    '/stations/allClassStations':{
+    controller : 'StationsController',
+    action : 'getAllClassStations',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+    '/stations/allWIMStations':{
+    controller : 'StationsController',
+    action : 'getAllWimStations',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/stations/wim/:stateFips':{
+    controller : 'StationsController',
+    action : 'getStateWimStations',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/state/classStations':{
+    controller : 'StationsController',
+    action : 'getStateClassStations',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/station/graphwimData':{
+    controller : 'StationsController',
+    action : 'getWimStationData',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/station/graphclassData':{
+    controller : 'StationsController',
+    action : 'getClassStationData',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/state/allStationsGeo/':{
+    controller : 'StationsController',
+    action : 'getStationGeoForState',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/stations/timeLine/':{
+    controller : 'StationsController',
+    action : 'getStationTimeLine',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },  
+  '/station/dailyWeights':{
+    controller : 'StationsController',
+    action : 'getDailyWeights',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/station/yearsActive':{
+    controller : 'StationsController',
+    action : 'getYearsActive',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+
+  },
+  '/station/classAmounts':{
+    controller : 'StationsController',
+    action : 'getClassAmounts',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/station/stationInfo':{
+    controller : 'StationsController',
+    action : 'getStationInfo',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/stations/weight/':{
+    controller : 'StationsController',
+    action : 'getStateWeightStations',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/stations/overweight/':{
+    controller : 'StationsController',
+    action : 'getStateOverweightStations',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/stations/byWeightTableInfo/':{
+    controller : 'StationsController',
+    action : 'getWeightTableInfo',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/station/byTonageInfo/':{
+    controller : 'StationsController',
+    action : 'getTonageInfo',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/station/byTonageStations/':{
+    controller : 'StationsController',
+    action : 'getTonageStations',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
 
   '/login':'UserController.login',
   '/login/auth':'UserController.auth',

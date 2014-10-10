@@ -76,8 +76,8 @@ function EnforcementController ($scope) {
                     .attr("xlink:href", "/img/loading.gif")
                     .attr("width", 67)
                     .attr("height", 40);
-                    URL = '/stations/'+$scope.state+'/weight/'
-                    wimXHR.get(URL, function(error, data) {
+                    URL = '/stations/weight/'
+                    wimXHR.post(URL, {stateFips:$scope.state},function(error, data) {
                                 if (error) {
                                     console.log(error);
                                     return;
@@ -130,8 +130,8 @@ function EnforcementController ($scope) {
                     .attr("xlink:href", "/img/loading.gif")
                     .attr("width", 67)
                     .attr("height", 40);
-                    URL = '/stations/'+$scope.state+'/overweight/'
-                    wimXHR.post(URL,{timeType:"on",threshold:80000} ,function(error, data) {
+                    URL = '/stations/overweight/'
+                    wimXHR.post(URL,{timeType:"on",threshold:80000,stateFips:$scope.state} ,function(error, data) {
                         while($scope.overWeightLine.length > 0){
                             $scope.overWeightLine.pop()
                         }
@@ -260,8 +260,8 @@ function EnforcementController ($scope) {
                 .attr("xlink:href", "/img/loading.gif")
                 .attr("width", 67)
                 .attr("height", 40);
-            URL = '/stations/'+$scope.state+'/overweight/'
-            wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000} ,function(error, data) {
+            URL = '/stations/overweight/'
+            wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000,stateFips:$scope.state} ,function(error, data) {
                 if (error) {
                     console.log(error);
                     return;
