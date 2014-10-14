@@ -344,23 +344,23 @@ module.exports = {
  		};
 
  		var SQL = generateSQL();
- 		//console.time('getWimStationDataQuery')
+ 		console.time('getWimStationDataQuery')
  		//console.log("wimstation ",SQL)
  		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
 	    	projectId: 'avail-wim',
-	    	timeoutMs: '100000',
+	    	timeoutMs: '1000',
 	    	resource: {query:SQL,projectId:'avail-wim'},
 	    	auth: jwt
 	    },
 
 		function(err, response) {
       		if (err) console.log('Error:',err);
-      		//console.timeEnd('getWimStationDataQuery')
-      		//console.time('getWimStationDataSend')
+      		console.timeEnd('getWimStationDataQuery')
+      		console.time('getWimStationDataSend')
       		//console.log(response)
       		res.json(response)
-      		//console.timeEnd('getWimStationDataSend')
+      		console.timeEnd('getWimStationDataSend')
 	    });
  		function generateSQL() {
  			var sql	= "SELECT " + select[depth.length] + ", class, total_weight AS weight, count(*) AS amount "
