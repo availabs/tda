@@ -24,7 +24,8 @@
     "grunt-contrib-coffee": "~0.10.1",
     "sails-postgresql": "~0.10.0",
     "googleapis":"*",
-    "bcrypt": "*"
+    "bcrypt": "*",
+    "bigquery": "~0.0.3"
   },
   "scripts": {
     "start": "node app.js",

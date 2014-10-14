@@ -19,6 +19,7 @@
 
 
 *.pem
+availwim.json
 pemKeypassword.txt
 
 ################################################
