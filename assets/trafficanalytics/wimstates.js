@@ -130,7 +130,7 @@
 			}
 			$scope.$apply(function(){
 				$scope.getStations = true
-				console.log(state2fips[marker.name()])
+				//console.log(state2fips[marker.name()])
 				$scope.stateName = state2fips[marker.name()]
   			});
 			var name = marker.name();
@@ -157,29 +157,72 @@
 			_getStationData(name);
 
 			function _getStationPoints() {
-				var URL = '/state/allStationsGeo/';
-				var sf = name
-				console.time('time')
-				wimXHR.post(URL, {statefips:sf},function(error, data) { //This route keeps failing
-					console.timeEnd('time')
-					console.log(data)
-	            	//XHR = null;
-	            	if (error) {
-	            		console.log(error);
-	            		return;
-	            	}
+				//var URL = '/state/allStationsGeo/'; 
+				//var sf = name
+				// wimXHR.post('demo', {statefips:sf},function(error, data) { //This route keeps failing
+				// 	//XHR = null;
+	   //          	if (error) {
+	   //          		console.log(error);
+	   //          		return;
+	   //          	}
 	            	if (clicked) {
-						_drawStationPoints(_formatData(__JSON__[name], data));
+	            		_drawStationPoints(_formatData(__JSON__[name]));
 					}
-				})
+				// })
 			}
 
 
-			function _formatData(stateData, stationData) {
-				// get valid geometries
+			function _formatData(stateData) {
+				var currentStateStations = []
+				AllStations.forEach(function(d){
+					if(parseInt(d.state_fips) == stateData.id){
+						currentStateStations.push(d)
+					}
+				})
+				var schema = [ 'station_id',
+							  'func_class_code',
+							  'method_of_vehicle_class',
+							  'method_of_truck_weighing',
+							  'type_of_sensor',
+							  'latitude',
+							  'longitude' ]
+				var featureCollection = {
+					type: "FeatureCollection",
+					features: []
+				}
+		    	currentStateStations.forEach(function(d) {
+		    		var feature = {
+		    			type:'Feature',
+		    			geometry: {
+		    				type:'Point',
+		    				coordinates: [0, 0]
+		    			},
+		    			properties: {}
+		    	};
+		    		schema.forEach(function(name, i) {
+
+		    			if (name != 'latitude' && name != 'longitude') {
+			    			feature.properties[name] = d[name];
+			    		} else if (name == 'longitude') {
+			    			var lng = (+d[name]).toString();
+			    			if (/^1/.test(lng)) {
+			    				lng = lng.replace(/^(1\d\d)/, '-$1.');
+			    			} else {
+			    				lng = lng.replace(/^(\d\d)/, '-$1.');
+			    			}
+
+			    			feature.geometry.coordinates[0] = lng*1;
+			    		} else if (name == 'latitude') {
+			    			var lat = (+d[name]).toString().replace(/^ ?(\d\d)/, '$1.');
+			    			feature.geometry.coordinates[1] = lat*1;
+			    		}
+		    		})
+		    		featureCollection.features.push(feature);
+		    	})
+		    	//get valid geometries
 				var stations = {};
 				// need this to filter out bad geometry
-				stationData.features.forEach(function(d) {
+				featureCollection.features.forEach(function(d) {
 					if (d.geometry.coordinates[0] != 0 && d.geometry.coordinates[1] != 0) {
 						stations[d.properties.station_id] = d.geometry;
 					}
@@ -201,8 +244,9 @@
 						collection.features.push(obj);
 					}
 				}
+				
 				return collection;
-			}
+			 }
 		} // end _clicked
 
 		function _drawStationPoints(collection) {

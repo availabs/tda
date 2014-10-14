@@ -98,7 +98,7 @@ module.exports = {
  	getAllClassStations: function(req,res){
  		var database = req.param('database')+'Class';
 
- 		console.time('total-AllClass');
+ 		//console.time('total-AllClass');
 
  		//console.time('auth-AllClass');
  		var sql = 'SELECT state_fips,station_id,sum(total_vol) AS num_trucks '+
@@ -127,7 +127,7 @@ module.exports = {
  			res.send('{status:"error",message:"state FIPS required"}',500);
  			return;
  		}
- 		console.time('total-wimState');
+ 		//console.time('total-wimState');
  		var state_fips = req.param('stateFips'),
  			database = req.param('database');
 
@@ -164,7 +164,7 @@ module.exports = {
  			res.send('{status:"error",message:"state FIPS required"}',500);
  			return;
  		}
- 		console.time('total-classState');
+ 		//console.time('total-classState');
  		var state_fips = req.param('statefips'),
  			database = req.param('database')+'Class';
 
@@ -194,7 +194,6 @@ module.exports = {
  			res.send('{status:"error",message:"state FIPS required"}',500);
  			return;
  		}
- 		console.log(req.param('statefips'))
  		var stateFIPS = +req.param('statefips');
  		if(parseInt(stateFIPS)<10){
  			stateFIPS = "0"+stateFIPS
@@ -212,7 +211,7 @@ module.exports = {
 				"AND state_fips = '" +stateFIPS+ "' "+
 				"GROUP BY station_id,func_class_code,method_of_vehicle_class,"+
 				"method_of_truck_weighing,type_of_sensor,latitude,longitude;";
-			console.log(sql)
+			//console.log(sql)
 
 		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
@@ -282,7 +281,7 @@ module.exports = {
  		var SQL = generateSQL();
 
  		console.time('getClassStationData Query');
- 		console.log("getclassstationData ",SQL)
+ 		//console.log("getclassstationData ",SQL)
  		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
 	    	projectId: 'avail-wim',
@@ -345,8 +344,8 @@ module.exports = {
  		};
 
  		var SQL = generateSQL();
- 		console.time('getWimStationDataQuery')
- 		console.log("wimstation ",SQL)
+ 		//console.time('getWimStationDataQuery')
+ 		//console.log("wimstation ",SQL)
  		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
 	    	projectId: 'avail-wim',
@@ -357,11 +356,11 @@ module.exports = {
 
 		function(err, response) {
       		if (err) console.log('Error:',err);
-      		console.timeEnd('getWimStationDataQuery')
-      		console.time('getWimStationDataSend')
-      		console.log(response)
+      		//console.timeEnd('getWimStationDataQuery')
+      		//console.time('getWimStationDataSend')
+      		//console.log(response)
       		res.json(response)
-      		console.timeEnd('getWimStationDataSend')
+      		//console.timeEnd('getWimStationDataSend')
 	    });
  		function generateSQL() {
  			var sql	= "SELECT " + select[depth.length] + ", class, total_weight AS weight, count(*) AS amount "
@@ -397,7 +396,7 @@ module.exports = {
 		    			   		 'AND station_id IS NOT null) '+
  						   'GROUP BY num_days, month, day, class, year';
  		console.time('getDailyWeightInfoQuery')
- 		console.log("getDailyWeights ",sql)
+ 		//console.log("getDailyWeights ",sql)
 		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
 	    	projectId: 'avail-wim',
@@ -455,7 +454,7 @@ module.exports = {
 		    			   'WHERE station_id="'+station_id+'" '+
 		    			   'GROUP BY year, month, day';
 		console.time('getClassAmountsInfoQuery')
-		console.log("getClassAmounts ",sql)
+		//console.log("getClassAmounts ",sql)
 		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
 	    	projectId: 'avail-wim',
@@ -465,7 +464,7 @@ module.exports = {
 	    },
 
 		function(err, response) {
-			console.log("classamount error: ",err)
+			//console.log("classamount error: ",err)
 			if (err) console.log('Error:',err);
       		console.timeEnd('getClassAmountsInfoQuery')
       		res.json(response)
@@ -673,7 +672,7 @@ module.exports = {
 		    'as week,hour,count(1),dir from [tmasWIM12.'+database+'] where station_id = "'+stationId+'" group by '+
 		    'week,year,month,day,hour,dir order by week,year,month,day,hour,dir;'
 		console.time('getWeightTableInfoQuery')
-		console.log("gettableweight ",sql)
+		//console.log("gettableweight ",sql)
 		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
 	    	projectId: 'avail-wim',
@@ -683,14 +682,14 @@ module.exports = {
 	    },
 
 		function(err, response) {
-			console.log("weight table error: ",err)
+			//console.log("weight table error: ",err)
       		if (err) console.log('Error:',err);
       		console.timeEnd('getWeightTableInfoQuery')
       		res.json(response)
 	    });
  	},
  	getTonageInfo: function(req,res) {
- 		console.log('getTonageInfoQuery')
+ 		//console.log('getTonageInfoQuery')
  		if(typeof req.param('stationID') == 'undefined'){
  			res.send('{status:"error",message:"state FIPS required"}',500);
  			return;
@@ -728,7 +727,7 @@ module.exports = {
  			//'DAYOFWEEK(TIMESTAMP(concat(STRING(year),"-",STRING(month),"-",STRING(day)))) as day_, class = '+truck_class+'
  			/*' count(1)*/' FROM [tmasWIM12.'+database+'] where class = 9 and station_id = "'+stationId+'" group by year,month,day'
  		console.time('getTonageInfoQuery')
- 		console.log("gettonnageinfo ",sql)
+ 		//console.log("gettonnageinfo ",sql)
 		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
 	    	projectId: 'avail-wim',

@@ -1,6 +1,15 @@
 window.PJAX_ENABLED = false;
 window.DEBUG        = true;
 
+var AllStations = [];
+
+//Eventually you must replace the below file name with the proper file that contatains the station locations
+//of all stations
+
+d3.csv('/data/allStations.csv',function(data){
+    AllStations = data;
+})
+
 //colors
 //same as in _variables.scss
 //keep it synchronized

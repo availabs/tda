@@ -27,12 +27,22 @@
 	// data shoud be contained within a json
 	wimXHR.post = function(url, data, callback,test) {
 		data.database = _DATABASE;
-		console.log(url)
+
+// 		if(url === 'demo'){
+// 			_getXHR('http://localhost:1338/state/32/allStationsGeo/').post(JSON.stringify(data), function(error, data) {
+// 			if (typeof callback !== undefined)
+// 				callback(error, data);
+// //				console.log(data)
+// 		})
+// 		}	
+		
+		//else{
 		_getXHR(url).post(JSON.stringify(data), function(error, data) {
 			if (typeof callback !== undefined)
 				callback(error, data);
-		});
 		
+		});
+		//}
 		
 	}
 

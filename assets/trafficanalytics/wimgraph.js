@@ -29,7 +29,7 @@
 
 			_formatData,
 		
-			route,	// URL to retrieve graph data from
+			route = ['url','station'],	// URL to retrieve graph data from
 
 		// depth is an array object that is treated as a stack.
 		// Ss users delve deeper into graph times, the year, month, or
@@ -429,7 +429,7 @@
 			console.time("getData");
 			loader.style('display', 'inline')
 
-            wimXHR.post(route, {'depth': depth,'id':station}, function(error, data) {
+            wimXHR.post(route[0], {'depth': depth,'id':route[1]}, function(error, data) {
             	if (error) {
             		console.log(error);
             		return;
@@ -986,7 +986,8 @@
 			//stationID = station;
 			//stationType = type;
 
-			route = '/station/graph'+type+'Data';
+			route[0] = '/station/graph'+type+'Data';
+			route[1] = station
 
 			if (type == 'class') {
 				weightDistButton.classed('active', false)
@@ -1003,7 +1004,7 @@
 				_formatData = _formatWIMData;
 			}
 
-			_getData(station);
+			_getData();
 		}
 	}
 

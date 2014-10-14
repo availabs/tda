@@ -329,7 +329,7 @@ var AADTGraph ={
 			  		else if(i==1){return  "fill:"+colorS(graphData[zz].AASU)+";";}
 			  		else {return  "fill:"+colorT(graphData[zz].AATT)+";";} 
 			  	})
-			  	.on("click",function(d,i,zz) { window.location ="#/station/class/"+ graphData[zz].stationId; })
+			  	.on("click",function(d,i,zz) { window.location ="/station/class/"+ graphData[zz].stationId; })
 			  	.on("mouseover",function(d,i,zz) {
 			  		d3.select('#map_station_'+graphData[zz].stationId)
 			  			.style('opacity', 1.0)
