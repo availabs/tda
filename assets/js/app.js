@@ -6,7 +6,7 @@ var AllStations = [];
 //Eventually you must replace the below file name with the proper file that contatains the station locations
 //of all stations
 
-d3.csv('/data/allStations.csv',function(data){
+d3.json('/data/allStations.json',function(data){
     AllStations = data;
 })
 
