@@ -230,7 +230,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
           var URL = '/station/yearsActive';
           
-          
+      seasonalLineChart.initseasonalLineChart("#seasonalLineGraph",'.tab-content')
           wimXHR.post(URL, {isClass:$scope.stationType,id:$scope.station},function(error, data) {
               if(error){
                 console.log(error)
@@ -261,7 +261,9 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                         $scope.loading2 = false
                       });
                   }
-              
+                
+                seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",data,3)
+                
 
                 if($scope.stationType === "wim"){
               

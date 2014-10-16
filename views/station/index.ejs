@@ -20,7 +20,7 @@
 	                        <a href="#graphs" data-toggle="tab">Truck Volume Graphs</a>
 	                    </li>
 	                    <li>
-	                        <a href="#calendar" data-toggle="tab">Calendar View</a>
+	                        <a href="#calendar" data-toggle="tab">Seasonality</a>
 	                    </li>
 	                    <li>
 	                        <a href="#enforcement" data-toggle="tab" ng-hide='stationType=="class"'>Overweight Enforcement</a>
@@ -56,6 +56,9 @@
                			Calendar
                		-->
                		<div id="calendar" class="tab-pane clearfix">
+                   		<div id="seasonalLineGraph" style='margin-left:10px;'>
+                   		</div>
+
                    		<div id='calendar-controls' style='margin-left:10px;'>
                    			<label>Class:
 			              		<select  class="form-control" ng-model="myClass" ng-options="item.id as item.label for item in values" style='width:75px;display:inline;margin-right:5px;'></select>
@@ -147,6 +150,7 @@
 <script src="/trafficanalytics/stationInfo.js"></script>
 <script src="/trafficanalytics/wimCalendar.js"></script>
 <script src="/trafficanalytics/weightTable.js"></script>
+<script src="/trafficanalytics/seasonalLineChart.js"></script>
 <script src="/controllers/station/stationIndex.js"></script>
 <script src="/lib/leaflet.js"></script>
 <!--<script>

@@ -261,6 +261,7 @@ function EnforcementController ($scope) {
                 .attr("width", 67)
                 .attr("height", 40);
             URL = '/stations/overweight/'
+            console.log($scope.state)
             wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000,stateFips:$scope.state} ,function(error, data) {
                 if (error) {
                     console.log(error);

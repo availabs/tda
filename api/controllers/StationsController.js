@@ -448,11 +448,11 @@ module.exports = {
 		    			   'sum(class4), sum(class5), sum(class6), '+
 		    			   'sum(class7), sum(class8), sum(class9), '+
 		    			   'sum(class10), sum(class11), '+
-		    			   'sum(class12), sum(class13), '+
+		    			   'sum(class12), sum(class13), dir,'+
 
 		    			   'FROM [tmasWIM12.'+database+'Class] '+
 		    			   'WHERE station_id="'+station_id+'" '+
-		    			   'GROUP BY year, month, day';
+		    			   'GROUP BY year, month, day, dir';
 		console.time('getClassAmountsInfoQuery')
 		//console.log("getClassAmounts ",sql)
 		var request = bigQuery.jobs.query({

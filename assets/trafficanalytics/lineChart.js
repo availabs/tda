@@ -6,7 +6,6 @@ var lineChart = {
 		lineChart.margin = {top: 5, right: 5, bottom: 10, left:50},
 		lineChart.width = parseInt($(elem).width()) - lineChart.margin.left - lineChart.margin.right,
 		lineChart.height = parseInt($(elem).width()*0.75) - lineChart.margin.top - lineChart.margin.bottom;
-
 		lineChart.svg = d3.select(elem).append("svg")
 		    .attr("width", lineChart.width + lineChart.margin.left + lineChart.margin.right)
 		    .attr("height", lineChart.height + lineChart.margin.top + lineChart.margin.bottom)
@@ -133,8 +132,8 @@ var lineChart = {
 				}
 			}
 		}
-		  //console.log(temp)
-		  //console.log(voronoi(temp))
+		  console.log(temp)
+		  console.log(voronoi(temp))
 		  //console.log(voronoi(graphData))
 
 		  var voronoiGroup = svg.append("g")
