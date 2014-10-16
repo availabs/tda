@@ -35,6 +35,7 @@ module.exports.routes = {
   '/user/db' : 'UserController.changeDatabase',
   '/upload' : 'DataLoaderController.index',
   '/upload/data' : 'FileController.upload',
+  '/allStations' : 'bqController.allStations',
   '/stations/geo':{
     controller : 'StationsController',
     action : 'stationsGeo',
