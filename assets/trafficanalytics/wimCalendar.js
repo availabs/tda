@@ -229,6 +229,8 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
            $scope.drawVars = []
 
           var URL = '/station/yearsActive';
+          
+          
           wimXHR.post(URL, {isClass:$scope.stationType,id:$scope.station},function(error, data) {
               if(error){
                 console.log(error)
@@ -298,8 +300,10 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                       //   $scope.myDataDisp = $scope.values3[0].id
                         
                       // });
+
+                      //Remember to add in threshold value
                   
-                      wimXHR.post('/stations/byWeightTableInfo/', {'stationID':$scope.station},function(error,data) {
+                      wimXHR.post('/stations/byWeightTableInfo/', {'stationID':$scope.station,'threshold':80000},function(error,data) {
                         if(error){
                           console.log(error)
                           return

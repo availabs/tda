@@ -114,8 +114,25 @@ var stationInfo = {
 				}
 				else if(data.schema.fields[i].name === "latitude"){
 					$(xtag).append("<tr><th><strong>Lat/Long</strong></th><td>"+data.rows[0].f[i].v+","+data.rows[0].f[i+1].v+"</td></tr>")
+					
+
+					//Below is for creating the map on the station page
+				    var map = {};
+				    $('#displayMap').height($(window).height()-200);
+
+				    var mbTerrainSat = L.tileLayer("https://{s}.tiles.mapbox.com/v3/matt.hd0b27jd/{z}/{x}/{y}.png");
+				    map = L.map('displayMap', {
+				     center: [parseFloat(data.rows[0].f[i].v[0]+data.rows[0].f[i].v[1]+"."+data.rows[0].f[i].v.slice(2,data.rows[0].f[i].v.length)),parseFloat("-"+data.rows[0].f[i+1].v[1]+data.rows[0].f[i+1].v[2]+"."+data.rows[0].f[i+1].v.slice(3,data.rows[0].f[i+1].v.length))],
+				     zoom: 16 ,
+				     layers: [mbTerrainSat],
+				     zoomControl: false
+				    });
+				    var marker = L.marker([parseFloat(data.rows[0].f[i].v[0]+data.rows[0].f[i].v[1]+"."+data.rows[0].f[i].v.slice(2,data.rows[0].f[i].v.length)),parseFloat("-"+data.rows[0].f[i+1].v[1]+data.rows[0].f[i+1].v[2]+"."+data.rows[0].f[i+1].v.slice(3,data.rows[0].f[i+1].v.length))]).addTo(map);
+				    //End map creation
 					i++	
 					//stationData['coords']=data.rows[0].f[i].v+","+data.rows[0].f[i+1].v
+
+					
 				}
 				else if(nameMap[data.schema.fields[i].name] == undefined){
 					if(data.schema.fields[i].name === "method_of_weghing"){

@@ -665,12 +665,20 @@ module.exports = {
  			res.send('{status:"error",message:"state FIPS required"}',500);
  			return;
  		}
+ 		if(typeof req.param('threshold') == 'undefined'){
+ 			res.send('{status:"error",message:"threshold required"}',500);
+ 			return;
+ 		}
+
+ 		//Remember to add in proper threshold later on
+
  		var stationId = req.param('stationID'),
+ 			threshold = req.param('threshold'),
  			database = req.param('database');
 
- 		var sql = 'select DAYOFWEEK(TIMESTAMP(concat(STRING(year),"-",STRING(month),"-",STRING(day)))) '+
-		    'as week,hour,count(1),dir from [tmasWIM12.'+database+'] where station_id = "'+stationId+'" group by '+
-		    'week,year,month,day,hour,dir order by week,year,month,day,hour,dir;'
+ 		var sql = 'select DAYOFWEEK(TIMESTAMP(concat(STRING(year),"-",STRING(month),"-",STRING(day))))'+
+ 		' as dow, hour,count(1), dir, SUM(CASE WHEN total_weight*220.462 >= '+threshold+' THEN 1 ELSE 0 END)'+
+ 		' from [tmasWIM12.'+database+'] where station_id = "'+stationId+'" group by dow,hour,dir order by dow,hour,dir'
 		console.time('getWeightTableInfoQuery')
 		//console.log("gettableweight ",sql)
 		var request = bigQuery.jobs.query({

@@ -15,4 +15,6 @@ function StationController ($scope) {
     wimgraph.grapher('#wimgraph').drawGraph($scope.station, $scope.stationType);
     
     wimCal.init($scope);
+
+    
 };
