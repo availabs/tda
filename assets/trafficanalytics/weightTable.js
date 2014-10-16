@@ -114,13 +114,13 @@ var weightTable = {
 				for(var j = 0;j<12;j++){
 					if(organizationType === "count"){
 						data[i][j][2] = parseFloat(data[i][j][3]/data[i][j][1]).toFixed(0)
-						if(data[i][j][2] > max){
+						if(parseInt(data[i][j][2]) > max){
 							max = data[i][j][2]
 						}
 					}
 					else{
 						data[i][j][2] = parseFloat(((parseFloat(data[i][j][3]/data[i][j][1]).toFixed(0))/data[i][j][0])*100).toFixed(2)
-						if(data[i][j][2] > max){
+						if(parseFloat(data[i][j][2]) > max){
 							max = data[i][j][2]
 						}
 					}
@@ -141,6 +141,7 @@ var weightTable = {
 					.domain([0,max])
 					.range(colorbrewer.RdYlGn[11]);
 			}
+			console.log(max,color.range(),color)
 			for(var x = 0;x<data.length;x++){
 					if(x == 0){
 						htmlCode = htmlCode + "<tr><th>Sunday</th>"
