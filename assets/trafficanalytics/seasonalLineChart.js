@@ -54,7 +54,7 @@ var seasonalLineChart = {
 		    .y(function(d) { return y(d.value) })
 		    //.clipExtent([[-seasonalLineChart.margin.left, -seasonalLineChart.margin.top], [seasonalLineChart.width + seasonalLineChart.margin.right, seasonalLineChart.height + seasonalLineChart.margin.bottom]]);
 
-		console.log(graphData)
+		//console.log(graphData)
 
 		var avgs = [[],[],[],[],[],[],[],[],[],[],[],[],[]]
 		var countDays = [0,0,0,0,0,0,0,0,0,0,0,0]
@@ -64,7 +64,7 @@ var seasonalLineChart = {
 
 
 		graphData.rows.forEach(function(g){
-			if(parseInt(g.f[16].v) == dir){
+			if(parseInt(g.f[16].v) == dir || dir == -1){
 				if(parseInt(g.f[1].v) == 1){
 					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
 					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
@@ -269,7 +269,7 @@ var seasonalLineChart = {
 			}
 		}
 
-		console.log(avgs)
+		//console.log(avgs)
 
 	      x.domain([1,12]);
 
@@ -335,8 +335,8 @@ var seasonalLineChart = {
 								
 			}
 
-			  console.log(temp)
-			  console.log(voronoi(temp))
+			  // console.log(temp)
+			  // console.log(voronoi(temp))
 
 
 			  var voronoiGroup = svg.append("g")
@@ -359,7 +359,7 @@ var seasonalLineChart = {
 			  function mouseover(d) {
 			  	//d3.select(".stationLine_"+d.graphData.stationId).classed("station--hover", true); //Really only used to highlight a line
 			    //d.graphData.line.parentNode.appendChild(d.graphData.line); //???
-			    console.log('classLine_'+d.classID)
+			   // console.log('classLine_'+d.classID)
 	    	// 	$('#map_station_'+d.graphData.stationId).attr('stroke-width','2px');
 		  		// $('#map_station_'+d.graphData.stationId).attr('stroke','yellow');
 	    		$('#linegraph path').attr('opacity',0.1);

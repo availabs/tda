@@ -217,12 +217,15 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
       $scope.myDisp = "Count";
       $scope.myDataDisp = "Class";
       $scope.directionValues = [];
+      $scope.directionValues2 = [];
       $scope.myTableDisp = $scope.values4[0].id
       $scope.myDir = -1
+      $scope.myDir2 = -1
       $scope.loading = true
       $scope.loading2 = true
       var dir1 = -1
       var dir2 = -1
+      
 
            $scope.minYear = ""
            $scope.maxYear = ""
@@ -261,8 +264,32 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                         $scope.loading2 = false
                       });
                   }
+
+                if(data != null){
+                  if(data.rows != undefined){
+                      dir1 = -1
+                      dir2 = -1
+                      $scope.stationDataAll.rows.forEach(function(row){
+                        if(dir1 == -1){
+                            dir1 = parseInt(row.f[16].v)
+                          }
+                        if(dir1 != parseInt(row.f[16].v) && dir2 == -1){
+                            dir2 = parseInt(row.f[16].v)
+                          }
+                        })
+                      if(dir2 != -1){
+                       $scope.$apply(function(){
+                          $scope.directionValues2.push({id:-1,label:'combined'})
+                          $scope.directionValues2.push({id:dir1,label:getDir(dir1)})
+                          $scope.directionValues2.push({id:dir2,label:getDir(dir2)})
+                          $scope.myDir2 = $scope.directionValues2[0].id
+                        });
+                      }
+                      
+                  }
+                }
                 
-                seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",data,3)
+                seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",data,$scope.myDir2)
                 
 
                 if($scope.stationType === "wim"){
@@ -313,6 +340,8 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                         if(data != null){
                           if(data.rows != undefined){
                             $scope.stationWeightData = data;
+                            dir1 = -1
+                            dir2 = -1
                               $scope.stationWeightData.rows.forEach(function(row){
                                 if(dir1 == -1){
                                     dir1 = parseInt(row.f[3].v)
@@ -345,7 +374,10 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                 weightTable.tableCreate($scope.stationWeightData,$scope.myTableDisp,$scope.myDir,'#stationTable')
                 
               }
-
+              $scope.reloadSeasonalGraph = function(){
+                
+                seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",$scope.stationDataAll,$scope.myDir2)
+              }
               
               $scope.loadCalendar = function(){
                 if($scope.myDataDisp === "Freight"){

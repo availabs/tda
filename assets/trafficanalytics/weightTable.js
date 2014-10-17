@@ -1,7 +1,7 @@
 var weightTable = {
 	
 	tableCreate:function(cleanData,organizationType,dir,elem){
-		if(cleanData.rows != undefined){
+		if(cleanData != undefined){
 			/*Details about data array:
 
 				The data array is an array that contains arrays of data.
@@ -39,7 +39,7 @@ var weightTable = {
 					data[i].push([0,0,0,0]) //numtrucks,numdays,percent/average count
 				}
 			}
-			console.log('enforcement Data',cleanData);
+			//console.log('enforcement Data',cleanData);
 			cleanData.rows.forEach(function(row){
 				var hour = row.f[1].v
 				if(dir == -1 || row.f[3].v == dir){
@@ -126,7 +126,7 @@ var weightTable = {
 					}
 				}
 			}
-			console.log(data)
+			//console.log(data)
 			var htmlCode = "<table class=\"table table-hover table-bordered\">";
 			htmlCode = htmlCode+"<tr><th>Day</th><th>0:00-2:00</th><th>2:00-4:00</th><th>4:00-6:00</th>"+
 			"<th>6:00-8:00</th><th>8:00-10:00</th><th>10:00-12:00</th><th>12:00-14:00</th>"+
@@ -141,7 +141,7 @@ var weightTable = {
 					.domain([0,max])
 					.range(colorbrewer.RdYlGn[11]);
 			}
-			console.log(max,color.range(),color)
+			//console.log(max,color.range(),color)
 			for(var x = 0;x<data.length;x++){
 					if(x == 0){
 						htmlCode = htmlCode + "<tr><th>Sunday</th>"

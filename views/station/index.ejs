@@ -56,6 +56,10 @@
                			Calendar
                		-->
                		<div id="calendar" class="tab-pane clearfix">
+               			<label>Direction:
+			              <select  class="form-control" ng-model="myDir2" ng-options="item5.id as item5.label for item5 in directionValues2" style='width:75px;display:inline;margin-right:5px;'></select>
+			            </label>
+			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadSeasonalGraph()">Apply</button>
                    		<div id="seasonalLineGraph" style='margin-left:10px;'>
                    		</div>
 
