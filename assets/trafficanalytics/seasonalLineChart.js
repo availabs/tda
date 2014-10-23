@@ -18,7 +18,7 @@ var seasonalLineChart = {
 
 	//dir: direction of graph
 
-	drawseasonalLineChart:function(elem,graphData,dir){
+	drawseasonalLineChart:function(elem,graphData,dir,_filter){
 		var x = d3.scale.linear()
 		    .range([50, seasonalLineChart.width+50]);
 
@@ -30,7 +30,7 @@ var seasonalLineChart = {
 
 		var color2 = d3.scale.quantize()
 			.domain([0,12])
-			.range(colorbrewer.Set1[7]);
+			.range(["#08306b", "#08519c", "#2171b5", "#4292c6", "#6baed6", "#9ecae1","#ddffff","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"]);
 		
 		var xAxis = d3.svg.axis()
 		    .scale(x)
@@ -62,199 +62,511 @@ var seasonalLineChart = {
 			avgs[xx].push(0,0,0,0,0,0,0,0,0,0,0,0)
 		}
 
-
+		
 		graphData.rows.forEach(function(g){
 			if(parseInt(g.f[16].v) == dir || dir == -1){
-				if(parseInt(g.f[1].v) == 1){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+				if(parseInt(g.f[1].v) == 1 ){
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 2){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 3){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 4){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 5){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 6){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 7){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 8){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 9){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 10){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 11){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 				else if(parseInt(g.f[1].v) == 12){
-					avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
-					avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
-					avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
-					avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
-					avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
-					avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
-					avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
-					avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
-					avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
-					avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
-					avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
-					avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
-					avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					if(!(_filter['class'][0])){
+						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+					}
+					if(!(_filter['class'][1])){
+						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+					}
+					if(!(_filter['class'][2])){
+						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+					}
+					if(!(_filter['class'][3])){
+						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+					}
+					if(!(_filter['class'][4])){
+						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+					}
+					if(!(_filter['class'][5])){
+						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+					}
+					if(!(_filter['class'][6])){
+						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+					}
+					if(!(_filter['class'][7])){
+						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+					}
+					if(!(_filter['class'][8])){
+						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+					}
+					if(!(_filter['class'][9])){
+						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+					}
+					if(!(_filter['class'][10])){
+						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+					}
+					if(!(_filter['class'][11])){
+						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+					}
+					if(!(_filter['class'][12])){
+						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+					}
 					countDays[parseInt(g.f[1].v)-1]++
 				}
 			} //end dir
@@ -265,6 +577,9 @@ var seasonalLineChart = {
 			for(var j = 0;j<avgs[i].length;j++){
 				if(countDays[j] != 0){
 					avgs[i][j] = avgs[i][j]/countDays[j]
+				}
+				else{
+					avgs[i][j] = 0
 				}
 			}
 		}
@@ -279,6 +594,13 @@ var seasonalLineChart = {
 	    		d3.max(avgs, function(c) { return d3.max(c, function(v,i) { if(v != undefined || v != null || i != 13){return v;}; if(v == undefined || v == null){ return 0};  }); })
 		  ]).nice();
 		
+
+		  var div = d3.select(elem).append("div")
+			.attr("id","seasonalLineChartInfo")   
+		    .style("position", "absolute")
+		    .style("background-color","#fff")
+			.style("z-index", "10")
+			.style("visibility", "hidden")
 
 
 		  var svg = d3.select(elem+" svg");
@@ -348,6 +670,7 @@ var seasonalLineChart = {
 			      .attr("d", function(d) { if(d != undefined && d.length != 0){return "M" + d.join("L") + "Z"}; })
 			      .datum(function(d) { if(d != undefined && d.length != 0){return d.point;} })
 			      .on("mouseover", mouseover)
+			      .on("mousemove", function(){return div.style("top", (event.pageY-125)+"px").style("left",(event.pageX-75)+"px");})
 			      .on("mouseout", mouseout)
 			      .style("fill","none")
 			      .style("pointer-events","all")
@@ -357,19 +680,9 @@ var seasonalLineChart = {
 			  //NOTE This data is already formatted in a way so that drawing all dots on hover may actually doable. Probably.
 
 			  function mouseover(d) {
-			  	//d3.select(".stationLine_"+d.graphData.stationId).classed("station--hover", true); //Really only used to highlight a line
-			    //d.graphData.line.parentNode.appendChild(d.graphData.line); //???
-			   // console.log('classLine_'+d.classID)
-	    	// 	$('#map_station_'+d.graphData.stationId).attr('stroke-width','2px');
-		  		// $('#map_station_'+d.graphData.stationId).attr('stroke','yellow');
-	    		$('#linegraph path').attr('opacity',0.1);
+			  	$('#linegraph path').attr('opacity',0.1);
 		  		$('.classLine_'+d.classID).attr('opacity',0.9);
-		  		// $('.station_'+d.graphData.stationId).attr('opacity',0.1);
-		  		// d3.select('#map_station_'+d.graphData.stationId)
-				  // 			.style('opacity', 1.0)
-				  // 			.style('background', 'yellow')//#a50026')
-				  // 			.style('z-index', 6);
-				var dotData = d.graphData
+		  		var dotData = d.graphData
 				rect.select("rect")
 				  .data(dotData)
 				.enter().append("circle")
@@ -378,26 +691,21 @@ var seasonalLineChart = {
 					  .attr("cx", function(d,i) { return x(i+1); })
 					  .attr("cy", function(d) { return y(d); })
 				      .style("fill", function(d,i) {return color(i); }); //Color has no specific functionality for now
-		  // 		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
-				// 				"<br>Class: "+d.funcCode+
-				// 				"</p>";
-				// $("#stationInfo").html(info);
+
+		 		 var info =  "<p>Class "+d.classID+
+	  						"<br>Average Vehicle Count: "+Math.floor(d.value)+
+							"</p>";
+					
+			  		$("#seasonalLineChartInfo").html(info);
+			  		return div.style("visibility", "visible");
 			    //focus.attr("transform", "translate(" + x(d.xax+1) + "," + y(d.value) + ")"); //What's really used in voronoi dot formation
 			  }
 
 			  function mouseout(d) {
-			    //d3.select(".stationLine_"+d.graphData.stationId).classed("station--hover", false);
-			    // d3.select('#map_station_'+d.graphData.stationId)
-				  	// 		.style('opacity', 0.66)
-				  	// 		.style('z-index', 5)
-				  	// 		.style('background', function(d) {
-							// 	return (d.properties.type == 'wim' ? '#081d58' : '#d94801');
-							// });
-				svg.selectAll("circle").remove()
-	    	// 	$('#map_station_'+d.graphData.stationId).attr('stroke-width','none');
-		  		// $('#map_station_'+d.graphData.stationId).attr('stroke','none');
-		  		// $('.station_'+d.graphData.stationId).attr('opacity',1);
-		  		$('#linegraph path').attr('opacity',1);
+			   	svg.selectAll("circle").remove()
+	    		$('#linegraph path').attr('opacity',1);
+	    		$("#seasonalLineChartInfo").html('');
+			  	return div.style("visibility", "hidden");
 			    //focus.attr("transform", "translate(-100,-100)");
 			  }
 

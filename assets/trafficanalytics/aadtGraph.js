@@ -261,6 +261,7 @@ var AADTGraph ={
 			}
 			
 		}
+		
 		graphData.sort(compareStations); 
 		x.domain(graphData.map(function(d,i) { return graphData[i].stationId; }));
 		if(year.length < 2){

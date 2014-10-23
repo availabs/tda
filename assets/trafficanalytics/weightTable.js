@@ -32,7 +32,7 @@ var weightTable = {
 
 			*/
 			var data = [[],[],[],[],[],[],[]]
-			var total = 0
+			//var total = 0
 			var max = 0 //The total number of trucks
 			for(var i = 0;i<data.length;i++){
 				for(var j = 0;j<12;j++){
@@ -103,29 +103,39 @@ var weightTable = {
 						data[(row.f[0].v)-1][11][3] = parseInt(row.f[4].v) + data[(row.f[0].v)-1][11][3]
 						data[(row.f[0].v)-1][11][1]++
 					}
-					total = total + parseInt(row.f[2].v)
+					//total = total + parseInt(row.f[2].v)
 				}
 			});
-			total = total / cleanData.rows.length
-			//console.log(total)
-
+			//total = total / cleanData.rows.length
+			
 			//Below portion of code may have a may error
 			for(var i = 0;i<data.length;i++){
 				for(var j = 0;j<12;j++){
 					if(organizationType === "count"){
-						data[i][j][2] = parseFloat(data[i][j][3]/data[i][j][1]).toFixed(0)
+						if(data[i][j][1] != 0){
+							data[i][j][2] = parseFloat(data[i][j][3]/data[i][j][1]).toFixed(0)
+						}
+						else{
+						    data[i][j][2] = 0	
+						}
 						if(parseInt(data[i][j][2]) > max){
 							max = data[i][j][2]
 						}
 					}
 					else{
-						data[i][j][2] = parseFloat(((parseFloat(data[i][j][3]/data[i][j][1]).toFixed(0))/data[i][j][0])*100).toFixed(2)
+						if(data[i][j][1] != 0 && data[i][j][0] != 0){
+							data[i][j][2] = parseFloat(((parseFloat(data[i][j][3]/data[i][j][1]).toFixed(0))/data[i][j][0])*100).toFixed(2)
+						}
+						else{
+							data[i][j][2] = 0	
+						}
 						if(parseFloat(data[i][j][2]) > max){
 							max = data[i][j][2]
 						}
 					}
 				}
 			}
+		
 			//console.log(data)
 			var htmlCode = "<table class=\"table table-hover table-bordered\">";
 			htmlCode = htmlCode+"<tr><th>Day</th><th>0:00-2:00</th><th>2:00-4:00</th><th>4:00-6:00</th>"+

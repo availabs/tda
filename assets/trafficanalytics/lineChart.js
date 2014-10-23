@@ -132,8 +132,8 @@ var lineChart = {
 				}
 			}
 		}
-		  console.log(temp)
-		  console.log(voronoi(temp))
+		  // console.log(temp)
+		  // console.log(voronoi(temp))
 		  //console.log(voronoi(graphData))
 
 		  var voronoiGroup = svg.append("g")

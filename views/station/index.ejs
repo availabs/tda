@@ -50,6 +50,7 @@
                		-->
                		<div id="graphs" class="tab-pane clearfix active">
                    		<div class="col-md-12" id="wimgraph"></div>
+
                		</div>
 
                		<!--
@@ -60,9 +61,13 @@
 			              <select  class="form-control" ng-model="myDir2" ng-options="item5.id as item5.label for item5 in directionValues2" style='width:75px;display:inline;margin-right:5px;'></select>
 			            </label>
 			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadSeasonalGraph()">Apply</button>
+			            <div id="seasonalBarGraph" style='margin-left:10px;'>
+                   		</div>
+                   		
                    		<div id="seasonalLineGraph" style='margin-left:10px;'>
                    		</div>
-
+                   		<div ng-show="!(loading2)" class="col-md-12" id="seasonalLegend"></div>
+                   		
                    		<div id='calendar-controls' style='margin-left:10px;'>
                    			<label>Class:
 			              		<select  class="form-control" ng-model="myClass" ng-options="item.id as item.label for item in values" style='width:75px;display:inline;margin-right:5px;'></select>
@@ -155,26 +160,11 @@
 <script src="/trafficanalytics/wimCalendar.js"></script>
 <script src="/trafficanalytics/weightTable.js"></script>
 <script src="/trafficanalytics/seasonalLineChart.js"></script>
+<script src="/trafficanalytics/seasonalBarGraph.js"></script>
 <script src="/controllers/station/stationIndex.js"></script>
+<script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
 <script src="/lib/leaflet.js"></script>
-<!--<script>
-	station2="<%=station%>";
-	console.log(station2)
-	console.log(AllStations)
-	var map = {};
-	$('#displayMap').height($(window).height()-200);
 
-	var mbTerrainSat = L.tileLayer("https://{s}.tiles.mapbox.com/v3/matt.hd0b27jd/{z}/{x}/{y}.png");
-	map = L.map('displayMap', {
-	 center: [42.76314586689494,-74.7509765625],
-	 zoom: 14	,
-	 layers: [mbTerrainSat],
-	 zoomControl: false
-	});
-	var marker = L.marker([51.5, -0.09]).addTo(map);
-	console.log('mapped')
-
-</script>-->
 
 
 <link rel="stylesheet" href="/lib/leaflet.css">

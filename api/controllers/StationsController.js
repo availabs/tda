@@ -454,7 +454,7 @@ module.exports = {
 		    			   'WHERE station_id="'+station_id+'" '+
 		    			   'GROUP BY year, month, day, dir';
 		console.time('getClassAmountsInfoQuery')
-		//console.log("getClassAmounts ",sql)
+		console.log("getClassAmounts ",sql)
 		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
 	    	projectId: 'avail-wim',

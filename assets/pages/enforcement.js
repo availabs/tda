@@ -132,9 +132,8 @@ function EnforcementController ($scope) {
                     .attr("height", 40);
                     URL = '/stations/overweight/'
                     wimXHR.post(URL,{timeType:"on",threshold:80000,stateFips:$scope.state} ,function(error, data) {
-                        while($scope.overWeightLine.length > 0){
-                            $scope.overWeightLine.pop()
-                        }
+                        $scope.overWeightLine = []
+                        
                         if (error) {
                             console.log(error);
                             return;
@@ -196,7 +195,7 @@ function EnforcementController ($scope) {
                     .attr("xlink:href", "/img/loading.gif")
                     .attr("width", 67)
                     .attr("height", 40);
-                    wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000} ,function(error, data) {
+                    wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000,stateFips:$scope.state} ,function(error, data) {
                         if (error) {
                             console.log(error);
                             return;
@@ -261,37 +260,38 @@ function EnforcementController ($scope) {
                 .attr("width", 67)
                 .attr("height", 40);
             URL = '/stations/overweight/'
-            console.log($scope.state)
-            wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000,stateFips:$scope.state} ,function(error, data) {
-                if (error) {
-                    console.log(error);
-                    return;
-                }
-                if(data.rows != undefined){
-                    data.rows.forEach(function(row){
-                        var rowStation = row.f[0].v;
-                        for(var x = 0;x<rowStation.length;x++){
-                                            if(rowStation[x] === " "){
-                                                rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+            if($scope.state != undefined){
+                wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000,stateFips:$scope.state} ,function(error, data) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    if(data.rows != undefined){
+                        data.rows.forEach(function(row){
+                            var rowStation = row.f[0].v;
+                            for(var x = 0;x<rowStation.length;x++){
+                                                if(rowStation[x] === " "){
+                                                    rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+                                                }
                                             }
-                                        }
-                        if(getStationIndex(rowStation,"bar") == -1) {
-                            $scope.overWeightBar.push({'stationId':rowStation, years:[]})                         
-                            
-                        }
-                        if(parseInt(row.f[3].v) < 10){
-                            row.f[3].v = "0"+row.f[3].v
-                        }
+                            if(getStationIndex(rowStation,"bar") == -1) {
+                                $scope.overWeightBar.push({'stationId':rowStation, years:[]})                         
+                                
+                            }
+                            if(parseInt(row.f[3].v) < 10){
+                                row.f[3].v = "0"+row.f[3].v
+                            }
 
-                        $scope.overWeightBar[getStationIndex(rowStation,"bar")].years.push({'overweightTrucks':row.f[1].v,'numTrucks':row.f[2].v,'year':row.f[3].v})
-                    });
-                    truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
-                }
-                else{
-                    $scope.overWeightBar = []
-                    truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);    
-                }
-            });
+                            $scope.overWeightBar[getStationIndex(rowStation,"bar")].years.push({'overweightTrucks':row.f[1].v,'numTrucks':row.f[2].v,'year':row.f[3].v})
+                        });
+                        truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
+                    }
+                    else{
+                        $scope.overWeightBar = []
+                        truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);    
+                    }
+                });
+            }
         
         //console.log($scope.active_TruckClass)
     });

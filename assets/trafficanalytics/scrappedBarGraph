@@ -1,0 +1,1208 @@
+var seasonalBarGraph = {
+	
+	svg:{},
+
+	initseasonalBarGraph:function(elem,container){
+		seasonalBarGraph.margin = {top: 30, right: 10, bottom: 10, left: 10}
+		seasonalBarGraph.width = 960 - seasonalBarGraph.margin.left - seasonalBarGraph.margin.right
+		seasonalBarGraph.height = 500 - seasonalBarGraph.margin.top - seasonalBarGraph.margin.bottom;
+		// var svg = d3.select(elem).append("svg")
+		//     .attr("width", seasonalBarGraph.width + seasonalBarGraph.margin.left + seasonalBarGraph.margin.right)
+		//     .attr("height", seasonalBarGraph.height + seasonalBarGraph.margin.top + seasonalBarGraph.margin.bottom)
+		//   .append("g")
+		//     .attr("transform", "translate(" + seasonalBarGraph.margin.left + "," + seasonalBarGraph.margin.top + ")");
+
+	},
+
+	//graphData: data to be displayed
+
+	//dir: direction of graph
+
+	drawseasonalBarGraph:function(elem,graphData,dir1,dir2,_filter){
+// 		var x = d3.scale.linear()
+// 		    .range([50, seasonalBarGraph.width-50]);
+
+// 		var y = d3.scale.linear()
+// 		    .range([(seasonalLineChart.height/2), 0]);
+
+// 		var xAxis = d3.svg.axis()
+// 		    .scale(x)
+// 		    .orient("bottom");
+// 		// var yAxis = d3.svg.axis()
+// 		// 	.scale(y)
+// 		//     .orient("left");
+
+// 		var avgs = [[],[],[],[],[],[],[],[],[],[],[],[],[]]
+// 		var countDays = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+// 		for(var xx = 0;xx<avgs.length;xx++){
+// 			avgs[xx].push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+// 		}
+
+		
+// 		graphData.rows.forEach(function(g){
+// 			if(parseInt(g.f[16].v) == dir1){
+// 				if(parseInt(g.f[1].v) == 1 ){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 2){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 3){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 4){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 5){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 6){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 7){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 8){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 9){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 10){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 11){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 12){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1] = avgs[0][parseInt(g.f[1].v)-1] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1] = avgs[1][parseInt(g.f[1].v)-1] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1] = avgs[2][parseInt(g.f[1].v)-1] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1] = avgs[3][parseInt(g.f[1].v)-1] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1] = avgs[4][parseInt(g.f[1].v)-1] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1] = avgs[5][parseInt(g.f[1].v)-1] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1] = avgs[6][parseInt(g.f[1].v)-1] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1] = avgs[7][parseInt(g.f[1].v)-1] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1] = avgs[8][parseInt(g.f[1].v)-1] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1] = avgs[9][parseInt(g.f[1].v)-1] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1] = avgs[10][parseInt(g.f[1].v)-1] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1] = avgs[11][parseInt(g.f[1].v)-1] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1] = avgs[12][parseInt(g.f[1].v)-1] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1]++
+// 				}
+// 			} //end dir
+
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// 			//Other dir
+// 			else if(parseInt(g.f[16].v) == dir2){
+// 				if(parseInt(g.f[1].v) == 1 ){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 2){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 3){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 4){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 5){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 6){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 7){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 8){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 9){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 10){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 11){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 				else if(parseInt(g.f[1].v) == 12){
+// 					if(!(_filter['class'][0])){
+// 						avgs[0][parseInt(g.f[1].v)-1+12] = avgs[0][parseInt(g.f[1].v)-1+12] + parseInt(g.f[3].v)
+// 					}
+// 					if(!(_filter['class'][1])){
+// 						avgs[1][parseInt(g.f[1].v)-1+12] = avgs[1][parseInt(g.f[1].v)-1+12] + parseInt(g.f[4].v)
+// 					}
+// 					if(!(_filter['class'][2])){
+// 						avgs[2][parseInt(g.f[1].v)-1+12] = avgs[2][parseInt(g.f[1].v)-1+12] + parseInt(g.f[5].v)
+// 					}
+// 					if(!(_filter['class'][3])){
+// 						avgs[3][parseInt(g.f[1].v)-1+12] = avgs[3][parseInt(g.f[1].v)-1+12] + parseInt(g.f[6].v)
+// 					}
+// 					if(!(_filter['class'][4])){
+// 						avgs[4][parseInt(g.f[1].v)-1+12] = avgs[4][parseInt(g.f[1].v)-1+12] + parseInt(g.f[7].v)
+// 					}
+// 					if(!(_filter['class'][5])){
+// 						avgs[5][parseInt(g.f[1].v)-1+12] = avgs[5][parseInt(g.f[1].v)-1+12] + parseInt(g.f[8].v)
+// 					}
+// 					if(!(_filter['class'][6])){
+// 						avgs[6][parseInt(g.f[1].v)-1+12] = avgs[6][parseInt(g.f[1].v)-1+12] + parseInt(g.f[9].v)
+// 					}
+// 					if(!(_filter['class'][7])){
+// 						avgs[7][parseInt(g.f[1].v)-1+12] = avgs[7][parseInt(g.f[1].v)-1+12] + parseInt(g.f[10].v)
+// 					}
+// 					if(!(_filter['class'][8])){
+// 						avgs[8][parseInt(g.f[1].v)-1+12] = avgs[8][parseInt(g.f[1].v)-1+12] + parseInt(g.f[11].v)
+// 					}
+// 					if(!(_filter['class'][9])){
+// 						avgs[9][parseInt(g.f[1].v)-1+12] = avgs[9][parseInt(g.f[1].v)-1+12] + parseInt(g.f[12].v)
+// 					}
+// 					if(!(_filter['class'][10])){
+// 						avgs[10][parseInt(g.f[1].v)-1+12] = avgs[10][parseInt(g.f[1].v)-1+12] + parseInt(g.f[13].v)
+// 					}
+// 					if(!(_filter['class'][11])){
+// 						avgs[11][parseInt(g.f[1].v)-1+12] = avgs[11][parseInt(g.f[1].v)-1+12] + parseInt(g.f[14].v)
+// 					}
+// 					if(!(_filter['class'][12])){
+// 						avgs[12][parseInt(g.f[1].v)-1+12] = avgs[12][parseInt(g.f[1].v)-1+12] + parseInt(g.f[15].v)
+// 					}
+// 					countDays[parseInt(g.f[1].v)-1+12]++
+// 				}
+// 			} //end dir
+// 		}) //end avg build
+
+		
+// 		for(var i = 0;i<avgs.length;i++){
+// 			for(var j = 0;j<avgs[i].length;j++){
+// 				if(countDays[j] != 0){
+// 					avgs[i][j] = avgs[i][j]/countDays[j]
+// 				}
+// 				else{
+// 					avgs[i][j] = 0
+// 				}
+// 			}
+// 		}
+// 		//console.log(avgs)
+
+// 	    y.domain([0,11]);
+
+// 		//adjust the y domain based on dir
+// 		x.domain([
+// 			(-1*d3.max(avgs, function(c) { return d3.max(c, function(v,i) { if(v != undefined || v != null || i != 13){return v;}; if(v == undefined || v == null){ return 0};  }); })),
+// 	    	d3.max(avgs, function(c) { return d3.max(c, function(v,i) { if(v != undefined || v != null || i != 13){return v;}; if(v == undefined || v == null){ return 0};  }); })
+// 		]).nice();
+// 		var svg = d3.select(elem+" svg");
+// 		    svg.selectAll("g").remove();
+// 		    svg.append("g")
+// 		      .attr("class", "x axis")
+// 		      .attr("transform", "translate(0," + 0 + ")")
+// 		      .call(xAxis)
+// 		    .append("text")
+// 		      .attr("class", "label")
+// 		      .attr("x", seasonalBarGraph.width)
+// 		      .attr("y", -6)
+// 		      .style("text-anchor", "end")
+
+// 		  // svg.append("g")
+// 		  //     .attr("class", "y axis")
+// 		  //     .attr("transform", "translate(" + (seasonalBarGraph.width/2) + "," + (seasonalBarGraph.height-402) + ")")
+// 		  //     .style("font-size","10px")
+// 		  //     .call(yAxis)
+// 		  //   .append("text")
+// 		  //     .attr("class", "label")
+// 		  //     .attr("transform", "rotate(-90)")
+// 		  //     .attr("x", seasonalBarGraph.height)
+// 		  //     .attr("y", 6)
+// 		  //     .attr("dy", ".71em")
+// 		  //     .style("text-anchor", "end")
+// 		  svg.append("g")
+// 	      .attr("class", "y axis")
+// 	    .append("line")
+// 	      .attr("x1", x(0))
+// 	      .attr("x2", x(0))
+// 	      .attr("stroke","#000")
+// 	      .attr("fill","none")
+// 	      .attr("y2", seasonalBarGraph.height);
+
+// 		      console.log(y.domain())
+// 		for(var counter = 0;counter<avgs.length;counter++){
+// 			svg.selectAll(".bar")
+// 			    .data(avgs[counter])
+// 			  .enter().append("rect")
+// 			    .attr("class", function(d,i) { return i > 11 ? "bar negative" : "bar positive"; })
+// 			    .attr("x", function(d,i) {if(i > 11){return 0} return x(Math.min(0, d)); })
+// 			    .attr("y", function(d,i) { if(i < 12){return y(i)} return y(i-12);  })
+// 			    .attr("width", function(d) { if(i > 11){ return Math.abs(x((-1*d)) - x(0)); } return Math.abs(x(d) - x(0)); })
+// 			    .attr("height", 10);
+
+			
+// 		}
+		
+		var svg = d3.select(elem).append("svg")
+		    .attr("width", seasonalBarGraph.width + seasonalBarGraph.margin.left + seasonalBarGraph.margin.right)
+		    .attr("height", seasonalBarGraph.height + seasonalBarGraph.margin.top + seasonalBarGraph.margin.bottom)
+		  .append("g")
+		    .attr("transform", "translate(" + seasonalBarGraph.margin.left + "," + seasonalBarGraph.margin.top + ")");    
+		var x = d3.scale.linear()
+		    .range([0, seasonalBarGraph.width])
+
+		var y = d3.scale.ordinal()
+		    .rangeRoundBands([0, seasonalBarGraph.height], .2);
+
+		var xAxis = d3.svg.axis()
+		    .scale(x)
+		    .orient("top");
+		
+		var data = [
+		{'name':'A','value':-15},
+		{
+			'name':'B',
+			'value':-20
+		},
+		{
+			'name':'C',
+			'value':-22
+		},
+		{
+			'name':'D',
+			'value':-18
+		},
+		{
+			'name':'E',
+			'value':2
+		},
+		{
+			'name':'F',
+			'value':6
+		},
+		{
+			'name':'G',
+			'value':-26
+		},
+		{
+			'name':'H',
+			'value':-18
+		}]
+		  x.domain([-30,30]);
+		  y.domain(data.map(function(d,i) { console.log(i,d,d.name);return d.name; }));
+		  console.log(x.domain())
+		  console.log(data)
+		  // var svg = d3.select(elem+" svg");
+		  svg.selectAll(".bar")
+		      .data(data)
+		    .enter().append("rect")
+		      .attr("class", function(d) { return d.value < 0 ? "bar negative" : "bar positive"; })
+		      .attr("x", function(d) { return x(Math.min(0, d.value)); })
+		      .attr("y", function(d) { return y(d.name); })
+		      .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
+		      .attr("height", y.rangeBand());
+
+		  svg.append("g")
+		      .attr("class", "x axis")
+		      .call(xAxis)
+		    
+
+		  svg.append("g")
+		      .attr("class", "y axis")
+		    .append("line")
+		      .attr("x1", x(0))
+		      .attr("x2", x(0))
+		      .attr("y2", seasonalBarGraph.height)
+		      .attr("fill","none")
+		      .attr("stroke","#000")
+
+
+
+		function type(d) {
+		  d.value = +d.value;
+		  return d;
+		}
+	},
+}

@@ -2,6 +2,11 @@
   var wimCal = {
     version: "0.2.0"
   }
+  var _FILTERS = {
+    // data filters for various classes. False indicates filter is inactive.
+    // indexes [0, 12] correspond to classes [2, 14]
+      class: [false,false,false,false,false,false,false,false,false,false,false,false,false],
+    }
 
   function _init(min,max,caltype){
     var html = [];
@@ -225,6 +230,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
       $scope.loading2 = true
       var dir1 = -1
       var dir2 = -1
+
       
 
            $scope.minYear = ""
@@ -234,6 +240,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           var URL = '/station/yearsActive';
           
       seasonalLineChart.initseasonalLineChart("#seasonalLineGraph",'.tab-content')
+      seasonalBarGraph.initseasonalBarGraph("#seasonalBarGraph",'.tab-content')
           wimXHR.post(URL, {isClass:$scope.stationType,id:$scope.station},function(error, data) {
               if(error){
                 console.log(error)
@@ -289,7 +296,9 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                   }
                 }
                 
-                seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",data,$scope.myDir2)
+                seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",data,$scope.myDir2,_FILTERS)
+                seasonalBarGraph.drawseasonalBarGraph("#seasonalBarGraph",$scope.stationDataAll,$scope.directionValues2[1].id,$scope.directionValues2[2].id,_FILTERS)
+                _WIMGrapher("#seasonalLegend");
                 
 
                 if($scope.stationType === "wim"){
@@ -376,7 +385,8 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
               }
               $scope.reloadSeasonalGraph = function(){
                 
-                seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",$scope.stationDataAll,$scope.myDir2)
+                seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",$scope.stationDataAll,$scope.myDir2,_FILTERS)
+                seasonalBarGraph.drawseasonalBarGraph("#seasonalBarGraph",$scope.stationDataAll,$scope.directionValues2[1].id,$scope.directionValues2[2].id,_FILTERS)
               }
               
               $scope.loadCalendar = function(){
@@ -388,6 +398,108 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                   calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationDataAll,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
                 }
               }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                function _WIMGrapher(id) {
+                  
+                  // create class and weight scales
+
+                  // this scales maps classes to array index
+                  var classScale = d3.scale.ordinal()
+                    .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+                    .range([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+              // used to color class and weight legends
+                  var _LEGEND_COLORS = {
+                    class: ["#08306b", "#08519c", "#2171b5", "#4292c6", "#6baed6", "#9ecae1","#ddffff","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"],
+                  }
+                  
+
+                  // create legends
+                  var legendDIV = d3.select(id).append('div')
+                    .attr('id', 'legendDIV');
+                  // class legend
+                  var classLegend = legendDIV.append('div')
+                    .attr('class', 'legend');
+                  var classValues = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+
+                  _createLegendLabels(classLegend, classValues, 'class')
+
+                  // this function creates the labels for the legend parameter
+                  // values is an array of data the data contains
+                  //    labels for data not included in values are not created
+                  // attr is the weight or class label
+                  function _createLegendLabels(legend, values, attr) {
+                    values.sort(function(a, b) { return a-b; });
+
+                    var labels = legend.selectAll('a').data(values);
+
+                    labels.exit().remove();
+
+                    labels.enter().append('a')
+                      .attr('class', attr+'-label')
+                      .on('click', function(d) {
+                        clicked = true;
+                        var self = d3.select(this)
+
+                        self.classed('inactive', !self.classed('inactive'));
+                        _FILTERS[attr][d] = self.classed('inactive');
+
+                        if (self.classed('inactive')) {
+                          self.style('background', null)
+                        } else {
+                          self.style('background', function(d) {
+                            return _LEGEND_COLORS[attr][d];
+                          })
+                        }
+
+                        seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",$scope.stationDataAll,$scope.myDir2,_FILTERS)
+                        seasonalBarGraph.drawseasonalBarGraph("#seasonalBarGraph",$scope.stationDataAll,$scope.directionValues2[1].id,$scope.directionValues2[2].id,_FILTERS)
+
+                      })
+                      .on('mouseover', function(d) {
+                        d3.selectAll('.'+attr + d)
+                          .style('opacity', 1.0)
+                          .attr('fill', '#d73027')
+                      })
+                      .on('mouseout', function(d) {
+                        d3.selectAll('.'+attr + d)
+                          .style('opacity', 0.75)
+                          .attr('fill', function() { return _LEGEND_COLORS[attr][d]; })
+                      });
+
+                    labels.classed('inactive', function(d) {
+                        return _FILTERS[attr][d]
+                      })
+                      .style('background', function(d) {
+                        if (d3.select(this).classed('inactive')) {
+                          return null;
+                        }
+                        return _LEGEND_COLORS[attr][d];
+                      })
+                      .text(function(d, i) {
+                        var text;
+                        if (attr === 'weight') {
+                           if (d < weightScale.range().length-1) {
+                            text = (d*20).toString() +'-'+((d+1)*20) +'k lbs.';
+                           } else {
+                            text = (d*20).toString()+'k+ lbs.';
+                           }
+                        } else {
+                          text = 'Cls '+classScale.domain()[d];
+                        }
+                        return text;
+                      })
+
+                    legend.style('width', function() {
+                        var w = parseInt(d3.select('.'+attr+'-label').style('width'));
+                        return (w * values.length + 10) + 'px';
+                      })
+                      .style('background-color', '#000');
+                  }
+                }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
           });
   }// end init
 
@@ -529,6 +641,8 @@ function parseDataF(input,classInfo){
   }
   return output
 };
+
+
 
 function parseDataT(input,classInfo){
   var output = [];
