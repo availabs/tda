@@ -1,10 +1,9 @@
 <%- partial('../partials/nav') %>
-
 <div class="wrap sidebar-icons">
     <%- partial('../partials/header') %>
 	<div class="content container">  
 	  <div class="row" ng-controller="EnforcementController">
-		  <div id="nav-wrapper"class="col-md-8">
+		  <div id="nav-wrapper" class="col-md-8">
 		  	<div id="my-affix">
 			    <section class="widget">
 			    	<header>
@@ -19,7 +18,7 @@
 	                            
 	                    </div>
 			    	</header>
-				    <div class="body">
+				    	<div class="body">
 				      	<div id="statesDIV"></div>
 				    </div>
 			    </section>
@@ -83,7 +82,7 @@
 			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
 		      </div>
 		 	</section>
-		 	<section class="widget large" ng-show="stations.length > 0">
+		 	<section class="widget ui-sortable" ng-show="stations.length > 0">
 		  		<header>
 			        <fieldset>
 	            	<legend>Overweight Trucks<small>  by station</small>
@@ -113,11 +112,6 @@
         <i class="fa fa-spinner fa-spin"></i>
   </div>
 </div>
-
-
-
-
-
 <script src="/trafficanalytics/wimstates.js"></script>
 <script src="/lib/colorbrewer.min.js"></script>
 <script src="/trafficanalytics/aadtGraph.js"></script>

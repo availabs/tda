@@ -31,7 +31,7 @@
           var svg = d3.select("#caldiv"+caltype).selectAll("svg")
               .data(d3.range(2000+parseInt(min), 2001+parseInt(max)))
             .enter().append("svg")
-              .attr("width", 1300)
+              .attr("width", 1500)
               .attr("height", 200)
               .attr("class", "RdYlGn")
             .append("g")

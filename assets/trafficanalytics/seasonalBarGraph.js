@@ -210,8 +210,10 @@ var seasonalBarGraph = {
 		//     .attr("height", seasonalBarGraph.height + seasonalBarGraph.margin.top + seasonalBarGraph.margin.bottom)
 		//   .append("g")
 		//     .attr("transform", "translate(" + seasonalBarGraph.margin.left + "," + seasonalBarGraph.margin.top + ")");
+	   d3.select(elem).selectAll("div").remove()
        var svg = d3.select(elem+" svg");
 		    svg.selectAll("g").remove();
+
 		var x = d3.scale.linear()
 		    .range([0, seasonalBarGraph.width])
 

@@ -594,7 +594,7 @@ var seasonalLineChart = {
 	    		d3.max(avgs, function(c) { return d3.max(c, function(v,i) { if(v != undefined || v != null || i != 13){return v;}; if(v == undefined || v == null){ return 0};  }); })
 		  ]).nice();
 		
-
+		  d3.select(elem).selectAll("div").remove()
 		  var div = d3.select(elem).append("div")
 			.attr("id","seasonalLineChartInfo")   
 		    .style("position", "absolute")
@@ -602,7 +602,7 @@ var seasonalLineChart = {
 			.style("z-index", "10")
 			.style("visibility", "hidden")
 
-
+		  
 		  var svg = d3.select(elem+" svg");
 		    svg.selectAll("g").remove();
 		    svg.append("g")
