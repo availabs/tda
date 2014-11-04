@@ -31,8 +31,8 @@
           var svg = d3.select("#caldiv"+caltype).selectAll("svg")
               .data(d3.range(2000+parseInt(min), 2001+parseInt(max)))
             .enter().append("svg")
-              .attr("width", w + m.right + m.left + 100)
-              .attr("height", h + m.top + m.bottom)
+              .attr("width", 1300)
+              .attr("height", 200)
               .attr("class", "RdYlGn")
             .append("g")
               .attr("transform", "translate(" + (m.bottom + (w - z * 53) / 2) + "," + (m.top + (h - z * 7) / 2) + ")");
@@ -45,8 +45,8 @@
           var svg2 = d3.select("#legend"+caltype).selectAll("svg")
               .data(d3.range(0, 1))
             .enter().append("svg")
-              .style("width", 800)
-              .style("height", 20)
+              .attr("width", 1300)
+              .attr("height", 20)
               .attr("class", "RdYlGn")
             .append("g")
               .attr("transform", "translate(60,0)");
@@ -154,7 +154,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           .data(truckData.slice())
         .enter().append("g")
           .attr("class", "legend")
-          .attr("transform", function(d, i) { return "translate(" + i * 65 + ",0)"; }); //Displays ordering of legend
+          .attr("transform", function(d, i) { return "translate(" + i * 95 + ",0)"; }); //Displays ordering of legend
         
      
         //Coordinates of legend
@@ -169,9 +169,9 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
               .attr("x", 10)
               .attr("y", 10)     
               .attr("dy", ".35em")
-              .style("text-anchor", "front")
-              .style("font-size","12px")
-              .style("color","#fff")
+              .attr("text-anchor", "front")
+              .attr("font-size","10px")
+              .attr("color","#fff")
               .text(function(d) { return d; });
 
     function monthPath(t0) {
@@ -218,6 +218,10 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           {id: "percent", label:'Percent'},
           {id: "count", label:'Count'},
           ];
+        $scope.values5 = [
+          {id: "Days", label:'Days'},
+          {id: "Hours", label:'Hours'},
+          ];
       $scope.myClass = 0;
       $scope.myDisp = "Count";
       $scope.myDataDisp = "Class";
@@ -228,6 +232,11 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
       $scope.myDir2 = -1
       $scope.loading = true
       $scope.loading2 = true
+      $scope.yearRange = []
+      $scope.dataRange = []
+      $scope.point = 0
+      $scope.myYear = ""
+      $scope.myReport = "Days"
       var dir1 = -1
       var dir2 = -1
 
@@ -238,9 +247,8 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
            $scope.drawVars = []
 
           var URL = '/station/yearsActive';
-          
-      seasonalLineChart.initseasonalLineChart("#seasonalLineGraph",'.tab-content')
-      seasonalBarGraph.initseasonalBarGraph("#seasonalBarGraph",'.tab-content')
+          seasonalLineChart.initseasonalLineChart("#seasonalLineGraph",'.tab-content')
+          seasonalBarGraph.initseasonalBarGraph("#seasonalBarGraph",'.tab-content')
           wimXHR.post(URL, {isClass:$scope.stationType,id:$scope.station},function(error, data) {
               if(error){
                 console.log(error)
@@ -248,150 +256,220 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
               }
               $scope.minYear = data.rows[0].f[0].v;
               $scope.maxYear = data.rows[0].f[1].v;
+              $scope.yearRange = d3.range(2000+parseInt($scope.minYear), 2001+parseInt($scope.maxYear))
+              $scope.$apply(function(){
+                $scope.myYear = $scope.yearRange[0]
+              });
               $scope.drawVars = _init($scope.minYear,$scope.maxYear,"");
 
-              $scope.stationData = [];
+              $scope.stationData2 = [];
               $scope.stationDataAll = [];
+              $scope.reportData = [];
               $scope.stationTonageData = [];
               $scope.myClass = $scope.values[0].id;
               $scope.myDisp = $scope.values2[1].id;
               $scope.myDataDisp = $scope.values3[0].id;
 
+              wimXHR.post('/station/reportAmounts', {'id':$scope.station,'CoW':$scope.stationType,'year':(parseInt($scope.myYear)-2000)},function(error, data) {
 
-              wimXHR.post('/station/classAmounts', {'id':$scope.station},function(error, data) {
-                if(error){
-                  console.log(error)
-                  return
-                }
-                $scope.stationDataAll = data;
-                if($scope.stationType === "class"){
-                    $scope.myDataDisp = $scope.values3[1].id
-                    calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
-                    $scope.$apply(function(){
-                        $scope.loading2 = false
-                      });
+                $scope.reportData = data
+                $scope.dataRange = reportTable.drawTable('#reportTab',$scope.reportData,"Days",0,[])
+                $scope.dataRange[2].Year = $scope.myYear
+
+                wimXHR.post('/station/classAmounts', {'id':$scope.station},function(error, data) {
+                  if(error){
+                    console.log(error)
+                    return
                   }
-
-                if(data != null){
-                  if(data.rows != undefined){
-                      dir1 = -1
-                      dir2 = -1
-                      $scope.stationDataAll.rows.forEach(function(row){
-                        if(dir1 == -1){
-                            dir1 = parseInt(row.f[16].v)
-                          }
-                        if(dir1 != parseInt(row.f[16].v) && dir2 == -1){
-                            dir2 = parseInt(row.f[16].v)
-                          }
-                        })
-                      if(dir2 != -1){
-                       $scope.$apply(function(){
-                          $scope.directionValues2.push({id:-1,label:'combined'})
-                          $scope.directionValues2.push({id:dir1,label:getDir(dir1)})
-                          $scope.directionValues2.push({id:dir2,label:getDir(dir2)})
-                          $scope.myDir2 = $scope.directionValues2[0].id
-                        });
-                      }
-                      
-                  }
-                }
-                
-                seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",data,$scope.myDir2,_FILTERS)
-                seasonalBarGraph.drawseasonalBarGraph("#seasonalBarGraph",$scope.stationDataAll,$scope.directionValues2[1].id,$scope.directionValues2[2].id,_FILTERS)
-                _WIMGrapher("#seasonalLegend");
-                
-
-                if($scope.stationType === "wim"){
-              
-                    wimXHR.post('/station/dailyWeights', {id:$scope.station},function(error, data) {
-                      if(error){
-                        console.log(error)
-                        return
-                      }
-                      $scope.stationData = data;
-                      if($scope.stationType === "wim"){
-                        $scope.myDataDisp = $scope.values3[0].id
-                        calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"trucks",$scope.myDataDisp)
-                      
-                        $scope.$apply(function(){
+                  $scope.stationDataAll = data;
+                  if($scope.stationType === "class"){
+                      $scope.myDataDisp = $scope.values3[1].id
+                      calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
+                      $scope.$apply(function(){
                           $scope.loading2 = false
-                          $scope.myDataDisp = $scope.values3[0].id
-                          
                         });
-                      }
-                    
+                    }
 
-                    //doesn't work with class stations
-                    wimXHR.post('/station/byTonageInfo/', {'stationID':$scope.station},function(error, data) {
-                      if(error){
-                        console.log(error)
-                        return
-                      }
-                      $scope.stationTonageData = data;
-                      $scope.drawVars2 = _init($scope.minYear,$scope.maxYear,"ton");
-                      //if($scope.stationType === "wim"){
-                        //$scope.myDataDisp = $scope.values3[0].id
-                      calCreate($scope.drawVars2[5],$scope.drawVars2[3],9,$scope.drawVars2[1],$scope.drawVars2[2],$scope.stationTonageData,$scope.drawVars2[0],$scope.drawVars2[4],"trucks","Ton")
-                      //}
-                      // $scope.$apply(function(){
-                      //   $scope.loading2 = false
-                      //   $scope.myDataDisp = $scope.values3[0].id
+                  if(data != null){
+                    if(data.rows != undefined){
+                        dir1 = -1
+                        dir2 = -1
+                        $scope.stationDataAll.rows.forEach(function(row){
+                          if(dir1 == -1){
+                              dir1 = parseInt(row.f[16].v)
+                            }
+                          if(dir1 != parseInt(row.f[16].v) && dir2 == -1){
+                              dir2 = parseInt(row.f[16].v)
+                            }
+                          })
+                        if(dir2 != -1){
+                         $scope.$apply(function(){
+                            $scope.directionValues2.push({id:-1,label:'combined'})
+                            $scope.directionValues2.push({id:dir1,label:getDir(dir1)})
+                            $scope.directionValues2.push({id:dir2,label:getDir(dir2)})
+                            $scope.myDir2 = $scope.directionValues2[0].id
+                          });
+                        }
                         
-                      // });
-
-                      //Remember to add in threshold value
+                    }
+                  }
                   
-                      wimXHR.post('/stations/byWeightTableInfo/', {'stationID':$scope.station,'threshold':80000},function(error,data) {
+                  seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",data,$scope.myDir2,_FILTERS)
+                  if(dir2 != -1){
+                    seasonalBarGraph.drawseasonalBarGraph("#seasonalBarGraph",$scope.stationDataAll,$scope.directionValues2[1].id,$scope.directionValues2[2].id,_FILTERS)
+                  }
+                  else{
+                    $scope.$apply(function(){
+                      $scope.directionValues2.push({id:dir1,label:getDir(dir1)})
+                      $scope.myDir2 = $scope.directionValues2[0].id
+                    })
+                    seasonalBarGraph.drawseasonalBarGraph("#seasonalBarGraph",$scope.stationDataAll,dir1,-1,_FILTERS)
+                  }
+                  _WIMGrapher("#seasonalLegend");
+                  
+
+                  if($scope.stationType === "wim"){
+                
+                      wimXHR.post('/station/dailyWeights', {id:$scope.station},function(error, data) {
                         if(error){
                           console.log(error)
                           return
                         }
-                        if(data != null){
-                          if(data.rows != undefined){
-                            $scope.stationWeightData = data;
-                            dir1 = -1
-                            dir2 = -1
-                              $scope.stationWeightData.rows.forEach(function(row){
-                                if(dir1 == -1){
-                                    dir1 = parseInt(row.f[3].v)
-                                  }
-                                if(dir1 != parseInt(row.f[3].v) && dir2 == -1){
-                                    dir2 = parseInt(row.f[3].v)
-                                  }
-                                })
-                              if(dir2 != -1){
-                               $scope.$apply(function(){
-                                  $scope.directionValues.push({id:-1,label:'combined'})
-                                  $scope.directionValues.push({id:dir1,label:getDir(dir1)})
-                                  $scope.directionValues.push({id:dir2,label:getDir(dir2)})
-                                  $scope.myDir = $scope.directionValues[0].id
-                                  $scope.loading = false
-                                });
-                              }
-                              //weightTable.tableCreate($scope.stationWeightData,$scope.myTableDisp,$scope.myDir)
-                              
-                              $scope.reloadTable()
-                          }
+                        $scope.stationData2 = data;
+                        if($scope.stationType === "wim"){
+                          $scope.myDataDisp = $scope.values3[0].id
+                          calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],data,$scope.drawVars[0],$scope.drawVars[4],"trucks",$scope.myDataDisp)
+                        
+                          $scope.$apply(function(){
+                            $scope.loading2 = false
+                            $scope.myDataDisp = $scope.values3[0].id
+                            
+                          });
                         }
+                      
+
+                      //doesn't work with class stations
+                      wimXHR.post('/station/byTonageInfo/', {'stationID':$scope.station},function(error, data) {
+                        if(error){
+                          console.log(error)
+                          return
+                        }
+                        $scope.stationTonageData = data;
+                        $scope.drawVars2 = _init($scope.minYear,$scope.maxYear,"ton");
+                        //if($scope.stationType === "wim"){
+                          //$scope.myDataDisp = $scope.values3[0].id
+                        calCreate($scope.drawVars2[5],$scope.drawVars2[3],9,$scope.drawVars2[1],$scope.drawVars2[2],$scope.stationTonageData,$scope.drawVars2[0],$scope.drawVars2[4],"trucks","Ton")
+                        //}
+                        // $scope.$apply(function(){
+                        //   $scope.loading2 = false
+                        //   $scope.myDataDisp = $scope.values3[0].id
+                          
+                        // });
+
+                        //Remember to add in threshold value
+                    
+                        wimXHR.post('/stations/byWeightTableInfo/', {'stationID':$scope.station,'threshold':80000},function(error,data) {
+                          if(error){
+                            console.log(error)
+                            return
+                          }
+                          if(data != null){
+                            if(data.rows != undefined){
+                              $scope.stationWeightData = data;
+                              dir1 = -1
+                              dir2 = -1
+                                $scope.stationWeightData.rows.forEach(function(row){
+                                  if(dir1 == -1){
+                                      dir1 = parseInt(row.f[3].v)
+                                    }
+                                  if(dir1 != parseInt(row.f[3].v) && dir2 == -1){
+                                      dir2 = parseInt(row.f[3].v)
+                                    }
+                                  })
+                                if(dir2 != -1){
+                                 $scope.$apply(function(){
+                                    $scope.directionValues.push({id:-1,label:'combined'})
+                                    $scope.directionValues.push({id:dir1,label:getDir(dir1)})
+                                    $scope.directionValues.push({id:dir2,label:getDir(dir2)})
+                                    $scope.myDir = $scope.directionValues[0].id
+                                    $scope.loading = false
+                                  });
+                                }
+                                else{
+                                  $scope.$apply(function(){
+                                    $scope.directionValues.push({id:dir1,label:getDir(dir1)})
+                                    $scope.myDir = $scope.directionValues[0].id
+                                    $scope.loading = false
+                                  })
+                                }
+                                //weightTable.tableCreate($scope.stationWeightData,$scope.myTableDisp,$scope.myDir)
+                                
+                                $scope.reloadTable()
+                            }
+                          }
+                        });
                       });
                     });
-                  });
-                }
+                  }
+                });
               });
               $scope.reloadTable = function(){
                 weightTable.removeTable('#stationTable')
                 weightTable.tableCreate($scope.stationWeightData,$scope.myTableDisp,$scope.myDir,'#stationTable')
+
                 
               }
               $scope.reloadSeasonalGraph = function(){
-                
                 seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",$scope.stationDataAll,$scope.myDir2,_FILTERS)
-                seasonalBarGraph.drawseasonalBarGraph("#seasonalBarGraph",$scope.stationDataAll,$scope.directionValues2[1].id,$scope.directionValues2[2].id,_FILTERS)
+                if($scope.directionValues2.length > 0){
+                  seasonalBarGraph.drawseasonalBarGraph("#seasonalBarGraph",$scope.stationDataAll,$scope.directionValues2[1].id,$scope.directionValues2[2].id,_FILTERS)
+                  
+                }
+                else{
+                  seasonalBarGraph.drawseasonalBarGraph("#seasonalBarGraph",$scope.stationDataAll,-1,-1,_FILTERS)  
+
+                }
               }
-              
+              $scope.reloadReportTable = function(){
+                $scope.point = 0
+                if(parseInt($scope.dataRange[2].Year) == parseInt($scope.myYear)){
+                  reportTable.init($scope.station,'#reportTab',$scope.myReport,$scope.stationData)
+                  reportTable.drawTable('#reportTab',"",$scope.myReport,$scope.point,$scope.dataRange)
+                }
+                else{
+                  wimXHR.post('/station/reportAmounts', {'id':$scope.station,'CoW':$scope.stationType,'year':(parseInt($scope.myYear)-2000)},function(error, data) {
+                    $scope.reportData = data
+                    reportTable.init($scope.station,'#reportTab',$scope.myReport,$scope.stationData)
+                    $scope.dataRange = reportTable.drawTable('#reportTab',$scope.reportData,"Days",0,[])
+                    $scope.dataRange[2].Year = $scope.myYear
+                  });
+                }
+              }
+              $scope.reloadReportTableBack = function(){
+                console.log($scope.point)
+                if($scope.point >= 100){
+                  $scope.point -= 100
+                }
+                reportTable.init($scope.station,'#reportTab',$scope.myReport,$scope.stationData)
+                reportTable.drawTable('#reportTab',"",$scope.myReport,$scope.point,$scope.dataRange)
+              }
+              $scope.reloadReportTableForward = function(){
+                if($scope.myReport === "Days"){
+                  if(($scope.point+100) <= $scope.dataRange[0].length){
+                    $scope.point +=100 
+                  }
+                }
+                else{
+                  if(($scope.point)+100 <= $scope.dataRange[1].length){
+                    $scope.point +=100 
+                  }
+                }
+                reportTable.init($scope.station,'#reportTab',$scope.myReport,$scope.stationData)
+                reportTable.drawTable('#reportTab',"",$scope.myReport,$scope.point,$scope.dataRange)
+              }
               $scope.loadCalendar = function(){
                 if($scope.myDataDisp === "Freight"){
-                  calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationData,$scope.drawVars[0],$scope.drawVars[4],$scope.myDisp,$scope.myDataDisp)
+                  calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationData2,$scope.drawVars[0],$scope.drawVars[4],$scope.myDisp,$scope.myDataDisp)
                 
                 }
                 else{

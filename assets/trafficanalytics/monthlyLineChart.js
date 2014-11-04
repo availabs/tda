@@ -5,7 +5,7 @@ var monthlyLineChart = {
 	initMonthlylLineChart:function(elem){
 		monthlyLineChart.margin = {top: 5, right: 5, bottom: 10, left:50},
 		monthlyLineChart.width = parseInt($(elem).width()) - monthlyLineChart.margin.left - monthlyLineChart.margin.right,
-		monthlyLineChart.height = parseInt($(elem).width()*0.75) - monthlyLineChart.margin.top - monthlyLineChart.margin.bottom + 100;
+		monthlyLineChart.height = parseInt($(elem).width()*0.15) - monthlyLineChart.margin.top - monthlyLineChart.margin.bottom + 100;
 
 		var svg = d3.select(elem).append("svg")
 		    .attr("width", monthlyLineChart.width + monthlyLineChart.margin.left + monthlyLineChart.margin.right)

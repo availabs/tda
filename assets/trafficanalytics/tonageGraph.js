@@ -6,7 +6,7 @@ var tonageGraph ={
 
 		tonageGraph.margin = {top: 5, right: 5, bottom: 10, left:50},
 		tonageGraph.width = parseInt($(elem).width()) - tonageGraph.margin.left - tonageGraph.margin.right,
-		tonageGraph.height = parseInt($(elem).width()*0.75) - tonageGraph.margin.top - tonageGraph.margin.bottom;
+		tonageGraph.height = parseInt($(elem).width()*0.3) - tonageGraph.margin.top - tonageGraph.margin.bottom;
 
 		tonageGraph.svg = d3.select(elem).append("svg")
 		    .attr("width", tonageGraph.width + tonageGraph.margin.left + tonageGraph.margin.right)

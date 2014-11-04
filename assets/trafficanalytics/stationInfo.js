@@ -104,7 +104,7 @@ var stationInfo = {
 		}
 		wimXHR.post('/station/stationInfo', {'id':stationID},function(error, data) {
 			
-			$(elem).append('<table id="displayTable" class="table table-hover table-striped"><thead><tr><th colspan=2><strong>Station Info</strong></th></thead><tbody></tbody></table>')
+			$(elem).append('<table id="displayTable" class="table table-hover table-striped"><thead><tr><th colspan=2><strong>Station Info</strong></th></tr></thead><tbody></tbody></table>')
 			var xtag = '#displayTable tbody';
 			for(var i = 0;i<20;i++){
 				if(data.schema.fields[i].name === "national_highway_sys"){
@@ -115,20 +115,29 @@ var stationInfo = {
 				else if(data.schema.fields[i].name === "latitude"){
 					$(xtag).append("<tr><th><strong>Lat/Long</strong></th><td>"+data.rows[0].f[i].v+","+data.rows[0].f[i+1].v+"</td></tr>")
 					
+					if(!isNaN(parseFloat(data.rows[0].f[i].v)) && !isNaN(parseFloat(data.rows[0].f[i+1].v))){
+						if(data.rows[0].f[i+1].v[0] === " "){
+							var longitude = parseFloat("-"+data.rows[0].f[i+1].v[1]+data.rows[0].f[i+1].v[2]+"."+data.rows[0].f[i+1].v.slice(3,data.rows[0].f[i+1].v.length))
+							var latitude = parseFloat(data.rows[0].f[i].v[0]+data.rows[0].f[i].v[1]+"."+data.rows[0].f[i].v.slice(2,data.rows[0].f[i].v.length))
+						}
+						else{
+							
+							var longitude = parseFloat("-"+data.rows[0].f[i+1].v[0]+data.rows[0].f[i+1].v[1]+data.rows[0].f[i+1].v[2]+"."+data.rows[0].f[i+1].v.slice(3,data.rows[0].f[i+1].v.length))
+							var latitude = parseFloat(data.rows[0].f[i].v[0]+data.rows[0].f[i].v[1]+"."+data.rows[0].f[i].v.slice(2,data.rows[0].f[i].v.length))
+						}
 
-					//Below is for creating the map on the station page
-				    var map = {};
-				    $('#displayMap').height($(window).height()-200);
-
-				    var mbTerrainSat = L.tileLayer("https://{s}.tiles.mapbox.com/v3/matt.hd0b27jd/{z}/{x}/{y}.png");
-				    map = L.map('displayMap', {
-				     center: [parseFloat(data.rows[0].f[i].v[0]+data.rows[0].f[i].v[1]+"."+data.rows[0].f[i].v.slice(2,data.rows[0].f[i].v.length)),parseFloat("-"+data.rows[0].f[i+1].v[1]+data.rows[0].f[i+1].v[2]+"."+data.rows[0].f[i+1].v.slice(3,data.rows[0].f[i+1].v.length))],
-				     zoom: 16 ,
-				     layers: [mbTerrainSat],
-				     zoomControl: false
-				    });
-				    var marker = L.marker([parseFloat(data.rows[0].f[i].v[0]+data.rows[0].f[i].v[1]+"."+data.rows[0].f[i].v.slice(2,data.rows[0].f[i].v.length)),parseFloat("-"+data.rows[0].f[i+1].v[1]+data.rows[0].f[i+1].v[2]+"."+data.rows[0].f[i+1].v.slice(3,data.rows[0].f[i+1].v.length))]).addTo(map);
-				    //End map creation
+						//Below is for creating the map on the station page
+					    $('#displayMap').height($(window).height()-200);
+					    var map = L.map('displayMap', {
+					     center: [latitude,longitude],
+					     zoom: 16 ,
+					     //layers: [mbTerrainSat],
+					     //zoomControl: false
+					    });
+					    L.tileLayer("https://{s}.tiles.mapbox.com/v3/matt.hd0b27jd/{z}/{x}/{y}.png").addTo(map);
+					    var marker = L.marker([latitude,longitude]).addTo(map);
+					    //End map creation
+					}
 					i++	
 					//stationData['coords']=data.rows[0].f[i].v+","+data.rows[0].f[i+1].v
 
@@ -171,6 +180,10 @@ var stationInfo = {
 				///console.log('end loop info');
 			}//end loop
 			//console.log('end loop info2');	
+			//Reports Tab is built below//
+			$('#reportTab').append('<table id="reportTable" class="table"><thead><tr><th><strong>Yearly Highest Days</strong></th></tr></thead><tbody><tr><th colspan=2><strong>Location: '+stationData['station_location']+'</strong></th><th colspan=2><strong>Functional Class: '+stationData['func_class_code']+'</strong></th></tr></tbody></table>')
+
+
 			scope.stationData = stationData;
 			scope.$apply();
 		});

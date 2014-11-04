@@ -5,10 +5,10 @@ var lineChart = {
 	initlineChart:function(elem){
 		lineChart.margin = {top: 5, right: 5, bottom: 10, left:50},
 		lineChart.width = parseInt($(elem).width()) - lineChart.margin.left - lineChart.margin.right,
-		lineChart.height = parseInt($(elem).width()*0.75) - lineChart.margin.top - lineChart.margin.bottom;
+		lineChart.height = parseInt($(elem).width()*0.5)// - lineChart.margin.top - lineChart.margin.bottom;
 		lineChart.svg = d3.select(elem).append("svg")
-		    .attr("width", lineChart.width + lineChart.margin.left + lineChart.margin.right)
-		    .attr("height", lineChart.height + lineChart.margin.top + lineChart.margin.bottom)
+		    .attr("width", lineChart.width + 20)
+		    .attr("height", lineChart.height + lineChart.margin.top + lineChart.margin.bottom + 30)
 		    .attr("id","linegraph")
 		  .append("g")
 		    .attr("transform", "translate(" + lineChart.margin.left + "," + lineChart.margin.top + ")");
@@ -25,7 +25,7 @@ var lineChart = {
 
 	drawlineChart:function(elem,graphData,dataType){
 		var x = d3.scale.linear()
-		    .range([50, lineChart.width+50]);
+		    .range([50, lineChart.width]);
 
 		var y = d3.scale.linear()
 		    .range([lineChart.height, 0]);

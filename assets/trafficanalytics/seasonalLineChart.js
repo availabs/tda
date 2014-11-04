@@ -4,10 +4,10 @@ var seasonalLineChart = {
 
 	initseasonalLineChart:function(elem,container){
 		seasonalLineChart.margin = {top: 5, right: 5, bottom: 10, left:50},
-		seasonalLineChart.width = parseInt($(container).width()) - seasonalLineChart.margin.left - seasonalLineChart.margin.right,
-		seasonalLineChart.height = parseInt($(container).width()*0.75) - seasonalLineChart.margin.top - seasonalLineChart.margin.bottom + 100;
+		seasonalLineChart.width = 960 - seasonalLineChart.margin.left - seasonalLineChart.margin.right,
+		seasonalLineChart.height = 500 - seasonalLineChart.margin.top - seasonalLineChart.margin.bottom;
 		var svg = d3.select(elem).append("svg")
-		    .attr("width", seasonalLineChart.width + seasonalLineChart.margin.left + seasonalLineChart.margin.right)
+		    .attr("width", seasonalLineChart.width + seasonalLineChart.margin.left + seasonalLineChart.margin.right + 30)
 		    .attr("height", seasonalLineChart.height + seasonalLineChart.margin.top + seasonalLineChart.margin.bottom + 30)
 		    .attr("id","linegraph")
 		  .append("g")
@@ -670,7 +670,7 @@ var seasonalLineChart = {
 			      .attr("d", function(d) { if(d != undefined && d.length != 0){return "M" + d.join("L") + "Z"}; })
 			      .datum(function(d) { if(d != undefined && d.length != 0){return d.point;} })
 			      .on("mouseover", mouseover)
-			      .on("mousemove", function(){return div.style("top", (event.pageY-125)+"px").style("left",(event.pageX-75)+"px");})
+			      .on("mousemove", function(event){return div.style("top", (event.pageY-125)+"px").style("left",(event.pageX-75)+"px");})
 			      .on("mouseout", mouseout)
 			      .style("fill","none")
 			      .style("pointer-events","all")

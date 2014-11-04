@@ -412,7 +412,12 @@
 
 			legend.style('width', function() {
 					var w = parseInt(d3.select('.'+attr+'-label').style('width'));
-					return (w * values.length + 10) + 'px';
+					if(w < 100){
+						return ((61) * values.length) + 'px';
+					}
+					else{
+						return ((117) * values.length) + 'px';	
+					}
 				})
 				.style('background-color', '#000');
 		}
@@ -426,7 +431,7 @@
 		// this function retrieves the requested data from the back end API
 		function _getData(station) {
 			//console.log("getData",route,depth)
-			console.time("getData");
+			//console.time("getData");
 			loader.style('display', 'inline')
 
             wimXHR.post(route[0], {'depth': depth,'id':route[1]}, function(error, data) {
@@ -437,7 +442,7 @@
             	time = TIMES[depth.length];
 
             	_formatData(data);
-            	console.timeEnd("getData");
+            	//console.timeEnd("getData");
 
             	_drawGraph();
 	            _drawWDGraph();

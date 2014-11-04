@@ -8,7 +8,7 @@ var seasonalBarGraph = {
 		seasonalBarGraph.height = 500 - seasonalBarGraph.margin.top - seasonalBarGraph.margin.bottom;
 		var svg = d3.select(elem).append("svg")
 		    .attr("width", seasonalBarGraph.width + seasonalBarGraph.margin.left + seasonalBarGraph.margin.right)
-		    .attr("height", seasonalBarGraph.height + seasonalBarGraph.margin.top + seasonalBarGraph.margin.bottom)
+		    .attr("height", seasonalBarGraph.height + seasonalBarGraph.margin.top + seasonalBarGraph.margin.bottom + 50)
 		  .append("g")
 		    .attr("transform", "translate(" + seasonalBarGraph.margin.left + "," + seasonalBarGraph.margin.top + ")");
 	},

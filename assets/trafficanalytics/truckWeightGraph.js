@@ -7,7 +7,7 @@ var truckWeightGraph = {
 
 		truckWeightGraph.margin = {top: 5, right: 5, bottom: 10, left:50},
 		truckWeightGraph.width = parseInt($(elem).width()) - truckWeightGraph.margin.left - truckWeightGraph.margin.right,
-		truckWeightGraph.height = parseInt($(elem).width()*0.75) - truckWeightGraph.margin.top - truckWeightGraph.margin.bottom;
+		truckWeightGraph.height = parseInt($(elem).width()*0.3) - truckWeightGraph.margin.top - truckWeightGraph.margin.bottom;
 
 		truckWeightGraph.svg = d3.select(elem).append("svg")
 		    .attr("width", truckWeightGraph.width + truckWeightGraph.margin.left + truckWeightGraph.margin.right)

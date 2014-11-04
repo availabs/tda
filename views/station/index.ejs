@@ -61,12 +61,11 @@
 			              <select  class="form-control" ng-model="myDir2" ng-options="item5.id as item5.label for item5 in directionValues2" style='width:75px;display:inline;margin-right:5px;'></select>
 			            </label>
 			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadSeasonalGraph()">Apply</button>
-			            <div id="seasonalBarGraph" style='margin-left:10px;'>
+			            <div id="seasonalLineGraph" style='margin-left:10px;height: 550px;'>
                    		</div>
-                   		
-                   		<div id="seasonalLineGraph" style='margin-left:10px;'>
+                   		<div id="seasonalBarGraph" style="margin-left:10px;height: 550px;">
                    		</div>
-                   		<div ng-show="!(loading2)" class="col-md-12" id="seasonalLegend"></div>
+                   		<div ng-show="!(loading2)" id="seasonalLegend"></div>
                    		
                    		<div id='calendar-controls' style='margin-left:10px;'>
                    			<label>Class:
@@ -125,14 +124,30 @@
 				      		</div>
 			            </div>
                		</div>
-
+               		<!--
+						Map Tab
+					-->
                		<div id="map" class="tab-pane clearfix">
 
-               			<div id="displayMap">
+               			<div id="displayMap"> <!-- The map is built in the stationInfo page -->
                			</div>
                		</div>
-
+               		<!--
+						Reports Tab
+					-->
                		<div id="reports" class="tab-pane clearfix">
+               			<label>Type of Report:
+               				<select  class="form-control" ng-model="myReport" ng-options="item7.id as item7.label for item7 in values5" style='width:75px;display:inline;margin-right:5px;'></select>
+               			</label>
+               			<label>Year of Data:
+			              <select  class="form-control" ng-model="myYear" ng-options="item6 for item6 in yearRange" style='width:75px;display:inline;margin-right:5px;'></select>
+			            </label>
+			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadReportTableBack()">Back</button>
+			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadReportTable()">Reload</button>
+			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadReportTableForward()">Forward</button>
+               			<div id="reportTab">
+               			</div>
+               			
                		</div>
 
                		
@@ -159,6 +174,7 @@
 <script src="/trafficanalytics/stationInfo.js"></script>
 <script src="/trafficanalytics/wimCalendar.js"></script>
 <script src="/trafficanalytics/weightTable.js"></script>
+<script src="/trafficanalytics/reportTable.js"></script>
 <script src="/trafficanalytics/seasonalLineChart.js"></script>
 <script src="/trafficanalytics/seasonalBarGraph.js"></script>
 <script src="/controllers/station/stationIndex.js"></script>

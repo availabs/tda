@@ -37,8 +37,6 @@ var jsFilesToInject = [
     "lib/jquery-ui-1.10.3.custom.js",
     "lib/jquery.slimscroll.js",
 
-    //<!-- d3, nvd3-->
-    "lib/nvd3/lib/d3.v3.min.js",
     
     //<!--backbone and friends -->
     "lib/backbone/underscore-min.js",

@@ -790,6 +790,46 @@ module.exports = {
  			res.json(response)
 	    });
  	},
+ 	getReportAmounts:function(req,res){
+ 		var database = req.param('database'),
+ 		class_id = req.param('CoW'),
+ 		year = req.param('year')
+ 		station_id = req.param('id');
+ 		console.log(class_id,year)
+ 		if(class_id === "class"){
+ 			database = database+"Class"
+ 			var sql = 'SELECT year, month, day, hour, '+
+	 				  'DAYOFWEEK(TIMESTAMP(concat(STRING(year),"-",STRING(month),"-",STRING(day)))) as dow, '+
+			    	  'dir, total_vol ' +
+					  'FROM [tmasWIM12.'+database+'] '+
+					  'WHERE station_id="'+station_id+'" and year='+year+' '+
+					  'GROUP BY year, month, day, hour, dow, dir, total_vol '+
+					  'ORDER BY year, month, day, hour, dow, dir, total_vol';
+ 		}
+ 		else{
+	 		var sql = 'SELECT year, month, day, hour, '+
+	 				  'DAYOFWEEK(TIMESTAMP(concat(STRING(year),"-",STRING(month),"-",STRING(day)))) as dow, '+
+			    	  'dir, count(1) as DT '+
+					  'FROM [tmasWIM12.'+database+'] '+
+					  'WHERE station_id="'+station_id+'" and year='+year+' '+
+					  'GROUP BY year, month, day, hour, dow, dir '+
+					  'ORDER BY year, month, day, hour, dow, dir';
+		}
+		console.log(sql)
+		var request = bigQuery.jobs.query({
+	    	kind: "bigquery#queryRequest",
+	    	projectId: 'avail-wim',
+	    	timeoutMs: '10000',
+	    	resource: {query:sql,projectId:'avail-wim'},
+	    	auth: jwt
+	    },
+
+		function(err, response) {
+			//console.log("classamount error: ",err)
+			if (err) console.log('Error:',err);
+      		res.json(response)
+	    });
+ 	},
  	
 
 
