@@ -274,8 +274,8 @@ var seasonalBarGraph = {
 		  		//$("#seasonalBarGraphInfo").show();
 		  		return div.style("visibility", "visible");
 		  	})
-		  	.on("mousemove", function(){return div.style("top", (event.pageY-125)+"px").style("left",(event.pageX-75)+"px");})
-		  	.on("mouseout",function() {
+		  	.on("mousemove", function(){return div.style("top", (d3.event.layerY)+"px").style("left",(d3.event.layerX+20)+"px");})
+			.on("mouseout",function() {
 		  		$("#seasonalBarGraphInfo").html('');
 		  		//$("#seasonalBarGraphInfo").hide();
 		  		return div.style("visibility", "hidden");

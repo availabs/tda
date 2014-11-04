@@ -141,16 +141,18 @@
 		function _movePopup(DOMel) {
 			var xPos, yPos;
 
-			if ("offsetX" in d3.event) {
-			    xPos = d3.event.offsetX;
-			    yPos = d3.event.offsetY;
-			} else {
+			// if ("offsetX" in d3.event) { //Top part here seems to cause a problem in IE.
+			// 	console.log("X")
+			//     xPos = d3.event.offsetX;
+			//     yPos = d3.event.offsetY;
+			// } else {
+			// 	console.log("Y")
 			    xPos = d3.event.layerX;
 			    yPos = d3.event.layerY;
-			}
+			//}
 			xPos += 40;
 			yPos += 100;
-
+			//console.log(xPos,yPos)
 			if (xPos+parseInt(popup.style('width')) > parseInt(graphDIV.style('width'))) {
 				popup.style('right', xPos + 'px')
 					.style('left', (parseInt(graphDIV.style('width'))-parseInt(popup.style('width')))+'px')

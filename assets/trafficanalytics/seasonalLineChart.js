@@ -670,7 +670,7 @@ var seasonalLineChart = {
 			      .attr("d", function(d) { if(d != undefined && d.length != 0){return "M" + d.join("L") + "Z"}; })
 			      .datum(function(d) { if(d != undefined && d.length != 0){return d.point;} })
 			      .on("mouseover", mouseover)
-			      .on("mousemove", function(event){return div.style("top", (event.pageY-125)+"px").style("left",(event.pageX-75)+"px");})
+			      .on("mousemove", function(){return div.style("top", (d3.event.layerY)+"px").style("left",(d3.event.layerX+20)+"px");})
 			      .on("mouseout", mouseout)
 			      .style("fill","none")
 			      .style("pointer-events","all")

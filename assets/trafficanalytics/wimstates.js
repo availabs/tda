@@ -369,11 +369,13 @@
     }
 
 	function _popup(d) {
-		var wdth = parseInt(popup.style('width')),
-			hght = parseInt(popup.style('height'));
+		var wdth = 162//parseInt(popup.style('width')),
+			hght = 60//parseInt(popup.style('height'));
 
 		var left = projection(d.geometry.coordinates)[0] - wdth - 5,
 			top = projection(d.geometry.coordinates)[1] - hght - 5;
+
+		console.log(projection(d.geometry.coordinates)[0],projection(d.geometry.coordinates)[1],wdth,hght,left,top)
 
 		if (left < 0) {
 			left += wdth + 10;
