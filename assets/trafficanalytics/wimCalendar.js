@@ -31,8 +31,8 @@
           var svg = d3.select("#caldiv"+caltype).selectAll("svg")
               .data(d3.range(2000+parseInt(min), 2001+parseInt(max)))
             .enter().append("svg")
-              .attr("width", 1500)
-              .attr("height", 200)
+              .attr("width", 1800)
+              .attr("height", 300)
               .attr("class", "RdYlGn")
             .append("g")
               .attr("transform", "translate(" + (m.bottom + (w - z * 53) / 2) + "," + (m.top + (h - z * 7) / 2) + ")");
