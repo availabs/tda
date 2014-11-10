@@ -82,7 +82,7 @@ Things that still need to be done:
 
 var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTable,currentJob,blastBackData) {
 		
- 		var database = "TestData" //figure out how to get this...
+ 		var database = "ncdot" //figure out how to get this...
  		var data = newData
 
  		//A database of class data should always end in the string "Class" for claritys sake
@@ -145,6 +145,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTab
 				if(response != null || NewTable){
 					if(response != null){
 						if(response.rows != undefined){
+							console.log(response.rows.length)
 			    			response.rows.forEach(function(row){
 				    			if(parseInt(row.f[2].v) < 10){
 				    				row.f[2].v = "0"+row.f[2].v
@@ -181,9 +182,15 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTab
 		    		*/
 		    		var wstream = fs.createWriteStream(files[0].fd+"_"+currentJob.id,{ flags: 'w',encoding: null,mode: 0666 });
 		    		for(var j = 0;j<lines.length;j++){
-			    		if(newData.map(function(el) {return el.key;}).indexOf(lines[j][1]+lines[j][2]+lines[j][3]+lines[j][4]+lines[j][5]+lines[j][6]+lines[j][7]+lines[j][8]+lines[j][11]+lines[j][12]+lines[j][13]+lines[j][14]) != -1 && (lines[j][0] === 'W' ||lines[j][0] === 'C')){
-			    			wstream.write(lines[j] +"\n")
+		    			if(NewTable || (response.rows == undefined) ){
+		    				terminal.stdin.write('cp ' + files[0].fd+" "+files[0].fd+"_"+currentJob.id+'\n');
+		    				j = lines.length
+		    			}
+			    		else if(newData.map(function(el) {return el.key;}).indexOf(lines[j][1]+lines[j][2]+lines[j][3]+lines[j][4]+lines[j][5]+lines[j][6]+lines[j][7]+lines[j][8]+lines[j][11]+lines[j][12]+lines[j][13]+lines[j][14]) != -1 && (lines[j][0] === 'W' ||lines[j][0] === 'C')){
+			    			//wstream.write(lines[j] +"\n")
+			    			terminal.stdin.write('printf "'+lines[j]+'\n" >> '+files[0].fd+'_'+currentJob.id+'\n');
 			    		}
+
 			    	}
 			    	wstream.end("\n");
 		    		/*Below blocks of code may cause a server crashing error if they don't work. Unsure how to cause this error
@@ -224,6 +231,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTab
 							terminal.stdin.end();
 							return
 						}
+						console.log("Where?")
 						/*
 						Below parses new data to be properly formed for table insertion.
 
@@ -244,14 +252,12 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTab
 						}
 						else if(lines[0][0] === 'W'){
 							var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,class:integer,open:string,total_weight:integer,numAxles:integer,axle1:integer,axle1sp:integer,axle2:integer,axle2sp:integer,axle3:integer,axle3sp:integer,axle4:integer,axle4sp:integer,axle5:integer,axle5sp:integer,axle6:integer,axle6sp:integer,axle7:integer,axle7sp:integer,axle8:integer,axle8sp:integer,axle9:integer,axle9sp:integer,axle10:integer,axle10sp:integer,axle11:integer,axle11sp:integer,axle12:integer,axle12sp:integer,axle13:integer'"
-							var database2 = "UltimateTestTable2"
 							terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
 							terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 2 2 2 2 2 3 4 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
 							
 						}
 						else if(lines[0][0] === 'C'){
 							var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,total_vol:integer,class1:integer,class2:integer,class3:integer,class4:integer,class5:integer,class6:integer,class7:integer,class8:integer,class9:integer,class10:integer,class11:integer,class12:integer,class13:integer,class14:integer,class15:integer'"
-							var database2 = "TestDataClass"
 							terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
 							terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
 						}
@@ -277,7 +283,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTab
 							for(var i = 0;i<newData.length;i++){
 				                blastBackData.push("StateFips Code: "+newData[i].state+" Station: "+newData[i].station+" Month: "+newData[i].month+" Year: "+newData[i].year);
 				            }
-				            terminal.stdin.write("bq --project_id=avail-wim load --max_bad_records=10 tmasWIM12."+database2+" "+files[0].fd+"_"+currentJob.id+" "+schema+" \n");
+				            terminal.stdin.write("bq --project_id=avail-wim load --max_bad_records=10 tmasWIM12."+database+" "+files[0].fd+"_"+currentJob.id+" "+schema+" \n");
 							//Below removes junkfiles and lets the user know what data got uploaded
 							terminal.stdin.write('rm ' + files[0].fd+"_"+currentJob.id +'\n');
 							terminal.stdin.write('rm ' + files[0].fd +'\n');
@@ -332,6 +338,10 @@ module.exports = {
 
     	UploadJob.create({filename:files[0].filename,isFinished:false,status:"Started",progress:"Began"}).exec(function(err,job){
     		currentJob = job;
+    		if(currentJob == undefined){
+    			console.log("error")
+    			return
+    		}
     		
    		/*
 
@@ -381,8 +391,8 @@ module.exports = {
 	 		 	fs.close(fd)
 	 		 }
 	 		 else{
-			     res.write(b.toString('utf8',0,l))
-			     //console.log("The value: "+b.toString('utf8',0,l))
+			     // res.write(b.toString('utf8',0,l))
+			     // console.log("The value: "+b.toString('utf8',0,l))
 			     fs.close(fd)
 			 }
 		    })

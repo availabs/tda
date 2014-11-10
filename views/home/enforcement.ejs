@@ -5,7 +5,7 @@
 	  <div class="row" ng-controller="EnforcementController">
 		  <div id="nav-wrapper" class="col-md-8">
 		  	<div id="my-affix">
-			    <section class="widget">
+			    <section id="sectionMAP" class="widget">
 			    	<header>
 			    		<fieldset>
 		            	<legend>Station Map<small> Click a state to see their ATR sites</small></legend>
@@ -37,33 +37,15 @@
 		      		<img src="/img/loading.gif">
 		      </div>
 		 	</section>
-		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
-		  		<header>
-			        <fieldset>
-	            	<legend>AVG weight/time<small>  by station</small>
-
-	            	
-
-	            	</legend>
-	        		</fieldset>
-        		</header>
-		      <div class="body" >
-		     
-			      <div id="weightByHour"></div>
-			      <select class="form-control" ng-model='active_TruckClass.value'>
-	            		<option ng-repeat="class in truckClass" value='{{class}}'>{{class}}</option>
-	            	</select>
-			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
-		      </div>
-		 	</section>
-		 	<section class="widget ui-sortable" ng-show="stations.length > 0">
-		  		<header>
-			        <fieldset>
-	            	<legend>Overweight Trucks<small>  by station</small>
-	            	</legend>
-	        		</fieldset>
-	        		<div class="row">
-	            		<div class="col-md-6 form-inline">
+		 	<section class="widget ui-sortable" ng-show="(stations.length > 0)">
+		 		<div class="body tab-content" style="overflow:hidden;" ng-show="stations.length > 0">
+		 			<div  class="tab-pane AVG_weight_time clearfix active">
+			 			<select class="form-control" ng-model='active_TruckClass.value'>
+		            		<option ng-repeat="class in truckClass" value='{{class}}'>{{class}}</option>
+		            	</select>
+		            </div>
+		            <div  class="tab-pane Overweight_time clearfix">
+		            	<div class="col-md-6 form-inline">
 	            			<div class="form-group">
 				            	<select class="form-control" ng-model="myTimePeriod" ng-options="item2.id as item2.label for item2 in timePeriod" style='width:75px;display:inline;margin-right:5px;'></select>
 				            </div>
@@ -74,27 +56,68 @@
 					        </div>
 				        </div>
 				    </div>
-	            	
-        		</header>
-		      <div class="body">
-		     
-			      <div id="overweightBarGraph"></div>
-			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
-		      </div>
+				    <div  class="tab-pane Overweight_trucks clearfix">
+				        <div class="col-md-6 form-inline">
+	            			<div class="form-group">
+					        	<select class="form-control" ng-model="myOrder" ng-options="item3.id as item3.label for item3 in time_order" style='width:75px;display:inline;margin-right:5px;'></select>
+					        </div>
+				        </div>
+				    </div>
+			      
+		 		</div>
 		 	</section>
-		 	<section class="widget ui-sortable" ng-show="stations.length > 0">
-		  		<header>
-			        <fieldset>
-	            	<legend>Overweight Trucks<small>  by station</small>
+		 	<section class="widget widget-tabs">
+		 		<header ng-show="stations.length > 0">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href=".AVG_weight_time" data-toggle="tab">Average</a>
+                    </li>
+                    <li>
+                        <a href=".Overweight_time" data-toggle="tab">Time</a>
+                    </li>
+                    <li>
+                        <a href=".Overweight_trucks" data-toggle="tab">Overweight Trucks</a>
+                    </li>
+                                       
+                </ul>
+	            </header>
+	            <div class="body tab-content" style="overflow:hidden;" ng-show="stations.length > 0">
+			  		<div class="tab-pane AVG_weight_time clearfix active">
+				  		<header>
+					        <fieldset>
+			            	<legend>AVG weight/time<small>  by station</small>
+			            	</legend>
+			        		</fieldset>
+		        		</header>
+					      <div id="weightByHour"></div>
+					      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+			      	</div>
+			      	<div  class="tab-pane Overweight_time clearfix">
+			  			<header>
+				        <fieldset>
+		            	<legend>Overweight Trucks<small>  by station</small>
+		            	</legend>
+		        		</fieldset>
+		        		</header>
+			      
+			     
+				      <div id="overweightBarGraph"></div>
+				      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+			      	</div>
+					<div  class="tab-pane Overweight_trucks clearfix"> 	
+				  		<header>
+					        <fieldset>
+			            	<legend>Overweight Trucks<small>  by station</small>
 
-	            	</legend>
-	        		</fieldset>
-        		</header>
-		      <div class="body">
-		     
-			      <div id="overweightLineGraph" style="height: 450px;"></div>
-			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
-		      </div>
+			            	</legend>
+			        		</fieldset>
+		        		</header>
+			      
+			     
+				      <div id="overweightLineGraph" style="height: 450px;"></div>
+				      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+			      </div>
+			  	</div>
 		 	</section>
 		 	
 		  </div>

@@ -61,8 +61,11 @@ function IndexController ($scope) {
     
 
     $scope.$watch('stations', function() {
+
         if($scope.stations != undefined){
+
           if($scope.stations.length > 0){
+
             d3.select('#hrMonLineGraph'+" svg").selectAll("g").attr('opacity',0.1);
             d3.select('#hrMonLineGraph'+" svg").append("g")
                 .append("text")
@@ -113,8 +116,7 @@ function IndexController ($scope) {
                         //     $scope.truckClass = getClassRange(angular.copy($scope.graphData))
                         //     $scope.active_TruckClass = {value:$scope.truckClass[0]}
                         // });
-                        console.log(data)
-                        tonageGraph.drawtonageGraph('#tonageGraph',data)
+                        tonageGraph.drawtonageGraph('#tonageGraph',data,$scope.state)
                         
 
                     });
@@ -122,8 +124,8 @@ function IndexController ($scope) {
             //End tonageGraph
 
 
-            AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',[true,true,true],[$scope.active_years.first,$scope.active_years.max]);
-            AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',[true,true,true],[]);
+            AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',[true,true,true],[$scope.active_years.first,$scope.active_years.max],$scope.state);
+            AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',[true,true,true],[],$scope.state);
             monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',"All",$scope.state,"All");
           }
           
@@ -137,7 +139,7 @@ function IndexController ($scope) {
                 $scope.active_years.first = parseInt($scope.active_years.first);
                 //console.log('first_year',$scope.active_years)
                 if(parseInt($scope.active_years.first) != parseInt($scope.myMaxYear)){
-                    AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[$scope.active_years.first,parseInt($scope.myMaxYear)]);      
+                    AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[$scope.active_years.first,parseInt($scope.myMaxYear)],$scope.state);      
                 }
             }
             else{
@@ -149,7 +151,7 @@ function IndexController ($scope) {
         if($scope.stations.length > 0){
             if($scope.flagC){
                 if(parseInt($scope.active_years.first) != parseInt($scope.myMaxYear)){
-                    AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[$scope.active_years.first,parseInt($scope.myMaxYear)]);      
+                    AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[$scope.active_years.first,parseInt($scope.myMaxYear)],$scope.state);      
                 }
             }
             else{
@@ -180,7 +182,7 @@ function IndexController ($scope) {
                 .attr("height", 40);
                 $scope.curYear = $scope.active_years2.id
                 if($scope.active_years2.id === "All"){
-                    AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[]);
+                    AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[],$scope.state);
                     if($scope.dispTime === "month"){
                         monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',$scope.dispGraph,$scope.state,$scope.active_years2.id);
 
@@ -190,7 +192,7 @@ function IndexController ($scope) {
                     }
                 }
                 else{
-                    AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[parseInt($scope.active_years2.id)]);
+                    AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[parseInt($scope.active_years2.id)],$scope.state);
                     if($scope.dispTime === "month"){
                         monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',$scope.dispGraph,$scope.state,$scope.active_years2.id);
                     }
@@ -224,11 +226,11 @@ function IndexController ($scope) {
                 .attr("width", 67)
                 .attr("height", 40);
             if($scope.curYear === "All"){
-                AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[]);
+                AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[],$scope.state);
                 $scope.active_years.first = parseInt($scope.active_years.first);
                 $scope.active_years.max = parseInt($scope.active_years.max);
                 if(parseInt($scope.active_years.first) != parseInt($scope.active_years.max)){
-                    AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[$scope.active_years.first,$scope.active_years.max]);      
+                    AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[$scope.active_years.first,$scope.active_years.max],$scope.state);      
                 }
                 if($scope.dispTime === "month"){
                     monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',$scope.dispGraph,$scope.state,$scope.active_years2.id);
@@ -238,7 +240,7 @@ function IndexController ($scope) {
                 }
             }
             else{
-                AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[parseInt($scope.active_years2.id)]);
+                AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',$scope.graphs[$scope.graphs.map(function(el){return el.id;}).indexOf($scope.dispGraph)].data,[parseInt($scope.active_years2.id)],$scope.state);
                 if($scope.dispTime === "month"){
                        monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',$scope.dispGraph,$scope.state,$scope.active_years2.id);
                 }

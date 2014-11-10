@@ -283,10 +283,15 @@
 				})
 				.on('mousemove', _popup)
 				.on('click', function(d) {
-					var URL = '/station/' + 
-						d.properties.type + '/' +
-						d.properties.stationID;
-					open(URL, '_self');
+					if($scope.state != undefined){
+						if($scope.state.toString().length == 2){
+							var URL = '/station/' + 
+								d.properties.type + '/' +
+								d.properties.stationID+"_"+$scope.state;
+								
+							open(URL, '_self');
+						}
+					}
 				})
 		}
 		// this function queries backend for all stations
@@ -375,7 +380,7 @@
 		var left = projection(d.geometry.coordinates)[0] - wdth - 5,
 			top = projection(d.geometry.coordinates)[1] - hght - 5;
 
-		console.log(projection(d.geometry.coordinates)[0],projection(d.geometry.coordinates)[1],wdth,hght,left,top)
+		//console.log(projection(d.geometry.coordinates)[0],projection(d.geometry.coordinates)[1],wdth,hght,left,top)
 
 		if (left < 0) {
 			left += wdth + 10;

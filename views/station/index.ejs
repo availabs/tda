@@ -145,8 +145,12 @@
 			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadReportTableBack()">Back</button>
 			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadReportTable()">Reload</button>
 			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadReportTableForward()">Forward</button>
-               			<div id="reportTab">
+               			<div id="reportTab" ng-show="!(loading3)">
                			</div>
+               			<div class="body" ng-show="(loading3)">
+					      		<p>Loading</p>
+					      		<img src="/img/loading.gif">
+				      	</div>
                			
                		</div>
 

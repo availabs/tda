@@ -77,7 +77,8 @@ function EnforcementController ($scope) {
                     .attr("width", 67)
                     .attr("height", 40);
                     URL = '/stations/weight/'
-                    wimXHR.post(URL, {stateFips:$scope.state},function(error, data) {
+                    wimXHR.post(URL, {'stateFips':$scope.state},function(error, data) {
+                                console.log(data)
                                 if (error) {
                                     console.log(error);
                                     return;
@@ -110,7 +111,7 @@ function EnforcementController ($scope) {
                             $scope.truckClass = getClassRange(angular.copy($scope.graphData))
                             $scope.active_TruckClass = {value:$scope.truckClass[0]}
                         });
-                        AADTGraph.drawAADTGraphWeight('#weightByHour',angular.copy($scope.graphData),"weight","All")
+                        AADTGraph.drawAADTGraphWeight('#weightByHour',angular.copy($scope.graphData),"weight","All",$scope.state)
                     });
 
                     //line graph
@@ -218,11 +219,11 @@ function EnforcementController ($scope) {
 
                                 $scope.overWeightBar[getStationIndex(rowStation,"bar")].years.push({'overweightTrucks':row.f[1].v,'numTrucks':row.f[2].v,'year':row.f[3].v})
                             });
-                            truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
+                            truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod,$scope.state);
                         }
                         else{
                             $scope.overWeightBar = []
-                            truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
+                            truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod,$scope.state);
                         }
                     });
 
@@ -232,12 +233,12 @@ function EnforcementController ($scope) {
     });
 
     $scope.$watchCollection('active_TruckClass', function() {
-            AADTGraph.drawAADTGraphWeight('#weightByHour',angular.copy($scope.graphData),"weight",$scope.active_TruckClass.value)      
+            AADTGraph.drawAADTGraphWeight('#weightByHour',angular.copy($scope.graphData),"weight",$scope.active_TruckClass.value,$scope.state)      
         
         //console.log($scope.active_TruckClass)
     });
     $scope.$watchCollection('myOrder', function() {
-            truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
+            truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod,$scope.state);
             lineChart.drawlineChart('#overweightLineGraph',angular.copy($scope.overWeightLine),$scope.myOrder);
         
         //console.log($scope.active_TruckClass)
@@ -284,11 +285,11 @@ function EnforcementController ($scope) {
 
                             $scope.overWeightBar[getStationIndex(rowStation,"bar")].years.push({'overweightTrucks':row.f[1].v,'numTrucks':row.f[2].v,'year':row.f[3].v})
                         });
-                        truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);
+                        truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod,$scope.state);
                     }
                     else{
                         $scope.overWeightBar = []
-                        truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod);    
+                        truckWeightGraph.drawTruckWeightGraph('#overweightBarGraph',angular.copy($scope.overWeightBar),$scope.myOrder,$scope.myTimePeriod,$scope.state);    
                     }
                 });
             }

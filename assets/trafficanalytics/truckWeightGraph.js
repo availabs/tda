@@ -6,8 +6,8 @@ var truckWeightGraph = {
 	initTruckWeightGraph:function(elem){
 
 		truckWeightGraph.margin = {top: 5, right: 5, bottom: 10, left:50},
-		truckWeightGraph.width = parseInt($(elem).width()) - truckWeightGraph.margin.left - truckWeightGraph.margin.right,
-		truckWeightGraph.height = parseInt($(elem).width()*0.3) - truckWeightGraph.margin.top - truckWeightGraph.margin.bottom;
+		truckWeightGraph.width = parseInt($('#sectionMAP').width())/2.5 - truckWeightGraph.margin.left - truckWeightGraph.margin.right,
+		truckWeightGraph.height = parseInt($('#sectionMAP').width())/2.5 - truckWeightGraph.margin.top - truckWeightGraph.margin.bottom;
 
 		truckWeightGraph.svg = d3.select(elem).append("svg")
 		    .attr("width", truckWeightGraph.width + truckWeightGraph.margin.left + truckWeightGraph.margin.right)
@@ -27,7 +27,7 @@ var truckWeightGraph = {
 
 	*/
 
-	drawTruckWeightGraph:function(elem,graphData,orderType,displayType){
+	drawTruckWeightGraph:function(elem,graphData,orderType,displayType,state){
 
 		var x = d3.scale.ordinal()
 		    .rangeRoundBands([50, (truckWeightGraph.width+50)], 0.1);
@@ -125,7 +125,7 @@ var truckWeightGraph = {
 		  	.attr("height", function(d,i) { if(truckWeightGraph.height - y(average(graphData[i].years,"overweight")/average(graphData[i].years,"totalTrucks") * 100) == 0){return 1}; return truckWeightGraph.height - y(average(graphData[i].years,"overweight")/average(graphData[i].years,"totalTrucks") * 100); });
 		}
 
-		rect.on("click",function(d,i) { window.location ="/station/wim/"+ graphData[i].stationId; })
+		rect.on("click",function(d,i) { window.location ="/station/wim/"+ graphData[i].stationId+"_"+state; })
 		  	.on("mouseover",function(d,i) {
 		  		d3.select('#map_station_'+graphData[i].stationId)
 			  			.style('opacity', 1.0)

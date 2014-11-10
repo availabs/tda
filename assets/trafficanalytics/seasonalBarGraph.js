@@ -41,6 +41,7 @@ var seasonalBarGraph = {
 		}
 
 		//console.log(dir1,dir2)
+		//console.log(dir1)
 		graphData.rows.forEach(function(g){
 			if(parseInt(g.f[16].v) == dir1){
 
@@ -258,18 +259,19 @@ var seasonalBarGraph = {
 		  	.attr("style", function(d,i) { if(i>12){return "fill:"+color2(i-13)+";"};return "fill:"+color2(i)+";" })
 		  	//console.log(x.domain())
 		  	.on("mouseover",function(d,i) {
-		  		if(i > 12){
-		  			var vehClass = i-12
+		  		if(i < 12){
+		  			var vehClass = i+1
 					var dir = dir1
+					
 		  		}
 		  		else{
-		  			var vehClass = i+1
+		  			var vehClass = i-12
 		  			var dir = dir2
 		  		}
 		  		var info =  "<p>Month "+monthCheck(d.month)+
 		  						"<br>Class "+vehClass+
 		  						"<br>Average Vehicle Count: "+Math.floor(Math.abs(d.x1-d.x0))+
-		  						"<br>Direction: "+dir+
+		  						"<br>Direction: "+getDir(dir)+
 								"</p>";
 				
 		  		$("#seasonalBarGraphInfo").html(info);
@@ -349,6 +351,38 @@ var seasonalBarGraph = {
 				return "December"
 			}
 		}
+		function getDir(dir){
+		  if(dir == 0){
+		    return "EW/SENW"
+		  }
+		  else if(dir == 1){
+		    return "North"
+		  }
+		  else if(dir == 2){
+		    return "Northeast"
+		  }
+		  else if(dir == 3){
+		    return "East"
+		  }
+		  else if(dir == 4){
+		    return "Southeast"
+		  }
+		  else if(dir == 5){
+		    return "South"
+		  }
+		  else if(dir == 6){
+		    return "Southwest"
+		  }
+		  else if(dir == 7){
+		    return "West"
+		  }
+		  else if(dir == 8){
+		    return "Northwest"
+		  }
+		  else{
+		    return "NS/NESW"
+		  }
+		};
 		function calculatorAvg(avgElem,row,dir){
 			if(dir > 0){
 				if(!_filter.class[0]) avgElem[0] = avgElem[0] + (dir*row.f[3].v)

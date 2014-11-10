@@ -5,7 +5,7 @@
 	  <div class="row" ng-controller="IndexController">
 		  <div id="nav-wrapper" class="col-md-8">
 		  	<div id="my-affix">
-			    <section class="widget">
+			    <section id="sectionMAP" class="widget">
 			    	<header>
 			    		<fieldset>
 		            	<legend>Station Map<small> Click a state to see their ATR sites</small></legend>
@@ -36,108 +36,153 @@
 		      		<p>Loading {{stateName}}</p>
 		      		<img src="/img/loading.gif">
 		      </div>
+
 		 	</section>
-		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
-		  		<header>
-			        <fieldset>
-	            	<legend>AADT Change<small>  by station</small></legend>
-	        		</fieldset>
-	            	<div class="row">
-	            		
-	            		<div class="col-md-6 form-inline">
-	            			<div class="form-group">
+		 
+		 	<section class="widget ui-sortable" ng-show="(stations.length > 0)">
+		 		<div class="body tab-content" style="overflow:hidden;" ng-show="stations.length > 0">
+				 	<div  class="tab-pane AADT_Change_Graph clearfix active">   		
+		        		<div class="col-md-6 form-inline">
+		        			<div class="form-group">
 				            	<label>From:</label>
 				            	<select ng-model='active_years.first' class="form-control">
 				            		<option ng-repeat="year in years" value='{{year}}'>{{year}}</option>
 				            	</select>
 			            	</div>
-	            		</div>
-	            		<div class="col-md-6 form-inline">
-	            			<div class="form-group">
+		        		</div>
+		        		<div class="col-md-6 form-inline">
+		        			<div class="form-group">
 				            	<label>To:</label>	            	
 				            	<select class="form-control" ng-model="myMaxYear" ng-options="item3.id as item3.label for item3 in maxYears"></select>
 				            	
 				            </div>
 		            	</div>
-		            </div>
-	            	
-        		</header>
-		      <div class="body">
-		     
-			      <div id="changeAADTGraph"></div>
-			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
-		      </div>
-		 	</section>
-			<section class="widget ui-sortable" ng-show="stations.length > 0">
-		  		 	<header>
-			        <fieldset>
-	            	<legend>Tonage<small>  by station</small></legend></fieldset>
-	            	<div class="row">
-		            	<div class="col-md-6 form-inline">
-		            			<div class="form-group">
-					            	 <!-- <select class="form-control" ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select> -->
-					           	</div>
-					    </div>
-					    <div class="col-md-6 form-inline">
-		            			<div class="form-group">
-					            	 <!-- <select class="form-control" ng-model='active_years2.id'>
-					            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
-					            	</select> -->
-		        				</div>
-		        		</div>
-		        	</div>
-        		</header>
-		      <div class="body">
-		     
-			      <div id="tonageGraph"></div>
-			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
-		      </div>
-		 	</section>
-		  	<section class="widget ui-sortable" ng-show="stations.length > 0">
-		  		 	<header>
-			        <fieldset>
-	            	<legend>AADT<small>  by station</small></legend></fieldset>
-	            	<div class="row">
-		            	<div class="col-md-6 form-inline">
-		            			<div class="form-group">
-					            	 <select class="form-control" ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select>
-					           	</div>
-					    </div>
-					    <div class="col-md-6 form-inline">
-		            			<div class="form-group">
-					            	 <select class="form-control" ng-model='active_years2.id'>
-					            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
-					            	</select>
-		        				</div>
-		        		</div>
-		        	</div>
-        		</header>
-		      <div class="body">
-		     
-			      <div id="aadtGraph"></div>
-			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
-		      </div>
-		 	</section>
-			<section class="widget ui-sortable" ng-show="stations.length > 0">
-		  		 	<header>
-			        <fieldset>
-	            	<legend>Line Graph<small>by time</small></legend></fieldset>
-	            	<div class="row">
-		            	<div class="col-md-6 form-inline">
-		            			<div class="form-group">
-		            	 			<select class="form-control" ng-model="dispTime" ng-options="item2.id as item2.label for item2 in times"></select>
-		            	 		</div>
-		            	</div>
-		            </div>
-        			</header>
-		      <div class="body">
-		     	  	<div id="hrMonLineGraph" style="height: 250px" ng-show="!(getMonHour)"></div>
-		     	  	<!--<div id="hrMonLineGraph" ng-show="(getMonHour)">Loading</div>-->
-		     	  
-			      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
-		      </div>
-		 	</section>
-		  </div>
+					</div>
+					<div  class="tab-pane Tonage_Graph clearfix active">
+					</div>
+				    <div  class="tab-pane ADDT_Graph clearfix">
+				  			<div class="col-md-6 form-inline">
+				            			<div class="form-group">
+							            	 <select class="form-control" ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select>
+							           	</div>
+							    </div>
+							    <div class="col-md-6 form-inline">
+				            			<div class="form-group">
+							            	 <select class="form-control" ng-model='active_years2.id'>
+							            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
+							            	</select>
+				        				</div>
+				        		</div>
+				    </div>
+				 	<div  class="tab-pane Line_Graph clearfix">
+				  			<div class="col-md-6 form-inline">
+				            			<div class="form-group">
+							            	 <select class="form-control" ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select>
+							           	</div>
+							    </div>
+							    <div class="col-md-6 form-inline">
+				            			<div class="form-group">
+							            	 <select class="form-control" ng-model='active_years2.id'>
+							            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
+							            	</select>
+				        				</div>
+				        		</div>
+				        		<div class="col-md-6 form-inline">
+				            			<div class="form-group">
+				            	 			<select class="form-control" ng-model="dispTime" ng-options="item2.id as item2.label for item2 in times"></select>
+				            	 		</div>
+				            	</div>
+				    </div>
+				</div>
+
+			</section>
+		
+		 
+		 <section class="widget widget-tabs">
+
+		 	<header ng-show="stations.length > 0">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href=".AADT_Change_Graph" data-toggle="tab">Change</a>
+                    </li>
+                    <li>
+                        <a href=".Tonage_Graph" data-toggle="tab">Tonage</a>
+                    </li>
+                    <li>
+                        <a href=".ADDT_Graph" data-toggle="tab">AADT</a>
+                    </li>
+                    <li>
+                        <a href=".Line_Graph" data-toggle="tab">Line</a>
+                    </li>
+                </ul>
+            </header>
+
+		 	<div class="body tab-content" style="overflow:hidden;" ng-show="stations.length > 0">
+			  	<div class="tab-pane AADT_Change_Graph clearfix active">
+				  	<!-- <section class="widget ui-sortable"> -->
+				  		<header>
+					        <fieldset>
+			            	<legend>AADT Change<small>  by station</small></legend>
+			        		</fieldset>
+			            	
+			            	
+		        		</header>
+				      
+				     
+					      <div id="changeAADTGraph"></div>
+					      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+				      
+				 	<!-- </section> -->
+				 </div>
+				 <div class="tab-pane Tonage_Graph clearfix">
+					<!-- <section class="widget ui-sortable" ng-show="stations.length > 0"> -->
+				  		 	<header>
+					        <fieldset>
+			            	<legend>Tonage<small>  by station</small></legend></fieldset>
+			            	
+		        			</header>
+				     <!--  <div class="body"> -->
+				     
+					      <div id="tonageGraph"></div>
+					      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+				      <!-- </div> -->
+				 	<!-- </section> -->
+				 </div>
+				 <div  class="tab-pane ADDT_Graph clearfix">
+				  <!-- 	<section class="widget ui-sortable" ng-show="stations.length > 0"> -->
+				  		 	<header>
+					        <fieldset>
+			            	<legend>AADT<small>  by station</small></legend></fieldset>
+			            	
+		        		</header>
+				      <!-- <div class="body"> -->
+				     
+					      <div id="aadtGraph"></div>
+					      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+				      <!-- </div> -->
+				 	<!-- </section> -->
+				 </div>
+				 <div class="tab-pane Line_Graph clearfix">
+					<!-- <section class="widget ui-sortable" ng-show="stations.length > 0"> -->
+				  		 	<header>
+					        <fieldset>
+			            	<legend>Line Graph<small>by time</small></legend></fieldset>
+			            	
+		        			</header>
+				      <!-- <div class="body"> -->
+				     	  	<div id="hrMonLineGraph" ng-show="!(getMonHour)"></div>
+				     	  	<!--<div id="hrMonLineGraph" ng-show="(getMonHour)">Loading</div>-->
+				     	  
+					      <!-- <div id="stationInfo" style="position:absolute;background-color:#fff"></div> -->
+				     <!--  </div> -->
+			 		<!-- </section> -->
+			 	</div>
+
+			 </div>
+		</section>
+		</div>
+
+		  <!--</div>-->
 		</div>
 	</div>
  	<div class="loader-wrap hiding hide">
