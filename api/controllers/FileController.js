@@ -145,8 +145,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTab
 				if(response != null || NewTable){
 					if(response != null){
 						if(response.rows != undefined){
-							console.log(response.rows.length)
-			    			response.rows.forEach(function(row){
+							response.rows.forEach(function(row){
 				    			if(parseInt(row.f[2].v) < 10){
 				    				row.f[2].v = "0"+row.f[2].v
 				    			}
@@ -231,7 +230,6 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTab
 							terminal.stdin.end();
 							return
 						}
-						console.log("Where?")
 						/*
 						Below parses new data to be properly formed for table insertion.
 
@@ -338,10 +336,7 @@ module.exports = {
 
     	UploadJob.create({filename:files[0].filename,isFinished:false,status:"Started",progress:"Began"}).exec(function(err,job){
     		currentJob = job;
-    		if(currentJob == undefined){
-    			console.log("error")
-    			return
-    		}
+    		
     		
    		/*
 

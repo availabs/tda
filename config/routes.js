@@ -217,6 +217,15 @@ module.exports.routes = {
       headers: 'content-type,X-Requested-With'
     }
   },
+  '/station/byMostRecentDate/':{
+    controller : 'StationsController',
+    action : 'getRecentDates',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
 
   '/login':'UserController.login',
   '/login/auth':'UserController.auth',

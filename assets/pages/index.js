@@ -47,8 +47,11 @@ function IndexController ($scope) {
     $scope.dispGraph = $scope.graphs[0].id;
     $scope.curYear = "All";
     $scope.getStations = false
+    $scope.getRecent = false
     //$scope.myMaxYear = ""
     $scope.stateName = ""
+    $scope.recentClass = ""
+    $scope.recentWeight = ""
     $scope.flagA = false
     $scope.flagB = false
     $scope.flagC = false
@@ -117,7 +120,31 @@ function IndexController ($scope) {
                         //     $scope.active_TruckClass = {value:$scope.truckClass[0]}
                         // });
                         tonageGraph.drawtonageGraph('#tonageGraph',data,$scope.state)
-                        
+                        wimXHR.post('/station/byMostRecentDate/',{'type':""},function(error,data){
+
+                            wimXHR.post('/station/byMostRecentDate/',{'type':"Class"},function(error,data){
+
+                                if(parseInt(data.rows[0].f[0].v) < 10 ){
+                                    $scope.recentClass = "200"+data.rows[0].f[0].v+"/"+data.rows[0].f[1].v+"/"+data.rows[0].f[2].v
+                                }
+                                else{
+                                    $scope.recentClass = "20"+data.rows[0].f[0].v+"/"+data.rows[0].f[1].v+"/"+data.rows[0].f[2].v
+                                }
+                                $scope.$apply(function(){
+                                    $scope.getRecent = true
+                                });
+                            });
+
+                            if(parseInt(data.rows[0].f[0].v) < 10 ){
+                                $scope.recentWeight = "200"+data.rows[0].f[0].v+"/"+data.rows[0].f[1].v+"/"+data.rows[0].f[2].v
+                            }
+                            else{
+                                $scope.recentWeight = "20"+data.rows[0].f[0].v+"/"+data.rows[0].f[1].v+"/"+data.rows[0].f[2].v
+                            }
+                                
+
+                        });
+
 
                     });
 
@@ -127,6 +154,7 @@ function IndexController ($scope) {
             AADTGraph.drawAADTGraph('#changeAADTGraph',angular.copy($scope.stations),'class',[true,true,true],[$scope.active_years.first,$scope.active_years.max],$scope.state);
             AADTGraph.drawAADTGraph('#aadtGraph',angular.copy($scope.stations),'class',[true,true,true],[],$scope.state);
             monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',"All",$scope.state,"All");
+
           }
           
         }
@@ -279,6 +307,7 @@ function IndexController ($scope) {
             }
             else{
                 if($scope.dispTime === "month"){
+
                         monthlyLineChart.drawMonthlyLineChart('#hrMonLineGraph',$scope.dispGraph,$scope.state,$scope.active_years2.id);
                       
                     }

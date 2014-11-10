@@ -904,7 +904,31 @@ module.exports = {
       		res.json(response)
 	    });
  	},
- 	
+ 	getRecentDates:function(req,res){
+ 		if(typeof req.param('type') == 'undefined'){
+ 			res.send('{status:"error",message:"class/weight required"}',500);
+ 			return;
+ 		}
+ 		var database = req.param('database'),
+ 			dataType = req.param('type')
+ 		var sql = 'SELECT year, month,day '+
+	 				  'FROM [tmasWIM12.'+database+dataType+'] '+
+					  'GROUP BY year, month,day '+
+					  'ORDER BY year DESC, month DESC, day DESC LIMIT 1 ';
+ 		var request = bigQuery.jobs.query({
+	    	kind: "bigquery#queryRequest",
+	    	projectId: 'avail-wim',
+	    	timeoutMs: '10000',
+	    	resource: {query:sql,projectId:'avail-wim'},
+	    	auth: jwt
+	    },
+
+		function(err, response) {
+			//console.log("classamount error: ",err)
+			if (err) console.log('Error:',err);
+      		res.json(response)
+	    });
+ 	},
 
 
   /**
