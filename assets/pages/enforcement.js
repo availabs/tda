@@ -49,6 +49,9 @@ function EnforcementController ($scope) {
     $scope.myTimePeriod = $scope.timePeriod[0].id
     $scope.myOrder = $scope.time_order[0].id
     $scope.getStations = false
+    $scope.recentClass = ""
+    $scope.recentWeight = ""
+    $scope.getRecent = false
     wimstates.init('#statesDIV',$scope);
     AADTGraph.initAADTGraph('#weightByHour');
     lineChart.initlineChart('#overweightLineGraph');
@@ -78,7 +81,6 @@ function EnforcementController ($scope) {
                     .attr("height", 40);
                     URL = '/stations/weight/'
                     wimXHR.post(URL, {'stateFips':$scope.state},function(error, data) {
-                                console.log(data)
                                 if (error) {
                                     console.log(error);
                                     return;
@@ -110,6 +112,30 @@ function EnforcementController ($scope) {
                         $scope.$apply(function(){
                             $scope.truckClass = getClassRange(angular.copy($scope.graphData))
                             $scope.active_TruckClass = {value:$scope.truckClass[0]}
+                        });
+                        wimXHR.post('/station/byMostRecentDate/',{'type':""},function(error,data){
+
+                            wimXHR.post('/station/byMostRecentDate/',{'type':"Class"},function(error,data){
+
+                                if(parseInt(data.rows[0].f[0].v) < 10 ){
+                                    $scope.recentClass = "200"+data.rows[0].f[0].v+"/"+data.rows[0].f[1].v+"/"+data.rows[0].f[2].v
+                                }
+                                else{
+                                    $scope.recentClass = "20"+data.rows[0].f[0].v+"/"+data.rows[0].f[1].v+"/"+data.rows[0].f[2].v
+                                }
+                                $scope.$apply(function(){
+                                    $scope.getRecent = true
+                                });
+                            });
+
+                            if(parseInt(data.rows[0].f[0].v) < 10 ){
+                                $scope.recentWeight = "200"+data.rows[0].f[0].v+"/"+data.rows[0].f[1].v+"/"+data.rows[0].f[2].v
+                            }
+                            else{
+                                $scope.recentWeight = "20"+data.rows[0].f[0].v+"/"+data.rows[0].f[1].v+"/"+data.rows[0].f[2].v
+                            }
+                                
+
                         });
                         AADTGraph.drawAADTGraphWeight('#weightByHour',angular.copy($scope.graphData),"weight","All",$scope.state)
                     });
