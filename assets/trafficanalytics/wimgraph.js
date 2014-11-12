@@ -30,6 +30,7 @@
 			_formatData,
 		
 			route = ['url','station'],	// URL to retrieve graph data from
+			
 
 		// depth is an array object that is treated as a stack.
 		// Ss users delve deeper into graph times, the year, month, or
@@ -415,10 +416,10 @@
 			legend.style('width', function() {
 					var w = parseInt(d3.select('.'+attr+'-label').style('width'));
 					if(w < 100){
-						return ((61) * values.length) + 'px';
+						return ((61.3) * values.length) + 'px';
 					}
 					else{
-						return ((117) * values.length) + 'px';	
+						return ((117.3) * values.length) + 'px';	
 					}
 				})
 				.style('background-color', '#000');
@@ -435,8 +436,7 @@
 			//console.log("getData",route,depth)
 			//console.time("getData");
 			loader.style('display', 'inline')
-
-            wimXHR.post(route[0], {'depth': depth,'id':route[1]}, function(error, data) {
+			wimXHR.post(route[0], {'depth': depth,'id':route[1],'state_code':route[2]}, function(error, data) {
             	if (error) {
             		console.log(error);
             		return;
@@ -989,12 +989,13 @@
 			return d+'th';
 		}
 
-		self.drawGraph = function(station, type) {
+		self.drawGraph = function(station, type, state) {
 			//stationID = station;
 			//stationType = type;
 
 			route[0] = '/station/graph'+type+'Data';
 			route[1] = station
+			route[2] = state
 
 			if (type == 'class') {
 				weightDistButton.classed('active', false)

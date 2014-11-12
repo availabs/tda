@@ -232,6 +232,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
       $scope.myDir2 = -1
       $scope.loading = true
       $scope.loading2 = true
+      $scope.loading3 = true
       $scope.yearRange = []
       $scope.dataRange = []
       $scope.point = 0
@@ -249,7 +250,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           var URL = '/station/yearsActive';
           seasonalLineChart.initseasonalLineChart("#seasonalLineGraph",'.tab-content')
           seasonalBarGraph.initseasonalBarGraph("#seasonalBarGraph",'.tab-content')
-          wimXHR.post(URL, {isClass:$scope.stationType,id:$scope.station},function(error, data) {
+          wimXHR.post(URL, {isClass:$scope.stationType,id:$scope.station,'state_code':$scope.state},function(error, data) {
               if(error){
                 console.log(error)
                 return
@@ -270,13 +271,16 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
               $scope.myDisp = $scope.values2[1].id;
               $scope.myDataDisp = $scope.values3[0].id;
 
-              wimXHR.post('/station/reportAmounts', {'id':$scope.station,'CoW':$scope.stationType,'year':(parseInt($scope.myYear)-2000)},function(error, data) {
+              wimXHR.post('/station/reportAmounts', {'id':$scope.station,'CoW':$scope.stationType,'year':(parseInt($scope.myYear)-2000),'state_code':$scope.state},function(error, data) {
+                  $scope.reportData = data
+                  $scope.dataRange = reportTable.drawTable('#reportTab',$scope.reportData,"Days",0,[])
+                
+                  $scope.dataRange[2].Year = $scope.myYear
+                  $scope.$apply(function(){
+                            $scope.loading3 = false
+                          });
 
-                $scope.reportData = data
-                $scope.dataRange = reportTable.drawTable('#reportTab',$scope.reportData,"Days",0,[])
-                $scope.dataRange[2].Year = $scope.myYear
-
-                wimXHR.post('/station/classAmounts', {'id':$scope.station},function(error, data) {
+                wimXHR.post('/station/classAmounts', {'id':$scope.station,'state_code':$scope.state},function(error, data) {
                   if(error){
                     console.log(error)
                     return
@@ -330,7 +334,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
                   if($scope.stationType === "wim"){
                 
-                      wimXHR.post('/station/dailyWeights', {id:$scope.station},function(error, data) {
+                      wimXHR.post('/station/dailyWeights', {'id':$scope.station,'state_code':$scope.state},function(error, data) {
                         if(error){
                           console.log(error)
                           return
@@ -349,7 +353,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                       
 
                       //doesn't work with class stations
-                      wimXHR.post('/station/byTonageInfo/', {'stationID':$scope.station},function(error, data) {
+                      wimXHR.post('/station/byTonageInfo/', {'stationID':$scope.station,'state_code':$scope.state},function(error, data) {
                         if(error){
                           console.log(error)
                           return
@@ -368,7 +372,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
                         //Remember to add in threshold value
                     
-                        wimXHR.post('/stations/byWeightTableInfo/', {'stationID':$scope.station,'threshold':80000},function(error,data) {
+                        wimXHR.post('/stations/byWeightTableInfo/', {'stationID':$scope.station,'threshold':80000,'state_code':$scope.state},function(error,data) {
                           if(error){
                             console.log(error)
                             return
@@ -412,11 +416,12 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                     });
                   }
                 });
+              
               });
               $scope.reloadTable = function(){
                 weightTable.removeTable('#stationTable')
                 weightTable.tableCreate($scope.stationWeightData,$scope.myTableDisp,$scope.myDir,'#stationTable')
-
+                
                 
               }
               $scope.reloadSeasonalGraph = function(){
@@ -435,13 +440,18 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                 if(parseInt($scope.dataRange[2].Year) == parseInt($scope.myYear)){
                   reportTable.init($scope.station,'#reportTab',$scope.myReport,$scope.stationData)
                   reportTable.drawTable('#reportTab',"",$scope.myReport,$scope.point,$scope.dataRange)
+
                 }
                 else{
-                  wimXHR.post('/station/reportAmounts', {'id':$scope.station,'CoW':$scope.stationType,'year':(parseInt($scope.myYear)-2000)},function(error, data) {
+                  $scope.loading3 = true
+                  wimXHR.post('/station/reportAmounts', {'id':$scope.station,'CoW':$scope.stationType,'year':(parseInt($scope.myYear)-2000),'state_code':$scope.state},function(error, data) {
                     $scope.reportData = data
                     reportTable.init($scope.station,'#reportTab',$scope.myReport,$scope.stationData)
                     $scope.dataRange = reportTable.drawTable('#reportTab',$scope.reportData,"Days",0,[])
                     $scope.dataRange[2].Year = $scope.myYear
+                    $scope.$apply(function(){
+                            $scope.loading3 = false
+                          });
                   });
                 }
               }
@@ -476,6 +486,17 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                   calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationDataAll,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
                 }
               }
+              $scope.stationChangeClass = function() {
+                 if($scope.stationType === "wim"){
+                    window.location ="/station/class/"+$scope.station+"_"+$scope.state
+                 }
+              }
+              $scope.stationChangeWim = function() {
+                 if($scope.stationType === "class"){
+                    window.location ="/station/wim/"+$scope.station+"_"+$scope.state
+                 }
+              }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 function _WIMGrapher(id) {
                   
@@ -569,7 +590,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
                     legend.style('width', function() {
                         var w = parseInt(d3.select('.'+attr+'-label').style('width'));
-                        return (w * values.length + 10) + 'px';
+                        return ((61.3) * values.length) + 'px';
                       })
                       .style('background-color', '#000');
                   }

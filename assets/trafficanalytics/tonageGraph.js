@@ -5,8 +5,8 @@ var tonageGraph ={
 	initTonageGraph:function(elem){
 
 		tonageGraph.margin = {top: 5, right: 5, bottom: 10, left:50},
-		tonageGraph.width = parseInt($(elem).width()) - tonageGraph.margin.left - tonageGraph.margin.right,
-		tonageGraph.height = parseInt($(elem).width()*0.3) - tonageGraph.margin.top - tonageGraph.margin.bottom;
+		tonageGraph.width = parseInt($('#sectionMAP').width())/2.5 - tonageGraph.margin.left - tonageGraph.margin.right,
+		tonageGraph.height = parseInt($('#sectionMAP').width())/2.5 - tonageGraph.margin.top - tonageGraph.margin.bottom;
 
 		tonageGraph.svg = d3.select(elem).append("svg")
 		    .attr("width", tonageGraph.width + tonageGraph.margin.left + tonageGraph.margin.right)
@@ -40,7 +40,7 @@ var tonageGraph ={
 
 
 
-	drawtonageGraph:function(elem,graphData){
+	drawtonageGraph:function(elem,graphData,state){
 		var output = [];
 		if(graphData != null){
 			if(graphData.rows != undefined){
@@ -323,7 +323,7 @@ var tonageGraph ={
 		  	.attr("style", function(d,i) { return  "fill:"+color(d.avg)+";"; })
 		  	.attr("height", function(d,i) { if(tonageGraph.height - y(d.avg) == 0){return 1}; return tonageGraph.height - y(d.avg); });
 
-		rect.on("click",function(d,i) { window.location ="/station/wim/"+ d.stationId; })
+		rect.on("click",function(d,i) { window.location ="/station/wim/"+d.stationId+"_"+state; })
 		  	.on("mouseover",function(d,i) {
 		  		d3.select('#map_station_'+d.stationId)
 			  			.style('opacity', 1.0)

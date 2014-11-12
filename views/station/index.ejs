@@ -4,7 +4,17 @@
 	<div class="content container"  ng-controller="StationController">
 		<div class="row">
 		    <div class="col-md-12">
-		        <h2 class="page-title">Station: <%= station %><small> - {{stationData.route+" "+stationData.station_location}}</small></h2>
+		        <h2 class="page-title">Station: <%= station %><small> - {{stationData.route+" "+stationData.station_location}}</small>
+			        <div class="btn-group pull-right" data-toggle="buttons">
+                        <label id="radio_wim" class="btn btn-success" ng-click="stationChangeWim()">
+                            <input type="radio"> Wim
+                        </label>
+           
+                        <label id="radio_class" class="btn btn-success" ng-click="stationChangeClass()">
+                            <input type="radio"> Class
+                        </label>
+                    </div>
+            	</h2>
 		    </div>
 		</div>
 	    <div class="row">
@@ -54,18 +64,19 @@
                		</div>
 
                		<!--
-               			Calendar
+               			Seasonality
                		-->
                		<div id="calendar" class="tab-pane clearfix">
                			<label>Direction:
 			              <select  class="form-control" ng-model="myDir2" ng-options="item5.id as item5.label for item5 in directionValues2" style='width:75px;display:inline;margin-right:5px;'></select>
 			            </label>
 			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadSeasonalGraph()">Apply</button>
-			            <div id="seasonalLineGraph" style='margin-left:10px;height: 550px;'>
+			            <div ng-show="!(loading2)" id="seasonalLegend" class="col-md-14"></div>
+			            <div id="seasonalLineGraph" class="col-md-6">
                    		</div>
-                   		<div id="seasonalBarGraph" style="margin-left:10px;height: 550px;">
+                   		<div id="seasonalBarGraph" class="col-md-6">
                    		</div>
-                   		<div ng-show="!(loading2)" id="seasonalLegend"></div>
+                   		<div id="seasonalTable" class="col-md-12"></div>
                    		
                    		<div id='calendar-controls' style='margin-left:10px;'>
                    			<label>Class:
@@ -145,8 +156,12 @@
 			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadReportTableBack()">Back</button>
 			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadReportTable()">Reload</button>
 			            <button ng-show="!(loading2)" class='btn btn-info' type="button" ng-click="reloadReportTableForward()">Forward</button>
-               			<div id="reportTab">
+               			<div id="reportTab" ng-show="!(loading3)">
                			</div>
+               			<div class="body" ng-show="(loading3)">
+					      		<p>Loading</p>
+					      		<img src="/img/loading.gif">
+				      	</div>
                			
                		</div>
 

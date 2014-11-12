@@ -4,8 +4,8 @@ var lineChart = {
 
 	initlineChart:function(elem){
 		lineChart.margin = {top: 5, right: 5, bottom: 10, left:50},
-		lineChart.width = parseInt($(elem).width()) - lineChart.margin.left - lineChart.margin.right,
-		lineChart.height = parseInt($(elem).width()*0.5)// - lineChart.margin.top - lineChart.margin.bottom;
+		lineChart.width =parseInt($('#sectionMAP').width())/2.5 - lineChart.margin.left - lineChart.margin.right,
+		lineChart.height = parseInt($('#sectionMAP').width())/2.5 - lineChart.margin.top - lineChart.margin.bottom;
 		lineChart.svg = d3.select(elem).append("svg")
 		    .attr("width", lineChart.width + 20)
 		    .attr("height", lineChart.height + lineChart.margin.top + lineChart.margin.bottom + 30)

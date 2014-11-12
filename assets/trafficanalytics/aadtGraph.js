@@ -5,8 +5,8 @@ var AADTGraph ={
 	initAADTGraph:function(elem){
 
 		AADTGraph.margin = {top: 5, right: 5, bottom: 10, left:50},
-		AADTGraph.width = parseInt($(elem).width()) - AADTGraph.margin.left - AADTGraph.margin.right,
-		AADTGraph.height = parseInt($(elem).width()*0.3) - AADTGraph.margin.top - AADTGraph.margin.bottom;
+		AADTGraph.width = parseInt($('#sectionMAP').width())/2.5 - AADTGraph.margin.left - AADTGraph.margin.right,
+		AADTGraph.height = parseInt($('#sectionMAP').width())/2.5 - AADTGraph.margin.top - AADTGraph.margin.bottom;
 
 		var svg = d3.select(elem).append("svg")
 		    .attr("width", AADTGraph.width + AADTGraph.margin.left + AADTGraph.margin.right)
@@ -40,7 +40,7 @@ var AADTGraph ={
 
 
 
-	drawAADTGraph:function(elem,graphData,classT,PST,year){
+	drawAADTGraph:function(elem,graphData,classT,PST,year,state){
 		
 	/*Below Block of code is used for making a graph that displays data based on year*/
 		var x = d3.scale.ordinal()
@@ -330,7 +330,7 @@ var AADTGraph ={
 			  		else if(i==1){return  "fill:"+colorS(graphData[zz].AASU)+";";}
 			  		else {return  "fill:"+colorT(graphData[zz].AATT)+";";} 
 			  	})
-			  	.on("click",function(d,i,zz) { window.location ="/station/class/"+ graphData[zz].stationId; })
+			  	.on("click",function(d,i,zz) { window.location ="/station/class/"+ graphData[zz].stationId+"_"+state; })
 			  	.on("mouseover",function(d,i,zz) {
 			  		d3.select('#map_station_'+graphData[zz].stationId)
 			  			.style('opacity', 1.0)
@@ -444,7 +444,7 @@ var AADTGraph ={
 
 	*/
 
-	drawAADTGraphWeight:function(elem,graphData,classT,truckClass){
+	drawAADTGraphWeight:function(elem,graphData,classT,truckClass,state){
 		
 
 			//console.log('graphData',graphData);
@@ -504,7 +504,7 @@ var AADTGraph ={
 			  	.attr("y", function(d,i) { return y(Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour"))); })
 			  	.attr("style", function(d,i) { return  "fill:"+color(Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")))+";"; })
 			  	.attr("height", function(d,i) { return AADTGraph.height - y(Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour"))); })
-			  	.on("click",function(d,i) { window.location ="/station/wim/"+ graphData[i].stationId; })
+			  	.on("click",function(d,i) { window.location ="/station/wim/"+ graphData[i].stationId+"_"+state; })
 			  	.on("mouseover",function(d,i) {
 			  		d3.select('#map_station_'+graphData[i].stationId)
 			  			.style('opacity', 1.0)
