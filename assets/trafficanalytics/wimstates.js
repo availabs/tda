@@ -283,19 +283,19 @@
 				})
 				.on('mousemove', _popup)
 				.on('click', function(d) {
-					var URL = '/station/' + 
+					var _URL = '/station/' + 
 						d.properties.type + '/' +
 						d.properties.stationID;
-					open(URL, '_self');
+					open(_URL, '_self');
 				})
 		}
 		// this function queries backend for all stations
 		// and then updates $scope.stations variable in
 		// order to draw list of stations below map
 		function _getStationData(id) {
-			var URL = '/state/classStations';
+			var _URL = '/state/classStations';
 			var stationsClass = [];
-			wimXHR.post(URL, {statefips:id},function(error, data) {
+			wimXHR.post(_URL, {statefips:id},function(error, data) {
 				if (error) {
             		console.log(error);
             		return;

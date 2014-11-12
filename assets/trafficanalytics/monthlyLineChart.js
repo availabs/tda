@@ -20,12 +20,12 @@ var monthlyLineChart = {
 	//dataType: type of traffic being displayed
 
 	drawMonthlyLineChart:function(elem,dataType,id,yearS){
-		URL = '/stations/timeLine/'
+		var _URL = '/stations/timeLine/'
 		var graphData = [];
 		if(yearS !== 'All'){
 			yearS = parseInt(yearS) - 2000
 		}
-		wimXHR.post(URL,{time:"month",year:yearS,statefips:id},function(error, data) {
+		wimXHR.post(_URL,{time:"month",year:yearS,statefips:id},function(error, data) {
 			if (error) {
 				console.log(error);
         		return;
