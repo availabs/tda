@@ -413,19 +413,30 @@ module.exports = {
 
         */
         terminal.stdout.on('data', function (data) {
-       		console.log('stdout: ' + data);
-       		console.log(typeof data === 'object')
-       		console.log(data.toString().split(" Current status: ")[data.toString().split(" Current status: ").length-1].slice(0,4))
        		if(typeof data === 'object'){
-	       		var status = data.toString().split(" Current status: ")
-	       		if(status[status.length-1].slice(0,4) === 'DONE'){
-	       			sails.sockets.blast('file_parsed',blastBackData);
-	       			UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-Success"}).exec(function(err,job){
-				    		if(err){
-				    			console.log(err)
-				    		}
-				    })
-	       		}
+       			if(data.toString().indexOf("Failure details") > -1){
+       				UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-ERROR"}).exec(function(err,job){
+			    		if(err){
+			    			console.log(err)
+			    		}
+			    	})
+					console.log('Ending terminal session.');
+					blastBackData = []
+					blastBackData.push("The file "+files[0].filename+" is either improperly formated or contains illegal characters. Fix these errors and reupload the file.")
+					sails.sockets.blast('file_parsed',blastBackData)
+					terminal.stdin.end();
+       			}
+       			else{
+		       		var status = data.toString().split(" Current status: ")
+		       		if(status[status.length-1].slice(0,4) === 'DONE'){
+		       			sails.sockets.blast('file_parsed',blastBackData);
+		       			UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-Success"}).exec(function(err,job){
+					    		if(err){
+					    			console.log(err)
+					    		}
+					    })
+		       		}
+		       	}
 	       	}
 	    });
 
@@ -482,7 +493,7 @@ module.exports = {
 			    	//when creating new table pass true
 			    	//when not creating new table pass false
 			    	
-			    	newDataUploadChecker(dataHolder,typeD,lines,fs,files,terminal,false,currentJob,blastBackData)
+			    	newDataUploadChecker(dataHolder,typeD,lines,fs,files,terminal,true,currentJob,blastBackData)
 			    	
 
 				});

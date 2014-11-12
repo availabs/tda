@@ -4,8 +4,8 @@ var seasonalLineChart = {
 
 	initseasonalLineChart:function(elem,container){
 		seasonalLineChart.margin = {top: 5, right: 5, bottom: 10, left:50},
-		seasonalLineChart.width = 960 - seasonalLineChart.margin.left - seasonalLineChart.margin.right,
-		seasonalLineChart.height = 500 - seasonalLineChart.margin.top - seasonalLineChart.margin.bottom;
+		seasonalLineChart.width = parseInt($(elem).width())*10 - seasonalLineChart.margin.left - seasonalLineChart.margin.right,
+		seasonalLineChart.height = parseInt($(elem).width())*10 - seasonalLineChart.margin.top - seasonalLineChart.margin.bottom;
 		var svg = d3.select(elem).append("svg")
 		    .attr("width", seasonalLineChart.width + seasonalLineChart.margin.left + seasonalLineChart.margin.right + 30)
 		    .attr("height", seasonalLineChart.height + seasonalLineChart.margin.top + seasonalLineChart.margin.bottom + 30)
@@ -709,33 +709,14 @@ var seasonalLineChart = {
 			    //focus.attr("transform", "translate(-100,-100)");
 			  }
 
-		    //draws best fit line
-
-		    // rect.append("path")
-			   //    .attr("class", function(d){return "classLine_"+d.stationId})
-			   //    .attr("d", function(d) { if(dir === "count"){return line(d.avgOverWeight);} else{return line(d.perOverWeight);} }) //Must be passed an array
-			   //    .style("stroke", function(d) { return color2(parseInt(d.funcCode[0])); })
-			   //    .style("fill","none")
-				  // .on("mouseover",function(d) {
-				  // 		$('#linegraph path').attr('opacity',0.1);
-				  // 		$('.classLine_'+d.stationId).attr('opacity',0.9);
-				  // 		$('#map_station_'+d.stationId).attr('stroke-width','2px');
-				  // 		$('#map_station_'+d.stationId).attr('stroke','yellow');
-				  // 		var info =  "<p class="+d.stationId+">Station: " +d.stationId+
-						// 				"<br>Class: "+d.funcCode+
-						// 				"</p>";
-						// //focus.attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
-				  // 		$("#stationInfo").html(info);
-				  // 	})
-				  // 	.on("mouseout",function(d) {
-				  // 		$('#map_station_'+d.stationId).attr('stroke-width','none');
-				  // 		$('#map_station_'+d.stationId).attr('stroke','none');
-				  // 		//focus.attr("transform", "translate(-100,-100)");
-				  // 		$('#linegraph path').attr('opacity',1);
-				  // 		$("#stationInfo").html('');
-				  // 	});
-
-		
+		    //Seasonal Table is created below
+		    $('#seasonalTable').html('')
+			var htmlCode = '<table id="seasonal_Table" class="table table-bordered"><tr style="background:#B8B8B8"><th>Class/Month</th><th>January</th><th>February</th><th>March</th><th>April</th><th>May</th><th>June</th><th>July</th><th>August</th><th>September</th><th>October</th><th>November</th><th>December</th></tr>'
+			for(k = 0;k<avgs.length;k++){
+				htmlCode = htmlCode + '<tr><th style="background:#B8B8B8">Class '+(k+1)+'</th><th ">'+Math.floor(avgs[k][0])+'</th><th ">'+Math.floor(avgs[k][1])+'</th><th ">'+Math.floor(avgs[k][2])+'</th><th ">'+Math.floor(avgs[k][3])+'</th><th ">'+Math.floor(avgs[k][4])+'</th><th ">'+Math.floor(avgs[k][5])+'</th><th ">'+Math.floor(avgs[k][6])+'</th><th ">'+Math.floor(avgs[k][7])+'</th><th ">'+Math.floor(avgs[k][8])+'</th><th ">'+Math.floor(avgs[k][9])+'</th><th ">'+Math.floor(avgs[k][10])+'</th><th ">'+Math.floor(avgs[k][11])+'</th></tr>'
+			}
+			htmlCode = htmlCode + '</table>'
+			$('#seasonalTable').append(htmlCode)
 		
 	},
 }

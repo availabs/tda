@@ -272,11 +272,11 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
               $scope.myDataDisp = $scope.values3[0].id;
 
               wimXHR.post('/station/reportAmounts', {'id':$scope.station,'CoW':$scope.stationType,'year':(parseInt($scope.myYear)-2000),'state_code':$scope.state},function(error, data) {
-
-                $scope.reportData = data
-                $scope.dataRange = reportTable.drawTable('#reportTab',$scope.reportData,"Days",0,[])
-                $scope.dataRange[2].Year = $scope.myYear
-                $scope.$apply(function(){
+                  $scope.reportData = data
+                  $scope.dataRange = reportTable.drawTable('#reportTab',$scope.reportData,"Days",0,[])
+                
+                  $scope.dataRange[2].Year = $scope.myYear
+                  $scope.$apply(function(){
                             $scope.loading3 = false
                           });
 
@@ -416,6 +416,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                     });
                   }
                 });
+              
               });
               $scope.reloadTable = function(){
                 weightTable.removeTable('#stationTable')
@@ -485,6 +486,17 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                   calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationDataAll,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
                 }
               }
+              $scope.stationChangeClass = function() {
+                 if($scope.stationType === "wim"){
+                    window.location ="/station/class/"+$scope.station+"_"+$scope.state
+                 }
+              }
+              $scope.stationChangeWim = function() {
+                 if($scope.stationType === "class"){
+                    window.location ="/station/wim/"+$scope.station+"_"+$scope.state
+                 }
+              }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 function _WIMGrapher(id) {
                   
@@ -578,7 +590,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
                     legend.style('width', function() {
                         var w = parseInt(d3.select('.'+attr+'-label').style('width'));
-                        return (w * values.length + 10) + 'px';
+                        return ((61.3) * values.length) + 'px';
                       })
                       .style('background-color', '#000');
                   }

@@ -4,8 +4,8 @@ var seasonalBarGraph = {
 
 	initseasonalBarGraph:function(elem,container){
 		seasonalBarGraph.margin = {top: 30, right: 10, bottom: 10, left: 10}
-		seasonalBarGraph.width = 960 - seasonalBarGraph.margin.left - seasonalBarGraph.margin.right
-		seasonalBarGraph.height = 500 - seasonalBarGraph.margin.top - seasonalBarGraph.margin.bottom;
+		seasonalBarGraph.width = parseInt($(elem).width())*10 - seasonalBarGraph.margin.left - seasonalBarGraph.margin.right
+		seasonalBarGraph.height = parseInt($(elem).width())*10 - seasonalBarGraph.margin.top - seasonalBarGraph.margin.bottom;
 		var svg = d3.select(elem).append("svg")
 		    .attr("width", seasonalBarGraph.width + seasonalBarGraph.margin.left + seasonalBarGraph.margin.right)
 		    .attr("height", seasonalBarGraph.height + seasonalBarGraph.margin.top + seasonalBarGraph.margin.bottom + 50)
