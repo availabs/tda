@@ -181,7 +181,7 @@
 
 			 </div>
 		</section>
-		<section class="widget ui-sortable" ng-show="(stations.length > 0)">
+		<section class="widget ui-sortable" ng-show="(stations.length > 0) && (getRecent)">
 		  		<header>
 			        <fieldset>
 	            	<legend>Most Recent Data
@@ -192,7 +192,7 @@
 		      		<p>Loading Most Recent Dates Of Data...</p>
 		      		<img src="/img/loading.gif">
 		        </div> -->
-		        <div class="body" ng-show="(getRecent)">
+		        <div class="body" >
 		      		<p>Weight: {{recentWeight}}</p>
 		      		<p>Class: {{recentWeight}}</p>
 		        </div>
