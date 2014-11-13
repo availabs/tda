@@ -234,91 +234,98 @@
 		AVLmap.zoomToBounds(path.bounds(__JSON__[marker.name]));
 		AVLmap.zoomMap();
 
-	    drawStationPoints(formatData(__JSON__[marker.name]));
+		formatData(__JSON__[marker.name],function(stationPoints){
+			drawStationPoints(stationPoints);
+		})
+	    
 
 		getStationData(marker.name);
 
 		console.log(__JSON__[marker.name])
     }
 
-	function formatData(stateData) {
+	function formatData(stateData,cb) {
 		var collection = {
 				type: 'FeatureCollection',
 				features: []
 			};
 		var currentStateStations = []
-		AllStations.forEach(function(d){
-			if(parseInt(d.state_fips) == stateData.id){
-				currentStateStations.push(d)
-			}
-		})
-		var schema = [ 'station_id',
-					  'func_class_code',
-					  'method_of_vehicle_class',
-					  'method_of_truck_weighing',
-					  'type_of_sensor',
-					  'latitude',
-					  'longitude' ]
-		var featureCollection = {
-			type: "FeatureCollection",
-			features: []
-		}
-    	currentStateStations.forEach(function(d) {
-    		var feature = {
-    			type:'Feature',
-    			geometry: {
-    				type:'Point',
-    				coordinates: [0, 0]
-    			},
-    			properties: {}
-    	};
-    		schema.forEach(function(name, i) {
-
-    			if (name != 'latitude' && name != 'longitude') {
-	    			feature.properties[name] = d[name];
-	    		} else if (name == 'longitude') {
-	    			var lng = (+d[name]).toString();
-	    			if (/^1/.test(lng)) {
-	    				lng = lng.replace(/^(1\d\d)/, '-$1.');
-	    			} else {
-	    				lng = lng.replace(/^(\d\d)/, '-$1.');
-	    			}
-
-	    			feature.geometry.coordinates[0] = lng*1;
-	    		} else if (name == 'latitude') {
-	    			var lat = (+d[name]).toString().replace(/^ ?(\d\d)/, '$1.');
-	    			feature.geometry.coordinates[1] = lat*1;
-	    		}
-    		})
-    		featureCollection.features.push(feature);
-    	})
-    	//get valid geometries
-		var stations = {};
-		// need this to filter out bad geometry
-		featureCollection.features.forEach(function(d) {
-			if (d.geometry.coordinates[0] != 0 && d.geometry.coordinates[1] != 0) {
-				stations[d.properties.station_id] = d.geometry;
-			}
-		});
-		for (var i in stateData.properties.stations) {
-			var d = stateData.properties.stations[i];
-
-			var obj = {
-				type: 'Feature',
-				properties: {},
-				geometry: {}
-			};
-			obj.properties.stationID = d.stationID;
-			obj.properties.count = d.stationCount;
-			obj.properties.type = d.stationType;
-
-			if (d.stationID in stations) {
-				obj.geometry = stations[d.stationID];
-				collection.features.push(obj);
-			}
-		}
+		d3.json('/data/allStations.json',function(data){
+    		AllStations = data;
 		
-		return collection;
+			AllStations.forEach(function(d){
+				if(parseInt(d.state_fips) == stateData.id){
+					currentStateStations.push(d)
+				}
+			})
+			var schema = [ 'station_id',
+						  'func_class_code',
+						  'method_of_vehicle_class',
+						  'method_of_truck_weighing',
+						  'type_of_sensor',
+						  'latitude',
+						  'longitude' ]
+			var featureCollection = {
+				type: "FeatureCollection",
+				features: []
+			}
+	    	currentStateStations.forEach(function(d) {
+	    		var feature = {
+	    			type:'Feature',
+	    			geometry: {
+	    				type:'Point',
+	    				coordinates: [0, 0]
+	    			},
+	    			properties: {}
+	    	};
+	    		schema.forEach(function(name, i) {
+
+	    			if (name != 'latitude' && name != 'longitude') {
+		    			feature.properties[name] = d[name];
+		    		} else if (name == 'longitude') {
+		    			var lng = (+d[name]).toString();
+		    			if (/^1/.test(lng)) {
+		    				lng = lng.replace(/^(1\d\d)/, '-$1.');
+		    			} else {
+		    				lng = lng.replace(/^(\d\d)/, '-$1.');
+		    			}
+
+		    			feature.geometry.coordinates[0] = lng*1;
+		    		} else if (name == 'latitude') {
+		    			var lat = (+d[name]).toString().replace(/^ ?(\d\d)/, '$1.');
+		    			feature.geometry.coordinates[1] = lat*1;
+		    		}
+	    		})
+	    		featureCollection.features.push(feature);
+	    	})
+	    	//get valid geometries
+			var stations = {};
+			// need this to filter out bad geometry
+			featureCollection.features.forEach(function(d) {
+				if (d.geometry.coordinates[0] != 0 && d.geometry.coordinates[1] != 0) {
+					stations[d.properties.station_id] = d.geometry;
+				}
+			});
+			for (var i in stateData.properties.stations) {
+				var d = stateData.properties.stations[i];
+
+				var obj = {
+					type: 'Feature',
+					properties: {},
+					geometry: {}
+				};
+				obj.properties.stationID = d.stationID;
+				obj.properties.count = d.stationCount;
+				obj.properties.type = d.stationType;
+
+				if (d.stationID in stations) {
+					obj.geometry = stations[d.stationID];
+					collection.features.push(obj);
+				}
+			}
+			
+			cb(collection);
+	 	})
 	 }
 
 	function drawStationPoints(collection) {

@@ -1,28 +1,13 @@
 $(function(){
     function pageLoad(){        
-        //PjaxApp.onResize(drawSparkLines);f
+        
         $('.widget').widgster();
-
-        // $("body").on("mousemove", function(e) {
-        //   var x = e.pageX - 20;
-        //   var y = e.pageY;
-        //   var windowH = $(window).height();
-        //   if (y > (windowH - 100)) {
-        //   var y = e.pageY - 100;
-        //   } else {
-        //   var y = e.pageY - 20;
-        //   }
-        //   //console.log(x,y)
-        //   $("#stationInfo").css({
-        //     "left": x,
-        //     "top": y
-        //   });
-        // });
+    
     }
 
     pageLoad();
 
-    PjaxApp.onPageLoad(pageLoad);
+    
 });
 
 function IndexController ($scope) {
@@ -319,15 +304,15 @@ function IndexController ($scope) {
             }
         }
     });
-    $('#nav-wrapper').height($("#my-affix").height());
-    $('#my-affix').affix({
-    offset: {
-      top: 0
-    , bottom: function () {
-        return (this.bottom = $('.content container').outerHeight(true))
-      }
-    }
-  })
+  //   $('#nav-wrapper').height($("#my-affix").height());
+  //   $('#my-affix').affix({
+  //   offset: {
+  //     top: 0
+  //   , bottom: function () {
+  //       return (this.bottom = $('.content container').outerHeight(true))
+  //     }
+  //   }
+  // })
 
 
     function getYearRange(stations){

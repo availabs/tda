@@ -28,20 +28,6 @@ var jsFilesToInject = [
     "/js/dependencies/sails.io.js",
     "lib/angular/angular.min.js",
     "lib/jquery/jquery-2.0.3.min.js",
-    "lib/jquery-pjax/jquery.pjax.js",
-
-
-    //<!-- jquery plugins -->
-    "lib/icheck.js/jquery.icheck.js",
-    "lib/sparkline/jquery.sparkline.js",
-    "lib/jquery-ui-1.10.3.custom.js",
-    "lib/jquery.slimscroll.js",
-
-    
-    //<!--backbone and friends -->
-    "lib/backbone/underscore-min.js",
-    "lib/backbone/backbone-min.js",
-    "lib/backbone/backbone.localStorage-min.js",
 
     //<!-- bootstrap default plugins -->
     "lib/bootstrap/transition.js",
@@ -75,7 +61,7 @@ var jsFilesToInject = [
 // templates get spit out to the same file.  Be sure and check out `tasks/README.md`
 // for information on customizing and installing new tasks.
 var templateFilesToInject = [
-  'templates/**/*.html'
+  //'templates/**/*.html'
 ];
 
 
