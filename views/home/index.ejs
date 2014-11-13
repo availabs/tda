@@ -119,23 +119,24 @@
 
 		 	<header ng-show="stations.length > 0">
                 <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a href=".AADT_Change_Graph" data-toggle="tab">Change</a>
-                    </li>
-                    <li>
-                        <a href=".Tonage_Graph" data-toggle="tab">Tonage</a>
-                    </li>
-                    <li>
+                	<li  class="active">
                         <a href=".ADDT_Graph" data-toggle="tab">AADT</a>
                     </li>
                     <li>
                         <a href=".Line_Graph" data-toggle="tab">Line</a>
                     </li>
+                    <li>
+                        <a href=".AADT_Change_Graph" data-toggle="tab">Change</a>
+                    </li>
+                    <li>
+                        <a href=".Tonage_Graph" data-toggle="tab">Tonage</a>
+                    </li>
+                    
                 </ul>
             </header>
 
 		 	<div class="body tab-content" style="overflow:hidden;" ng-show="stations.length > 0">
-			  	<div class="tab-pane AADT_Change_Graph clearfix active">
+			  	<div class="tab-pane AADT_Change_Graph clearfix">
 				  	<!-- <section class="widget ui-sortable"> -->
 				  		<header>
 					        <fieldset>
@@ -165,7 +166,7 @@
 				      <!-- </div> -->
 				 	<!-- </section> -->
 				 </div>
-				 <div  class="tab-pane ADDT_Graph clearfix">
+				 <div  class="tab-pane ADDT_Graph clearfix  active">
 				  <!-- 	<section class="widget ui-sortable" ng-show="stations.length > 0"> -->
 				  		 	<header>
 					        <fieldset>
