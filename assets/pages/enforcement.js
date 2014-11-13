@@ -49,10 +49,13 @@ function EnforcementController ($scope) {
     $scope.myTimePeriod = $scope.timePeriod[0].id
     $scope.myOrder = $scope.time_order[0].id
     $scope.getStations = false
+
+    wimstates2.init('#statesDIV',$scope);
+
     $scope.recentClass = ""
     $scope.recentWeight = ""
     $scope.getRecent = false
-    wimstates.init('#statesDIV',$scope);
+
     AADTGraph.initAADTGraph('#weightByHour');
     lineChart.initlineChart('#overweightLineGraph');
     truckWeightGraph.initTruckWeightGraph('#overweightBarGraph')
@@ -79,8 +82,10 @@ function EnforcementController ($scope) {
                     .attr("xlink:href", "/img/loading.gif")
                     .attr("width", 67)
                     .attr("height", 40);
-                    URL = '/stations/weight/'
-                    wimXHR.post(URL, {'stateFips':$scope.state},function(error, data) {
+                    
+                    var URL = '/stations/weight/'
+                    wimXHR.post(URL, {stateFips:$scope.state},function(error, data) {
+
                                 if (error) {
                                     console.log(error);
                                     return;
@@ -157,7 +162,7 @@ function EnforcementController ($scope) {
                     .attr("xlink:href", "/img/loading.gif")
                     .attr("width", 67)
                     .attr("height", 40);
-                    URL = '/stations/overweight/'
+                    var URL = '/stations/overweight/'
                     wimXHR.post(URL,{timeType:"on",threshold:80000,stateFips:$scope.state} ,function(error, data) {
                         $scope.overWeightLine = []
                         
@@ -286,7 +291,7 @@ function EnforcementController ($scope) {
                 .attr("xlink:href", "/img/loading.gif")
                 .attr("width", 67)
                 .attr("height", 40);
-            URL = '/stations/overweight/'
+            var URL = '/stations/overweight/'
             if($scope.state != undefined){
                 wimXHR.post(URL,{timeType:$scope.myTimePeriod,threshold:80000,stateFips:$scope.state} ,function(error, data) {
                     if (error) {

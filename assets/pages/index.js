@@ -55,7 +55,9 @@ function IndexController ($scope) {
     $scope.flagA = false
     $scope.flagB = false
     $scope.flagC = false
-    wimstates.init('#statesDIV',$scope);
+
+    wimstates2.init('#statesDIV',$scope);
+
     AADTGraph.initAADTGraph('#changeAADTGraph');
     AADTGraph.initAADTGraph('#aadtGraph');
     monthlyLineChart.initMonthlylLineChart("#hrMonLineGraph");

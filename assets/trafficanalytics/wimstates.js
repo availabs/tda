@@ -283,6 +283,7 @@
 				})
 				.on('mousemove', _popup)
 				.on('click', function(d) {
+
 					if($scope.state != undefined){
 						if($scope.state.toString().length == 2){
 							var URL = '/station/' + 
@@ -298,9 +299,9 @@
 		// and then updates $scope.stations variable in
 		// order to draw list of stations below map
 		function _getStationData(id) {
-			var URL = '/state/classStations';
+			var _URL = '/state/classStations';
 			var stationsClass = [];
-			wimXHR.post(URL, {statefips:id},function(error, data) {
+			wimXHR.post(_URL, {statefips:id},function(error, data) {
 				if (error) {
             		console.log(error);
             		return;

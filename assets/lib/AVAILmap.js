@@ -61,7 +61,7 @@
 		}
     }
 
-    function _TileLayer(URL, options) {
+    function _TileLayer(_URL, options) {
         var self = this,
             IDtag,
             map,
@@ -105,9 +105,9 @@
 
         self.url = function(url) {
 			if (url === undefined) {
-				return URL;
+				return _URL;
 			}
-            URL = url;
+            _URL = url;
         }
 
         self.setMap = function(m) {
@@ -257,8 +257,8 @@
                 json = cache.data(id);
 
             if (json === undefined) {
-                var URL = _makeTileURL(d, self.url()),
-                    xhr = new _avlXHR(id, URL, requests);
+                var _URL = _makeTileURL(d, self.url()),
+                    xhr = new _avlXHR(id, _URL, requests);
 
                 requests[id] = xhr;
 
