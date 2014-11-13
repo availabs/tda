@@ -20,8 +20,8 @@
 		</div>
 	    <div class="row">
 
-	    	
-		    <section class="widget widget-tabs col-md-9">
+	    	<div class="col-md-10">
+		    <section class="widget widget-tabs">
 	            <header>
 	                <ul class="nav nav-tabs">
 	                    <li>
@@ -170,9 +170,49 @@
 		    		
 		      	</div>
 		    </section>
-			<section class="widget ui-sortable col-md-2">
-
+		    </div>
+		    <div class="col-md-2">
+			<section class="widget ui-sortable">
+				<fieldset>
+                    <!-- <legend class="section">Dropdown based colored selects</legend> -->
+                    <div class="control-group">
+                        <label class="control-label" for="simple-big"><strong>Year</strong></label>
+                        <div class="controls form-group">
+                            <div class="btn-group bootstrap-select col-md-12">
+                            	<button class="btn dropdown-toggle clearfix btn-primary btn-lg btn-block" data-toggle="dropdown" id="simple-big" tabindex="-1"><span class="filter-option">All</span>&nbsp;<i class="fa fa-caret-down"></i></button>
+                            	<ul class="dropdown-menu" role="menu" style="overflow-y: auto; min-height: 60px; max-height: 123px;">
+                            		<li rel="0"><a tabindex="-1" href="#" class="">2013</a></li>
+                            		<li rel="1"><a tabindex="-1" href="#" class="">2012</a></li>
+                            		<li rel="2"><a tabindex="-1" href="#" class="">2011</a></li>
+                            	</ul>
+                            </div>               
+                        </div>
+                        <label class="control-label" for="simple-big"><strong>Direction</strong></label>
+                        <div class="controls form-group">
+                            <div class="btn-group bootstrap-select col-md-12">
+                            	<button class="btn dropdown-toggle clearfix btn-primary btn-lg btn-block" data-toggle="dropdown" id="simple-big" tabindex="-1"><span class="filter-option">Combined</span>&nbsp;<i class="fa fa-caret-down"></i></button>
+                            	<ul class="dropdown-menu" role="menu" style="overflow-y: auto; min-height: 60px; max-height: 123px;">
+                            		<li rel="0"><a tabindex="-1" href="#" class="">Fourth Item</a></li>
+                            		<li rel="1"><a tabindex="-1" href="#" class="">Fifth Item</a></li>
+                            		<li rel="2"><a tabindex="-1" href="#" class="">Sixth item</a></li>
+                            	</ul>
+                            </div>               
+                        </div>
+                        <label class="control-label" for="simple-big"><strong>Class</strong></label>
+                        <div class="controls form-group">
+                            <div class="btn-group bootstrap-select col-md-12">
+                            	<button class="btn dropdown-toggle clearfix btn-primary btn-lg btn-block" data-toggle="dropdown" id="simple-big" tabindex="-1"><span class="filter-option">All</span>&nbsp;<i class="fa fa-caret-down"></i></button>
+                            	<ul class="dropdown-menu" role="menu" style="overflow-y: auto; min-height: 60px; max-height: 123px;">
+                            		<li rel="0"><a tabindex="-1" href="#" class="">Class 1</a></li>
+                            		<li rel="1"><a tabindex="-1" href="#" class="">Class 2</a></li>
+                            		<li rel="2"><a tabindex="-1" href="#" class="">Class 3</a></li>
+                            	</ul>
+                            </div>               
+                        </div>
+                    </div>
+                </fieldset>
 		 	</section>
+		 	</div>
 		  </div><!-- end of row-->
 		
 	</div>

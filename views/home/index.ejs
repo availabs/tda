@@ -25,23 +25,6 @@
 		  </div>
 		</div>
 		  <div class="col-md-4">
-		  	<section class="widget ui-sortable" ng-show="(stations.length > 0)">
-		  		<header>
-			        <fieldset>
-	            	<legend>Most Recent Data
-	            	</legend>
-	        		</fieldset>
-        		</header>
-        	    <div class="body2" ng-show="!(getRecent)">
-		      		<p>Loading Most Recent Dates Of Data...</p>
-		      		<img src="/img/loading.gif">
-		        </div>
-		        <div class="body" ng-show="(getRecent)">
-		      		<p>Weight: {{recentWeight}}</p>
-		      		<p>Class: {{recentWeight}}</p>
-		        </div>
-
-		 	</section>
 		  	<section class="widget ui-sortable" ng-show="!(stations.length > 0)">
 		  		<header>
 			        <fieldset>
@@ -197,6 +180,23 @@
 
 			 </div>
 		</section>
+		<section class="widget ui-sortable" ng-show="(stations.length > 0)">
+		  		<header>
+			        <fieldset>
+	            	<legend>Most Recent Data
+	            	</legend>
+	        		</fieldset>
+        		</header>
+        	   <!--  <div class="body2" ng-show="!(getRecent)">
+		      		<p>Loading Most Recent Dates Of Data...</p>
+		      		<img src="/img/loading.gif">
+		        </div> -->
+		        <div class="body" ng-show="(getRecent)">
+		      		<p>Weight: {{recentWeight}}</p>
+		      		<p>Class: {{recentWeight}}</p>
+		        </div>
+
+		 	</section>
 		</div>
 
 		  <!--</div>-->
