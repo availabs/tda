@@ -287,7 +287,7 @@ var AADTGraph ={
 		  .attr("dy", ".71em")
 		  .style("font-size","10px")
 		  .style("text-anchor", "end")
-		  .text("AAADT");
+		  .text("AADT");
 
 		//Below clears out previous graph data
 
