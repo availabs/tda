@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/lib/leaflet.css">
 <%- partial('../partials/nav') %>
 <div class="wrap sidebar-icons">
     <%- partial('../partials/header') %>
@@ -19,8 +20,8 @@
 		</div>
 	    <div class="row">
 
-	    	<div class="col-md-12">
-		    <section class="widget widget-tabs col-md-12">
+	    	
+		    <section class="widget widget-tabs col-md-9">
 	            <header>
 	                <ul class="nav nav-tabs">
 	                    <li>
@@ -169,9 +170,9 @@
 		    		
 		      	</div>
 		    </section>
-			  
-			</div>
-		  	
+			<section class="widget ui-sortable col-md-2">
+
+		 	</section>
 		  </div><!-- end of row-->
 		
 	</div>
@@ -184,6 +185,7 @@
 	stationType="<%=stationType%>";
 	
 </script>
+<script src="/lib/d3.min.js"></script>
 <script type="text/javascript" src="/lib/colorbrewer.js"></script>
 <script src="/trafficanalytics/wimgraph.js"></script>
 <script src="/trafficanalytics/stationInfo.js"></script>
@@ -195,7 +197,3 @@
 <script src="/controllers/station/stationIndex.js"></script>
 <script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
 <script src="/lib/leaflet.js"></script>
-
-
-
-<link rel="stylesheet" href="/lib/leaflet.css">

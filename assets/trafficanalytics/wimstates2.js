@@ -364,7 +364,7 @@
 			.on('click', function(d) {
 				var _URL = '/station/' + 
 					d.properties.type + '/' +
-					d.properties.stationID;
+					d.properties.stationID+"_"+$scope.state;
 				open(_URL, '_self');
 			})
 	}
