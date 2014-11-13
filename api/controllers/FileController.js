@@ -30,6 +30,24 @@ done has been done to make sure it works just fine. Notable errors to still be i
 
 4. Same file name error handling needs to be done
 
+5. Odd NaN error keeps popping up. Has to do with connection? Unsure of what the cause is or how to repeat it,
+but doesn't seem to do anything? Example of error is below:
+
+   error: Sent 500 ("Server Error") response
+error: Error (E_UNKNOWN) :: Encountered an unexpected error
+error: invalid input syntax for integer: "NaN"
+    at Connection.parseE (/home/user/code/tda/node_modules/sails-postgresql/node_modules/pg.js/lib/connection.js:526:11)
+    at Connection.parseMessage (/home/user/code/tda/node_modules/sails-postgresql/node_modules/pg.js/lib/connection.js:356:17)
+    at Socket.<anonymous> (/home/user/code/tda/node_modules/sails-postgresql/node_modules/pg.js/lib/connection.js:105:22)
+    at Socket.EventEmitter.emit (events.js:95:17)
+    at Socket.<anonymous> (_stream_readable.js:746:14)
+    at Socket.EventEmitter.emit (events.js:92:17)
+    at emitReadable_ (_stream_readable.js:408:10)
+    at emitReadable (_stream_readable.js:404:5)
+    at readableAddChunk (_stream_readable.js:165:9)
+    at Socket.Readable.push (_stream_readable.js:127:10)
+
+
 */
 
 
@@ -493,7 +511,7 @@ module.exports = {
 			    	//when creating new table pass true
 			    	//when not creating new table pass false
 			    	
-			    	newDataUploadChecker(dataHolder,typeD,lines,fs,files,terminal,true,currentJob,blastBackData)
+			    	newDataUploadChecker(dataHolder,typeD,lines,fs,files,terminal,false,currentJob,blastBackData)
 			    	
 
 				});
