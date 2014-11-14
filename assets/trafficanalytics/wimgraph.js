@@ -445,7 +445,7 @@
 
             	_formatData(data);
             	//console.timeEnd("getData");
-
+            	// console.log(depth)
             	_drawGraph();
 	            _drawWDGraph();
             });
@@ -641,7 +641,6 @@
 		   	Yscale.domain([0, Ymax]);
 
 		   	var bars = wdGraphSVG.selectAll('rect').data(data);
-
 		   	bars.enter().append('rect')
 		   		.attr('y', hght)
 		   		.attr('x', function(d, i) { return (i*(barWidth + gap) + gap); })
@@ -791,6 +790,36 @@
 		    	.rangePoints([0, wdth], padding);
 
 		   	Yscale.domain([0, Ymax]);
+		   	
+		   	//Below is where volume table is created.
+		   	$('#wimgraphTable').html('')
+		   	var timeRow = ""
+		   	for(x = 0;x<data.length;x++){
+		   		timeRow = timeRow+"<th style='color:#fff'>"+data[x][time]+"</th>"
+		   	}
+		   	var zero = true
+		   	var htmlCode = '<table id="seasonal_Table" class="table table-hover"><thead style="background:#618fb0;""><tr   ><th style="color:#fff">Class/'+time+'</th>'+timeRow+'</tr></th></thead>'
+			for(k = 0;k<13;k++){
+				htmlCode = htmlCode + '<tr><th>Class '+(k+1)+'</th>'
+				for(l = 0;l<data.length;l++){
+					for(m = 0;m<data[l]["data"].length;m++){
+						if(data[l]["data"][m].class == k){
+							htmlCode = htmlCode + '<th>'+Math.floor(data[l]["data"][m].amount)+'</th>'
+							m = data[l]["data"].length
+							zero = false
+						}
+					}
+					if(zero){
+						htmlCode = htmlCode + '<th>0</th>'
+					}
+					zero = true
+				}
+				htmlCode = htmlCode + '</tr>'
+			}
+			htmlCode = htmlCode + '</table>'
+			$('#wimgraphTable').append(htmlCode)
+			//End wim table creation
+
 
 			var stacks = cwGraphSVG.selectAll('.stack')
 				.data(data);

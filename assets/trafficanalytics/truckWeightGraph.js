@@ -62,7 +62,7 @@ var truckWeightGraph = {
 
 		var color = d3.scale.quantize()
 	        .domain([d3.min(graphData, function(d,i) { return average(graphData[i].years,"overweight"); }), d3.max(graphData, function(d,i) { return average(graphData[i].years,"overweight"); })])
-	        .range(colorbrewer.RdYlGn[11]);
+	        .range(colorbrewer.RdYlGn[11].reverse());
 
 	    var svg = d3.select(elem+" svg");
 	    svg.selectAll("g").remove();
@@ -95,10 +95,10 @@ var truckWeightGraph = {
 			y.domain([0, d3.max(graphData, function(d,i) { return average(graphData[i].years,"overweight")/average(graphData[i].years,"totalTrucks") * 100; })]);	
 		var color = d3.scale.quantize()
 	        .domain([d3.min(graphData, function(d,i) { return average(graphData[i].years,"overweight")/average(graphData[i].years,"totalTrucks") * 100; }), d3.max(graphData, function(d,i) { return average(graphData[i].years,"overweight")/average(graphData[i].years,"totalTrucks") * 100; })])
-	        .range(colorbrewer.RdYlGn[11]);
+	        .range(colorbrewer.RdYlGn[11].reverse());
 
 	    var svg = d3.select(elem+" svg");
-	    svg.selectAll("g").remove();
+	    svg.selectAll("g").reme();
 	    svg.append("g")
 		  .attr("class", "y axis")
 		  .style("font-size","10px")

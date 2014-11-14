@@ -119,23 +119,19 @@ var stationInfo = {
 						if(data.rows[0].f[i+1].v[0] === " "){
 							var longitude = parseFloat("-"+data.rows[0].f[i+1].v[1]+data.rows[0].f[i+1].v[2]+"."+data.rows[0].f[i+1].v.slice(3,data.rows[0].f[i+1].v.length))
 							var latitude = parseFloat(data.rows[0].f[i].v[0]+data.rows[0].f[i].v[1]+"."+data.rows[0].f[i].v.slice(2,data.rows[0].f[i].v.length))
+							stationData['lat'] = latitude;
+							stationData['lng'] = longitude;
 						}
 						else{
 							
 							var longitude = parseFloat("-"+data.rows[0].f[i+1].v[0]+data.rows[0].f[i+1].v[1]+data.rows[0].f[i+1].v[2]+"."+data.rows[0].f[i+1].v.slice(3,data.rows[0].f[i+1].v.length))
 							var latitude = parseFloat(data.rows[0].f[i].v[0]+data.rows[0].f[i].v[1]+"."+data.rows[0].f[i].v.slice(2,data.rows[0].f[i].v.length))
+							stationData['lat'] = latitude;
+							stationData['lng'] = longitude;
 						}
 
 						//Below is for creating the map on the station page
-					    $('#displayMap').height($(window).height()-200);
-					    var map = L.map('displayMap', {
-					     center: [latitude,longitude],
-					     zoom: 16 ,
-					     //layers: [mbTerrainSat],
-					     //zoomControl: false
-					    });
-					    L.tileLayer("https://{s}.tiles.mapbox.com/v3/matt.hd0b27jd/{z}/{x}/{y}.png").addTo(map);
-					    var marker = L.marker([latitude,longitude]).addTo(map);
+					    
 					    //End map creation
 					}
 					i++	

@@ -25,23 +25,6 @@
 		  </div>
 		</div>
 		  <div class="col-md-4">
-		  	<section class="widget ui-sortable" ng-show="(stations.length > 0)">
-		  		<header>
-			        <fieldset>
-	            	<legend>Most Recent Data
-	            	</legend>
-	        		</fieldset>
-        		</header>
-        	    <div class="body2" ng-show="!(getRecent)">
-		      		<p>Loading Most Recent Dates Of Data...</p>
-		      		<img src="/img/loading.gif">
-		        </div>
-		        <div class="body" ng-show="(getRecent)">
-		      		<p>Weight: {{recentWeight}}</p>
-		      		<p>Class: {{recentWeight}}</p>
-		        </div>
-
-		 	</section>
 		  	<section class="widget ui-sortable" ng-show="!(stations.length > 0)">
 		  		<header>
 			        <fieldset>
@@ -119,23 +102,24 @@
 
 		 	<header ng-show="stations.length > 0">
                 <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a href=".AADT_Change_Graph" data-toggle="tab">Change</a>
+                	<li  class="active">
+                        <a href=".ADDT_Graph" data-toggle="tab">AAD Traffic</a>
                     </li>
                     <li>
-                        <a href=".Tonage_Graph" data-toggle="tab">Tonage</a>
+                        <a href=".Line_Graph" data-toggle="tab">MAD Traffic</a>
                     </li>
                     <li>
-                        <a href=".ADDT_Graph" data-toggle="tab">AADT</a>
+                        <a href=".AADT_Change_Graph" data-toggle="tab">Year / Year</a>
                     </li>
                     <li>
-                        <a href=".Line_Graph" data-toggle="tab">Line</a>
+                        <a href=".Tonage_Graph" data-toggle="tab">AAD Tonnage</a>
                     </li>
+                    
                 </ul>
             </header>
 
 		 	<div class="body tab-content" style="overflow:hidden;" ng-show="stations.length > 0">
-			  	<div class="tab-pane AADT_Change_Graph clearfix active">
+			  	<div class="tab-pane AADT_Change_Graph clearfix">
 				  	<!-- <section class="widget ui-sortable"> -->
 				  		<header>
 					        <fieldset>
@@ -155,7 +139,7 @@
 					<!-- <section class="widget ui-sortable" ng-show="stations.length > 0"> -->
 				  		 	<header>
 					        <fieldset>
-			            	<legend>Tonage<small>  by station</small></legend></fieldset>
+			            	<legend>AAD Tonnage<small>  by station</small></legend></fieldset>
 			            	
 		        			</header>
 				     <!--  <div class="body"> -->
@@ -165,7 +149,7 @@
 				      <!-- </div> -->
 				 	<!-- </section> -->
 				 </div>
-				 <div  class="tab-pane ADDT_Graph clearfix">
+				 <div  class="tab-pane ADDT_Graph clearfix  active">
 				  <!-- 	<section class="widget ui-sortable" ng-show="stations.length > 0"> -->
 				  		 	<header>
 					        <fieldset>
@@ -197,6 +181,23 @@
 
 			 </div>
 		</section>
+		<section class="widget ui-sortable" ng-show="(stations.length > 0) && (getRecent)">
+		  		<header>
+			        <fieldset>
+	            	<legend>Most Recent Data
+	            	</legend>
+	        		</fieldset>
+        		</header>
+        	   <!--  <div class="body2" ng-show="!(getRecent)">
+		      		<p>Loading Most Recent Dates Of Data...</p>
+		      		<img src="/img/loading.gif">
+		        </div> -->
+		        <div class="body" >
+		      		<p>Weight: {{recentWeight}}</p>
+		      		<p>Class: {{recentWeight}}</p>
+		        </div>
+
+		 	</section>
 		</div>
 
 		  <!--</div>-->
@@ -206,12 +207,14 @@
         <i class="fa fa-spinner fa-spin"></i>
   </div>
 </div>
+<script src="/lib/d3.min.js"></script>
+<script src="/lib/topojson.js"></script>
 
 <script src="/trafficanalytics/wimstates2.js"></script>
 <script src="/trafficanalytics/hpms_map.js"></script>
 <script src="/trafficanalytics/avlmenu.js"></script>
 <script src="/lib/avlmap.js"></script>
-<script src="/lib/esc.js"></script>
+<script src="/trafficanalytics/utils-esc.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/avlmap.css">
 <link rel="stylesheet" type="text/css" href="/css/avlmenu.css">
 <link rel="stylesheet" type="text/css" href="/css/hpms/myCSS.css">

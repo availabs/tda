@@ -287,7 +287,7 @@ var AADTGraph ={
 		  .attr("dy", ".71em")
 		  .style("font-size","10px")
 		  .style("text-anchor", "end")
-		  .text("AAADT");
+		  .text("AADT");
 
 		//Below clears out previous graph data
 
@@ -298,13 +298,13 @@ var AADTGraph ={
 
 		var colorP = d3.scale.quantize()
 	        .domain([d3.min(graphData, function(d,i) {  return graphData[i].AAPT; }), d3.max(graphData, function(d,i) { return graphData[i].AAPT; })])
-	        .range(colorbrewer.RdYlGn[11]);
+	        .range(colorbrewer.RdYlGn[11].reverse());
 	    var colorS = d3.scale.quantize()
 	        .domain([d3.min(graphData, function(d,i) {  return graphData[i].AASU; }), d3.max(graphData, function(d,i) { return graphData[i].AASU; })])
-	        .range(colorbrewer.RdYlGn[11]);
+	        .range(colorbrewer.RdYlGn[11].reverse());
 	    var colorT = d3.scale.quantize()
 	        .domain([d3.min(graphData, function(d,i) { return graphData[i].AATT; }), d3.max(graphData, function(d,i) { return graphData[i].AATT; })])
-	        .range(colorbrewer.RdYlGn[11]);
+	        .range(colorbrewer.RdYlGn[11].reverse());
 
 		var rect = svg.selectAll(".graph")
 	      .data(graphData)
@@ -475,7 +475,7 @@ var AADTGraph ={
 
 			var color = d3.scale.quantize()
 		        .domain([d3.min(graphData, function(d,i) { return Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")); }), d3.max(graphData, function(d,i) { return Math.round(totalAADT(graphData[i].years,classT)/totalAADT(graphData[i].years,"hour")); })])
-		        .range(colorbrewer.RdYlGn[11]);
+		        .range(colorbrewer.RdYlGn[11].reverse());
 
 		    var svg = d3.select(elem+" svg");
 		    svg.selectAll("g").remove();

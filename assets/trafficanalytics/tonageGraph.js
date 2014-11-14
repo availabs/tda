@@ -1,6 +1,6 @@
 var tonageGraph ={
 	svg:{},
-	
+	colorRange:colorbrewer.RdYlGn[11].reverse(),
 
 	initTonageGraph:function(elem){
 
@@ -296,7 +296,7 @@ var tonageGraph ={
 
 		var color = d3.scale.quantize()
 	        .domain([d3.min(output, function(d,i) { return output[i].avg; }), d3.max(output, function(d,i) { return output[i].avg; })])
-	        .range(colorbrewer.RdYlGn[11]);
+	        .range(tonageGraph.colorRange);
 	    var svg = d3.select(elem+" svg");
 	    svg.selectAll("g").remove();
 	    svg.append("g")
