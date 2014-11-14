@@ -21,6 +21,8 @@
 		width = 1000,
 		height = 500;
 
+	var HPMSmap = null;
+
 	var projection = null,
 		zoom = null,
 		path = null;
@@ -147,7 +149,7 @@
 			AVLmap  = avlmap.Map({id: id, startLoc: [-95.5, 37], minZoom: 3})
 				.addLayer(avlmap.RasterLayer({url: "http://api.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png"}))
 				.addControl({type:'info', position: 'bottom-right'})
-				.addControl({type:'zoom'})
+				.addControl({type:'zoom', position: 'bottom-left'})
 
 			// resetZoom = AVLmap.customControl({name: 'Reset Zoom', position: 'avl-top-left'});
 			// resetState = AVLmap.customControl({name: 'Zoom to State', position: 'avl-top-left'});
@@ -159,6 +161,10 @@
 
 			AVLmap.zoomToBounds(path.bounds(dataCollection));
 			AVLmap.zoomMap();
+
+			// create new HPMS object with base HPMS URL and TileStache URL
+			HPMSmap = hpms_map_maker("http://api.availabs.org/hpms/", "http://lor.availabs.org:1331/");
+			HPMSmap.init(AVLmap);
 
 			drawMap(statesSVG);
 
@@ -217,6 +223,8 @@
 	  	if (clicked == marker.name) {
 	  		clicked = null;
 
+			HPMSmap.updateActiveStates(marker.name, false);
+
 	  		removeStationPoints();
 
 			AVLmap.zoomToBounds(path.bounds(dataCollection));
@@ -224,6 +232,11 @@
 
 			return;
 	  	}
+	  	
+	  	if (clicked) {
+			HPMSmap.updateActiveStates(clicked, false);
+	  	}
+
 	  	clicked = marker.name;
 
 		$scope.$apply(function(){
@@ -234,11 +247,11 @@
 		AVLmap.zoomToBounds(path.bounds(__JSON__[marker.name]));
 		AVLmap.zoomMap();
 
+		HPMSmap.updateActiveStates(marker.name, true);
+
 	    drawStationPoints(formatData(__JSON__[marker.name]));
 
 		getStationData(marker.name);
-
-		console.log(__JSON__[marker.name])
     }
 
 	function formatData(stateData) {
