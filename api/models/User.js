@@ -53,9 +53,10 @@ module.exports = {
       defaultsTo: false
     },
     
-    agency: {
-      model: 'Agency'
-    },
+    agency:{
+            collection: 'Agency',
+            via: 'users'
+        },
 
     toJSON: function() {
       var obj = this.toObject();

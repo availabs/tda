@@ -4,8 +4,8 @@ var seasonalLineChart = {
 
 	initseasonalLineChart:function(elem,container){
 		seasonalLineChart.margin = {top: 5, right: 5, bottom: 10, left:50},
-		seasonalLineChart.width = parseInt($(elem).width())*10 - seasonalLineChart.margin.left - seasonalLineChart.margin.right,
-		seasonalLineChart.height = parseInt($(elem).width())*10 - seasonalLineChart.margin.top - seasonalLineChart.margin.bottom;
+		seasonalLineChart.width = parseInt($(elem).width())*8 - seasonalLineChart.margin.left - seasonalLineChart.margin.right,
+		seasonalLineChart.height = parseInt($(elem).width())*8 - seasonalLineChart.margin.top - seasonalLineChart.margin.bottom;
 		var svg = d3.select(elem).append("svg")
 		    .attr("width", seasonalLineChart.width + seasonalLineChart.margin.left + seasonalLineChart.margin.right + 30)
 		    .attr("height", seasonalLineChart.height + seasonalLineChart.margin.top + seasonalLineChart.margin.bottom + 30)

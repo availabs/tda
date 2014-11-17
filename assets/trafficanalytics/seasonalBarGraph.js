@@ -4,8 +4,8 @@ var seasonalBarGraph = {
 
 	initseasonalBarGraph:function(elem,container){
 		seasonalBarGraph.margin = {top: 30, right: 10, bottom: 10, left: 10}
-		seasonalBarGraph.width = parseInt($(elem).width())*10 - seasonalBarGraph.margin.left - seasonalBarGraph.margin.right
-		seasonalBarGraph.height = parseInt($(elem).width())*10 - seasonalBarGraph.margin.top - seasonalBarGraph.margin.bottom;
+		seasonalBarGraph.width = parseInt($(elem).width())*8 - seasonalBarGraph.margin.left - seasonalBarGraph.margin.right
+		seasonalBarGraph.height = parseInt($(elem).width())*8 - seasonalBarGraph.margin.top - seasonalBarGraph.margin.bottom;
 		var svg = d3.select(elem).append("svg")
 		    .attr("width", seasonalBarGraph.width + seasonalBarGraph.margin.left + seasonalBarGraph.margin.right)
 		    .attr("height", seasonalBarGraph.height + seasonalBarGraph.margin.top + seasonalBarGraph.margin.bottom + 50)
@@ -242,7 +242,7 @@ var seasonalBarGraph = {
 		      .data(barSetCalc)
 		    .enter().append("g")
 		      .attr("class", "g")
-		      .attr("transform", "translate(" + 0 + "," + seasonalBarGraph.margin.top + ")")
+		      .attr("transform", "translate(" + 10 + "," + seasonalBarGraph.margin.top + ")")
 		    rect.selectAll("rect")
 		      .data(function(d) { return d; })
 		    .enter().append("rect")
@@ -288,16 +288,17 @@ var seasonalBarGraph = {
 
 		  svg.append("g")
 		      .attr("class", "x axis")
-		      .attr("transform", "translate(0," + 500 + ")")
+		      .attr("transform", "translate(10," + (seasonalBarGraph.height+40) + ")")
 		      .call(xAxis)
 		  
 
 		  svg.append("g")
 		      .attr("class", "y axis")
 		    .append("line")
+		      .attr("transform", "translate(10,0)")
 		      .attr("x1", x(0))
 		      .attr("x2", x(0))
-		      .attr("y2", 500)
+		      .attr("y2", (seasonalBarGraph.height+40))
 		      .attr("fill","none")
 		      .attr("stroke","#000")
 

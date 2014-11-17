@@ -22,13 +22,11 @@ $(function () {
 
     }
     pageLoad();
-    PjaxApp.onPageLoad(pageLoad);
-
 });
 
 
 function parsedDataController($scope){
-
+    
     io.socket.on('connect',function(){
         $scope.processedFiles = [];
         $scope.loadingData = false
@@ -48,9 +46,24 @@ function parsedDataController($scope){
                     $scope.loadingData = false
                 }
             });
+
+            d3.json("/uploadJob/?limit=20&sort=createdAt%20DESC", function(error, json) {
+              if (error) return console.warn(error);
+              $scope.$apply(function(){
+                        $scope.jobs = json
+                    });
+            });
+
         })
-        
+                
         
     })
+
+    d3.json("/uploadJob/?limit=20&sort=createdAt%20DESC", function(error, json) {
+      if (error) return console.warn(error);
+      $scope.$apply(function(){
+                $scope.jobs = json
+            });
+    });
 
 }

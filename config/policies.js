@@ -25,7 +25,10 @@ module.exports.policies = {
 		'login': "flash",
 		'auth':"flash",
 		'admin':["flash","sessionAuth"]
-	}
+	},
+  Agency: {
+  	'admin':["flash","sessionAuth"]
+  }
 
 
 	// Here's an example of mapping some policies to run before

@@ -10,6 +10,7 @@ module.exports = {
 	show:function(req,res){
 		UploadJob.find().exec(function(err,returnJobs){
 			res.view({jobs:returnJobs})
+			
 		})
 	}
 	

@@ -32,6 +32,7 @@ module.exports.routes = {
   '/enforcement' :'HomeController.enforcement',
   '/station/:type/:id':'StationController.index',
   '/user/admin':'UserController.admin',
+  '/agency/admin':'AgencyController.admin',
   '/user/db' : 'UserController.changeDatabase',
   '/upload' : 'DataLoaderController.index',
   '/upload/data' : 'FileController.upload',

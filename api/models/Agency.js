@@ -9,7 +9,11 @@ module.exports = {
 
   attributes: {
   	name:"STRING",
-  	datasource:"STRING"
+  	datasource:"STRING",
+  	users:{
+            collection: 'User',
+            via: 'agency'
+        },
   }
 
 };
