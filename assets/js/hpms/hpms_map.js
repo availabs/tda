@@ -53,7 +53,7 @@
 			.addControl({type:'info', position:'top-right'})
 			.on('zoomchange.hpms', mapZoomWatch);
 
-		var dims = map.dimensions();
+		//var dims = map.dimensions();
 
 		popup = avlmenu.Popup()
 			.position('bottom-right')

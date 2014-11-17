@@ -8,6 +8,8 @@
       class: [false,false,false,false,false,false,false,false,false,false,false,false,false],
     }
 
+  var colorRange = colorbrewer.RdYlGn[11].reverse();
+
   function _init(min,max,caltype){
     var html = [];
     var caldiv = d3.select("#caldiv"+caltype);
@@ -122,7 +124,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 
       var color = d3.scale.quantize()
           .domain([d3.min(values), d3.max(values)])
-          .range(colorbrewer.RdYlGn[11]);
+          .range(colorRange);
 
         var data = wimCal.colorDays(svg,input_data,monthPath,rect,color,dispType)
         
@@ -149,7 +151,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                            Math.floor(color.invertExtent("#006837")[0]) + " - " + Math.floor(color.invertExtent("#006837")[1])]
 
           var color2 = d3.scale.ordinal()
-          .range(["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]);
+          .range(colorRange);
           wimCal.legend = svg2.selectAll("#legend"+caltype)
           .data(truckData.slice())
         .enter().append("g")
@@ -508,7 +510,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
                     .range([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
               // used to color class and weight legends
                   var _LEGEND_COLORS = {
-                    class: ["#08306b", "#08519c", "#2171b5", "#4292c6", "#6baed6", "#9ecae1","#ddffff","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"],
+                    class: ["#08306b", "#08519c", "#2171b5", "#4292c6", "#6baed6", "#9ecae1","#ddffff","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"].reverse(),
                   }
                   
 

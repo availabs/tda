@@ -795,12 +795,12 @@
 		   	$('#wimgraphTable').html('')
 		   	var timeRow = ""
 		   	for(x = 0;x<data.length;x++){
-		   		timeRow = timeRow+"<th>"+data[x][time]+"</th>"
+		   		timeRow = timeRow+"<th style='color:#fff'>"+data[x][time]+"</th>"
 		   	}
 		   	var zero = true
-		   	var htmlCode = '<table id="seasonal_Table" class="table table-bordered"><tr style="background:#B8B8B8"><th>Class/'+time+'</th>'+timeRow+'</tr>'
+		   	var htmlCode = '<table id="seasonal_Table" class="table table-hover"><thead style="background:#618fb0;""><tr   ><th style="color:#fff">Class/'+time+'</th>'+timeRow+'</tr></th></thead>'
 			for(k = 0;k<13;k++){
-				htmlCode = htmlCode + '<tr><th style="background:#B8B8B8">Class '+(k+1)+'</th>'
+				htmlCode = htmlCode + '<tr><th>Class '+(k+1)+'</th>'
 				for(l = 0;l<data.length;l++){
 					for(m = 0;m<data[l]["data"].length;m++){
 						if(data[l]["data"][m].class == k){

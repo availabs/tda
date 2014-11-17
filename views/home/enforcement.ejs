@@ -25,23 +25,6 @@
 		  </div>
 		</div>
 		  <div class="col-md-4">
-		  	<section class="widget ui-sortable" ng-show="(stations.length > 0)">
-		  		<header>
-			        <fieldset>
-	            	<legend>Most Recent Data
-	            	</legend>
-	        		</fieldset>
-        		</header>
-        	    <div class="body2" ng-show="!(getRecent)">
-		      		<p>Loading Most Recent Dates Of Data...</p>
-		      		<img src="/img/loading.gif">
-		        </div>
-		        <div class="body" ng-show="(getRecent)">
-		      		<p>Weight: {{recentWeight}}</p>
-		      		<p>Class: {{recentWeight}}</p>
-		        </div>
-
-		 	</section>
 		  	<section class="widget ui-sortable" ng-show="!(stations.length > 0)">
 		  		<header>
 			        <fieldset>
@@ -152,6 +135,9 @@
         <i class="fa fa-spinner fa-spin"></i>
   </div>
 </div>
+<script src="/lib/d3.min.js"></script>
+<script src="/lib/topojson.js"></script>
+<script src="/lib/avlmap.js"></script>
 <script src="/trafficanalytics/wimstates.js"></script>
 <script src="/lib/AVAILmap.js"></script>
 <script src="/trafficanalytics/wimstates2.js"></script>
@@ -165,5 +151,5 @@
 <script src="/trafficanalytics/lineChart.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
-<script src="/pages/enforcement.js"></script>
+<script src="/controllers/home/enforcementController.js"></script>
 

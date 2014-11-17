@@ -21,6 +21,8 @@
 		width = 1000,
 		height = 500;
 
+	var HPMSmap = null;
+
 	var projection = null,
 		zoom = null,
 		path = null;
@@ -68,27 +70,29 @@
 	    URL = '/stations/allClassStations';
 
 	    wimXHR.get(URL, function(error, data) {
-	        data.rows.forEach(function(row){
-	            var rowState = row.f[0].v;
-	            var rowStation = row.f[1].v;
+	        if(data){
+		        data.rows.forEach(function(row){
+		            var rowState = row.f[0].v;
+		            var rowStation = row.f[1].v;
 
-	            if (!(rowState in states)) {
-	                states[rowState] = {
-	                    'state_fips': rowState, 
-	                    stations: {length: 0},
-	                    name: esc.fips2state[rowState]
-	                };
-	            }
-	            var obj = {
-	                stationID: rowStation,
-	                stationCount: row.f[2].v,
-	                stationType: 'class'
-	            }
-	            if (!(rowStation in states[rowState].stations)) {
-	                states[rowState].stations[rowStation] = obj;
-	                states[rowState].stations.length++;
-	            }
-	        });
+		            if (!(rowState in states)) {
+		                states[rowState] = {
+		                    'state_fips': rowState, 
+		                    stations: {length: 0},
+		                    name: esc.fips2state[rowState]
+		                };
+		            }
+		            var obj = {
+		                stationID: rowStation,
+		                stationCount: row.f[2].v,
+		                stationType: 'class'
+		            }
+		            if (!(rowStation in states[rowState].stations)) {
+		                states[rowState].stations[rowStation] = obj;
+		                states[rowState].stations.length++;
+		            }
+		        });
+		    }
 	        if (++sourcesLoaded == dataSources) {
 	            finalInit(DOMelemID, states, $s);
 	        }
@@ -147,7 +151,7 @@
 			AVLmap  = avlmap.Map({id: id, startLoc: [-95.5, 37], minZoom: 3})
 				.addLayer(avlmap.RasterLayer({url: "http://api.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png"}))
 				.addControl({type:'info', position: 'bottom-right'})
-				.addControl({type:'zoom'})
+				.addControl({type:'zoom', position: 'bottom-left'})
 
 			// resetZoom = AVLmap.customControl({name: 'Reset Zoom', position: 'avl-top-left'});
 			// resetState = AVLmap.customControl({name: 'Zoom to State', position: 'avl-top-left'});
@@ -159,6 +163,10 @@
 
 			AVLmap.zoomToBounds(path.bounds(dataCollection));
 			AVLmap.zoomMap();
+
+			// create new HPMS object with base HPMS URL and TileStache URL
+			HPMSmap = hpms_map_maker("http://api.availabs.org/hpms/", "http://lor.availabs.org:1331/");
+			HPMSmap.init(AVLmap);
 
 			drawMap(statesSVG);
 
@@ -217,6 +225,8 @@
 	  	if (clicked == marker.name) {
 	  		clicked = null;
 
+			HPMSmap.updateActiveStates(marker.name, false);
+
 	  		removeStationPoints();
 
 			AVLmap.zoomToBounds(path.bounds(dataCollection));
@@ -224,6 +234,11 @@
 
 			return;
 	  	}
+	  	
+	  	if (clicked) {
+			HPMSmap.updateActiveStates(clicked, false);
+	  	}
+
 	  	clicked = marker.name;
 
 		$scope.$apply(function(){
@@ -234,14 +249,14 @@
 		AVLmap.zoomToBounds(path.bounds(__JSON__[marker.name]));
 		AVLmap.zoomMap();
 
+		HPMSmap.updateActiveStates(marker.name, true);
+
 		formatData(__JSON__[marker.name],function(stationPoints){
 			drawStationPoints(stationPoints);
 		})
 	    
 
 		getStationData(marker.name);
-
-		console.log(__JSON__[marker.name])
     }
 
 	function formatData(stateData,cb) {
@@ -405,24 +420,26 @@
         		console.log(error);
         		return;
         	}
-        	if(data.rows != undefined){
-		  		data.rows.forEach(function(row){
-			  			var rowStation = row.f[0].v;
-			  			for(var x = 0;x<rowStation.length;x++){
-                                        if(rowStation[x] === " "){
-                                            rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
-                                        }
-                                    }
-			  			if(getStationIndex(rowStation,"class") == -1) {
-			  				stationsClass.push({'stationId':rowStation, years:[],heights:[],'AAPT':0,'AASU':0,'AATT':0})
-			  				stationsClass[getStationIndex(rowStation,"class")].heights.push({'y0':0,'y1':0})
-			  				stationsClass[getStationIndex(rowStation,"class")].heights.push({'y0':0,'y1':0})
-			  				stationsClass[getStationIndex(rowStation,"class")].heights.push({'y0':0,'y1':0})
-			  			}
-			  			stationsClass[getStationIndex(rowStation,"class")].years.push({'year':row.f[1].v,'ADT':Math.round(row.f[2].v),'APT':Math.round(row.f[3].v),'ASU':Math.round(row.f[4].v),'ATT':Math.round(row.f[5].v)});
-			  			
-		  		});
-	  		}
+        	if(data){
+	        	if(data.rows != undefined){
+			  		data.rows.forEach(function(row){
+				  			var rowStation = row.f[0].v;
+				  			for(var x = 0;x<rowStation.length;x++){
+	                                        if(rowStation[x] === " "){
+	                                            rowStation = rowStation.substr(0, x) + '0' + rowStation.substr(x + 1)
+	                                        }
+	                                    }
+				  			if(getStationIndex(rowStation,"class") == -1) {
+				  				stationsClass.push({'stationId':rowStation, years:[],heights:[],'AAPT':0,'AASU':0,'AATT':0})
+				  				stationsClass[getStationIndex(rowStation,"class")].heights.push({'y0':0,'y1':0})
+				  				stationsClass[getStationIndex(rowStation,"class")].heights.push({'y0':0,'y1':0})
+				  				stationsClass[getStationIndex(rowStation,"class")].heights.push({'y0':0,'y1':0})
+				  			}
+				  			stationsClass[getStationIndex(rowStation,"class")].years.push({'year':row.f[1].v,'ADT':Math.round(row.f[2].v),'APT':Math.round(row.f[3].v),'ASU':Math.round(row.f[4].v),'ATT':Math.round(row.f[5].v)});
+				  			
+			  		});
+		  		}
+		  	}
 	  		if (clicked) {
 				$scope.$apply(function(){
 		  			$scope.getStations = false
