@@ -144,7 +144,7 @@
 				}
 			})
 
-			AVLmap  = avlmap.Map({id: id, startLoc: [-95.5, 37], minZoom: 3})
+			AVLmap  = avlmap.Map({id: id, startLoc: [-95.5, 37], minZoom: 3, maxZoom: 17})
 				.addLayer(avlmap.RasterLayer({url: "http://api.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png"}))
 				.addControl({type:'info', position: 'bottom-right'})
 
@@ -259,9 +259,10 @@
 
 	function resetMap() {
 		d3.selectAll(".station-point").remove();
+
 		$scope.$apply(function(){
   			$scope.stations = [];
-		  	$scope.getStations = false
+		  	$scope.getStations = false;
 		});
 
 		AVLmap.zoomToBounds(path.bounds(dataCollection));
@@ -457,12 +458,12 @@
 			})
 			.on('mouseover', function(d) {
 				d3.select(this)
-					.attr('opacity', 1.0);
+					.style('opacity', 1.0);
 				adjustPopup(d);
 			})
 			.on('mouseout', function(d) {
-				d3.selectAll('.station')
-					.attr('opacity', 0.66);
+				d3.select(this)
+					.style('opacity', 0.66);
 				popup.style('display', 'none')
 			})
 			.on('mousemove', adjustPopup)
