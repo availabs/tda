@@ -6,25 +6,20 @@
 		__JSON__ = {},  // contains geoJSON data indexed by state fips
 		$scope = null,
 		clicked = null,
-		prevMarker = null,
-		prevColor = null,
+		stateResetControl = null,
 		stations = null,
-		XHR = null,
 		dataCollection = {  // collection of geoJSON for states containing WIM data
 			type: 'FeatureCollection',
 			features: []
 		};
 
 	var AVLmap = null,
-		resetZoom,
-		resetState,
 		width = 1000,
 		height = 500;
 
 	var HPMSmap = null;
 
 	var projection = null,
-		zoom = null,
 		path = null;
 
 	var colorScale = d3.scale.linear()
@@ -111,7 +106,8 @@
     		.style('width', width+'px')
     		.style('height', height+'px')
 
-		mapDIV.style('height', height+"px");
+		mapDIV.style('height', height+"px")
+			.style('position', 'relative');
 
 		popup = mapDIV.append('div')
 			.attr('class', 'station-popup');
@@ -151,18 +147,15 @@
 			AVLmap  = avlmap.Map({id: id, startLoc: [-95.5, 37], minZoom: 3})
 				.addLayer(avlmap.RasterLayer({url: "http://api.tiles.mapbox.com/v3/am3081.map-lkbhqenw/{z}/{x}/{y}.png"}))
 				.addControl({type:'info', position: 'bottom-right'})
-				.addControl({type:'zoom', position: 'bottom-left'})
-
-			// resetZoom = AVLmap.customControl({name: 'Reset Zoom', position: 'avl-top-left'});
-			// resetState = AVLmap.customControl({name: 'Zoom to State', position: 'avl-top-left'});
-			// resetState.toggle();
 
 			projection = AVLmap.projection();
-			// zoom = AVLmap.zoom();
 			path = d3.geo.path().projection(projection);
 
 			AVLmap.zoomToBounds(path.bounds(dataCollection));
 			AVLmap.zoomMap();
+
+			stateResetControl = AVLmap.addControl({type:'custom', position: 'bottom-left'});
+			stateResetControl.data([{name: "Reset Map", func: doclick}])();
 
 			// create new HPMS object with base HPMS URL and TileStache URL
 			HPMSmap = hpms_map_maker("http://api.availabs.org/hpms/", "http://lor.availabs.org:1331/");
@@ -222,15 +215,14 @@
     function doclick(marker) {
 	  	if (d3.event.defaultPrevented) return;
 
-	  	if (clicked == marker.name) {
+	  	if (!marker || clicked == marker.name) {
+			HPMSmap.updateActiveStates(fips2route(clicked), false);
+
+	  		resetMap();
+
+			stateResetControl.data([{name: "Reset Map", func: doclick}])();
+
 	  		clicked = null;
-
-			HPMSmap.updateActiveStates(marker.name, false);
-
-	  		removeStationPoints();
-
-			AVLmap.zoomToBounds(path.bounds(dataCollection));
-			AVLmap.zoomMap();
 
 			return;
 	  	}
@@ -241,6 +233,8 @@
 
 	  	clicked = marker.name;
 
+		stateResetControl.data([{name: "Reset Map", func: doclick}, {name: "Reset State", func: resetState}])();
+
 		$scope.$apply(function(){
 			$scope.getStations = true
 			$scope.stateName = esc.fips2state[marker.name]
@@ -249,15 +243,111 @@
 		AVLmap.zoomToBounds(path.bounds(__JSON__[marker.name]));
 		AVLmap.zoomMap();
 
-		HPMSmap.updateActiveStates(marker.name, true);
+		HPMSmap.updateActiveStates(fips2route(marker.name), true);
 
 		formatData(__JSON__[marker.name],function(stationPoints){
 			drawStationPoints(stationPoints);
 		})
-	    
 
 		getStationData(marker.name);
     }
+
+    function resetState() {
+		AVLmap.zoomToBounds(path.bounds(__JSON__[clicked]));
+		AVLmap.zoomMap();
+    }
+
+	function resetMap() {
+		d3.selectAll(".station-point").remove();
+		$scope.$apply(function(){
+  			$scope.stations = [];
+		  	$scope.getStations = false
+		});
+
+		AVLmap.zoomToBounds(path.bounds(dataCollection));
+		AVLmap.zoomMap();
+	}
+
+	function fips2route(fips) {
+		switch(+fips) {
+			case 36:
+				return "newyork2012";
+			case 42:
+				return "pennsylvania2012";
+			case 6:
+				return "california2012";
+			case 34:
+				return "newjersey2012";
+			case 39:
+				return "ohio2012";
+			case 48:
+				return "texas2012";
+			case 15:
+				return "hawaii2012";
+			case 32:
+				return "nevada2012";
+			case 16:
+				return "idaho2012";
+			case 30:
+				return "montana2012";
+			case 56:
+				return "wyoming2012";
+			case 8:
+				return "colorado2012";
+			case 35:
+				return "newmexico2012";
+			case 38:
+				return "northdakota2012";
+			case 46:
+				return "southdakota2012";
+			case 31:
+				return "nebraska2012";
+			case 27:
+				return "minnesota2012";
+			case 19:
+				return "iowa2012";
+			case 29:
+				return "missouri2012";
+			case 12:
+				return "florida2012";
+			case 5:
+				return "arkansas2012";
+			case 28:
+				return "mississippi2012";
+			case 13:
+				return "georgia2012";
+			case 55:
+				return "wisconsin2012";
+			case 26:
+				return "michigan2012";
+			case 18:
+				return "indiana2012";
+			case 51:
+				return "virginia2012";
+			case 54:
+				return "westvirginia2012";
+			case 9:
+				return "connecticut2012";
+			case 25:
+				return "massachusetts2012";
+			case 33:
+				return "newhampshire2012";
+			case 23:
+				return "maine2012";
+			case 37:
+				return "northcarolina2012";
+			case 24:
+				return "maryland2012";
+			case 11:
+				return "district2012";
+			case 10:
+				return "delaware2012";
+			case 44:
+				return "rhodeisland2012";
+			default:
+				return "none";
+		}
+	}
 
 	function formatData(stateData,cb) {
 		var collection = {
@@ -382,14 +472,6 @@
 					d.properties.stationID+"_"+$scope.state;
 				open(_URL, '_self');
 			})
-	}
-
-	function removeStationPoints() {
-		d3.selectAll(".station-point").remove();
-		$scope.$apply(function(){
-  			$scope.stations = [];
-		  	$scope.getStations = false
-		});
 	}
 
 	function adjustPopup(d) {
