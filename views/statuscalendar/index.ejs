@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="/lib/leaflet.css">
+<%- partial('../partials/nav') %>
+<div class="wrap sidebar-icons">
+    <%- partial('../partials/header') %>
+	<div class="content container"  ng-controller="StatusCalendarController">
+		<div class="row">	
+		    <div class="col-md-10">
+		    	<section class="widget">
+		    		<div class="body">
+			    	
+				    	<div id="calendar" class="tab-pane clearfix">
+				    		<div id='calendar-controls' style='margin-left:10px;'>
+				    			<label>Data Source
+				    			<select id="selector" class="form-control" ng-model="curAgencyLabel" ng-options="agency.name for agency in agencys" style='width:300px;display:inline;margin-right:5px;'></select>
+				    			</label>
+				    			<label>Class:
+			              		<select id="selector2" class="form-control" ng-model="myDataDisp33" ng-options="itemC.id as itemC.label for itemC in values33" style='width:150px;display:inline;margin-right:5px;'></select>
+			              		<button ng-show="!(loading)" class='btn btn-info' type="button" ng-click="loadCalendar2()">Apply</button>
+			              	</label>
+				    		</div>
+				    		<div class="body" ng-show="(loading)">
+					      		<p>Loading</p>
+					      		<img src="/img/loading.gif">
+				      		</div>
+			       			<div ng-show="!(loading)" id="caldiv" class="ratings">
+				                <div id="legend"></div>
+
+				                <!--<div class="body" ng-show="(loading2)">
+					      			<p>Loading</p>
+					      			<img src="/img/loading.gif">
+				      			</div>-->
+				            </div>
+						</div>
+					
+					</div>
+				</section>
+		    </div>
+		</div>	
+	</div>
+ 	<div class="loader-wrap hiding hide">
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+</div>
+<script src="/lib/d3.min.js"></script>
+<script type="text/javascript" src="/lib/colorbrewer.js"></script>
+<script src="/trafficanalytics/wimCalendar.js"></script>
+<script src="/controllers/status/statusIndex.js"></script>
+<script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
+<script src="/js/dependencies/sails.io.js"> </script>
+<script>
+
+currentUser = <%- JSON.stringify(user) %>;
+
+</script>
+
+

@@ -26,8 +26,15 @@ module.exports = {
 	
 	changeDatabase: function(req,res){
 
-		req.session.database = req.param('database');
-		res.send({'status':'updated'});
+		Agency.findOneByDatasource(req.param('database'), function foundUser(err, agency) {
+			if (err) return next(err);
+			req.session.database = agency
+			res.send({'status':'updated'});
+			
+		});
+		// req.session.database = req.param('database');
+		// console.log(req.param('database'))
+		// res.send({'status':'updated'});
 	},
 	auth: function(req, res, next) {
 
@@ -90,7 +97,7 @@ module.exports = {
 				// Log user in
 				req.session.authenticated = true;
 				req.session.User = user;
-				req.session.database = 'allWim';
+				//req.session.database = 'allWim';
 
 				// Change status to online
 				user.online = true;
@@ -109,6 +116,11 @@ module.exports = {
 					res.redirect('/');
 				});
 			});
+		});
+		Agency.findOneByDatasource('allWim', function foundUser(err, agency) {
+			if (err) return next(err);
+			req.session.database = agency
+			//console.log(agency)
 		});
 	},
 	logout: function(req, res, next) {

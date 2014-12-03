@@ -8,7 +8,7 @@
                     <header>
                         <table class="table table-hover">
                           <tr><th><b>Running jobs</b></th></tr>
-                          <tr ng-repeat="job in jobs"><td ng-if="!(job.isFinished)">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}</td></tr>
+                          <tr ng-repeat="job in jobs"><td ng-if="!(job.isFinished)">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}, Data Source: {{job.source}} </td></tr>
                         </table>
                     
                     </header>
@@ -22,7 +22,7 @@
                     <header>
                         <table class="table table-hover">
                           <tr><th><b>Finished jobs</b></th></tr>
-                          <tr ng-repeat="job in jobs"><td ng-if="job.isFinished">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}</td></tr>
+                          <tr ng-repeat="job in jobs"><td ng-if="job.isFinished">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}, Data Source: {{job.source}} </td></tr>
                         </table>
                     </header>
                     <div class="body">

@@ -16,14 +16,20 @@
                 <form class="ng-pristine ng-valid" id="fileupload" action="/upload/data" method="POST" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-md-6">
-                            <div id="dropzone" class="dropzone">
+                            <div id="dropzone" class="dropzone col-md-12">
                                 Drop files here
                                 <i class="fa fa-download-alt pull-right"></i>
+                            </div>
+                            <div class="body">
+                            <select class="form-control" ng-model="dataSource" ng-options="agency.name for agency in agencys"></select>
+                            <button class='btn btn-info' type="button" ng-click="changeDateSource()">Change Source</button>
+                            Current Source: {{ currentSource }}
+                            
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 fileupload-progress fade">
+                        <div class="col-md-3 fileupload-progress fade">
                             <!-- The global progress bar -->
                             <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
                                 <div class="bar" style="width:0%;"></div>
@@ -31,6 +37,7 @@
                             <!-- The extended global progress information -->
                             <div class="progress-extended">&nbsp;</div>
                         </div>
+                        
                     </div>
                     <div class="form-actions fileupload-buttonbar no-margin">
                         <span class="btn btn-sm btn-default fileinput-button">
@@ -78,7 +85,7 @@
                     <header>
                         <table class="table table-hover">
                           <tr><th><b>Recent Finished jobs</b></th></tr>
-                          <tr ng-repeat="job in jobs"><td ng-if="(job.isFinished && (job.status !== 'Finished-ERROR'))">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}</td></tr>
+                          <tr ng-repeat="job in jobs"><td ng-if="(job.isFinished && (job.status !== 'Finished-ERROR'))">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}, Data Source: {{job.source}} </td></tr>
                         </table>
                     </header>
                     <div class="body">
@@ -91,7 +98,7 @@
                     <header>
                         <table class="table table-hover">
                           <tr><th><b>Recent Failed Jobs</b></th></tr>
-                          <tr ng-repeat="job in jobs"><td ng-if="(job.status === 'Finished-ERROR')">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}</td></tr>
+                          <tr ng-repeat="job in jobs"><td ng-if="(job.status === 'Finished-ERROR')">File: {{job.filename}}, Status: {{job.status}}, Last Update: {{job.updatedAt}}, Data Source: {{job.source}} </td></tr>
                         </table>
                     
                     </header>
@@ -123,7 +130,7 @@
 <script src="/lib/jquery.fileupload-ui.js"></script>
 <script>
 
-
+currentUser = <%- JSON.stringify(user) %>;
 
 </script>
 

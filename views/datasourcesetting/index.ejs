@@ -1,0 +1,127 @@
+<link rel="stylesheet" href="/lib/leaflet.css">
+<%- partial('../partials/nav') %>
+<div class="wrap sidebar-icons">
+    <%- partial('../partials/header') %>
+	<div class="content container"  ng-controller="DataSourceSettingController">
+		<div class="row">	
+		    <div class="col-md-8">
+		    	<section class="widget">
+		    		<div class="body">
+			    	
+				    	<div id="calendar" class="tab-pane clearfix">
+				    		<div id='calendar-controls' style='margin-left:10px;'>
+				    			<label>Data Source
+				    			<select id="selector" class="form-control" ng-model="curAgencyLabel" ng-options="agency.name for agency in agencys" style='width:300px;display:inline;margin-right:5px;'></select>
+				    			</label>
+				    		</div>
+						</div>
+						<div class="body">
+			     			<table class='table'>
+								<tr>
+									<th>State</th>
+									<th>Value Type</th>
+									<th>Limit</th>
+									<th></th>
+									<th></th>
+								</tr>
+								
+								<tr ng-repeat="setting in settings">
+									<td>{{ setting.state }}</td>
+									<td>{{ setting.type }}</td>
+									<td>{{ setting.limit }}</td>
+									<td><button ng-click="editSettings(setting)" class="btn btn-lg btn-primary btn-block" >Edit</button></td>
+									<td><button ng-click="deleteSettings(setting)" class="btn btn-lg btn-primary btn-block" >Delete</button></td>
+									
+								</tr> 
+							</table>
+								
+			    		</div>
+
+					</div>
+				</section>
+			</div>
+
+
+		    <div class="col-md-4">
+		  			<section class="widget">
+				    	<table>
+							<tr>
+								<td>
+									<div class="control-group">
+									<input id="newState" type="text" class="form-control" placeholder="State" ng-model="newSetting.state">
+									</div>
+								</td>
+								<td><div class="control-group">
+									<input id="newType" type="text" class="form-control" placeholder="Value Type" ng-model="newSetting.type">
+									</div>
+								</td>
+								<td><div class="control-group">
+									<input id="newLimit" type="text" class="form-control" placeholder="Limit" ng-model="newSetting.limit">
+									</div>
+								</td>
+								
+							</tr>
+						</table>
+
+				    		<button ng-click="createSetting()" class="btn btn-lg btn-primary btn-block" >Add New Setting</button>
+
+				    </section>
+			</div>
+
+			<div class="col-md-4" ng-show="(edit)">
+		  			<section class="widget">
+				    	<table>
+				    		<tr>
+									<th>State</th>
+									<th>Value Type</th>
+									<th>Limit</th>
+									
+								</tr>
+								
+								<tr>
+									<td id="editStateOld" ></td>
+									<td id="editTypeOld" ></td>
+									<td id="editLimitOld" ></td>
+									
+								</tr>
+							<tr>
+								<td>
+									<div class="control-group">
+									<input id="editState" type="text" class="form-control" placeholder="State" ng-model="updateSetting.state">
+									</div>
+								</td>
+								<td><div class="control-group">
+									<input id="editType" type="text" class="form-control" placeholder="Value Type" ng-model="updateSetting.type">
+									</div>
+								</td>
+								<td><div class="control-group">
+									<input id="editLimit" type="text" class="form-control" placeholder="Limit" ng-model="updateSetting.limit">
+									</div>
+								</td>
+								
+							</tr>
+						</table>
+
+				    		<button ng-click="updateSettingFin()" class="btn btn-lg btn-primary btn-block" >Update Setting</button>
+				    		<button ng-click="cancelUpdate()" class="btn btn-lg btn-primary btn-block" >Cancel</button>
+				    		
+				    </section>
+			</div>
+		</div>	
+	</div>
+ 	<div class="loader-wrap hiding hide">
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+</div>
+<script src="/lib/d3.min.js"></script>
+<script type="text/javascript" src="/lib/colorbrewer.js"></script>
+<script src="/controllers/datasourcesetting/settingIndex.js"></script>
+<script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
+<script src="/js/dependencies/sails.io.js"> </script>
+<script>
+
+currentUser = <%- JSON.stringify(user) %>;
+
+</script>
+
+

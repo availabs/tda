@@ -98,9 +98,9 @@ Things that still need to be done:
 */
 
 
-var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTable,currentJob,blastBackData) {
+var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,currentJob,blastBackData,dataSource,yearFormat) {
 		
- 		var database = "ncdot" //figure out how to get this...
+ 		var database = dataSource
  		var data = newData
 
  		//A database of class data should always end in the string "Class" for claritys sake
@@ -139,6 +139,20 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTab
 
 
 			*/
+			if(err != null){
+				if(err.errors != undefined){
+					if(err.errors[0].reason === "notFound"){
+						var NewTable = true
+					}
+					else{
+						var NewTable = false
+					}
+				}
+				
+			}
+			else{
+				var NewTable = false
+			}
 			if (err && !(NewTable)) {
 					UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-ERROR"}).exec(function(err,job){
 			    		if(err){
@@ -266,16 +280,31 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,NewTab
 							terminal.stdin.end();
 							return
 						}
-						else if(lines[0][0] === 'W'){
-							var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,class:integer,open:string,total_weight:integer,numAxles:integer,axle1:integer,axle1sp:integer,axle2:integer,axle2sp:integer,axle3:integer,axle3sp:integer,axle4:integer,axle4sp:integer,axle5:integer,axle5sp:integer,axle6:integer,axle6sp:integer,axle7:integer,axle7sp:integer,axle8:integer,axle8sp:integer,axle9:integer,axle9sp:integer,axle10:integer,axle10sp:integer,axle11:integer,axle11sp:integer,axle12:integer,axle12sp:integer,axle13:integer'"
-							terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
-							terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 2 2 2 2 2 3 4 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
-							
+						else if(yearFormat === "2001"){
+							if(lines[0][0] === 'W'){
+								var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,class:integer,open:string,total_weight:integer,numAxles:integer,axle1:integer,axle1sp:integer,axle2:integer,axle2sp:integer,axle3:integer,axle3sp:integer,axle4:integer,axle4sp:integer,axle5:integer,axle5sp:integer,axle6:integer,axle6sp:integer,axle7:integer,axle7sp:integer,axle8:integer,axle8sp:integer,axle9:integer,axle9sp:integer,axle10:integer,axle10sp:integer,axle11:integer,axle11sp:integer,axle12:integer,axle12sp:integer,axle13:integer'"
+								terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
+								terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 2 2 2 2 2 3 4 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
+								
+							}
+							else if(lines[0][0] === 'C'){
+								var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,total_vol:integer,class1:integer,class2:integer,class3:integer,class4:integer,class5:integer,class6:integer,class7:integer,class8:integer,class9:integer,class10:integer,class11:integer,class12:integer,class13:integer,class14:integer,class15:integer'"
+								terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
+								terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
+							}
 						}
-						else if(lines[0][0] === 'C'){
-							var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,total_vol:integer,class1:integer,class2:integer,class3:integer,class4:integer,class5:integer,class6:integer,class7:integer,class8:integer,class9:integer,class10:integer,class11:integer,class12:integer,class13:integer,class14:integer,class15:integer'"
-							terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
-							terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 2 2 2 2 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
+						else if(yearFormat === "2013"){
+							if(lines[0][0] === 'W'){
+								var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,class:integer,open:string,total_weight:integer,numAxles:integer,axle1:integer,axle1sp:integer,axle2:integer,axle2sp:integer,axle3:integer,axle3sp:integer,axle4:integer,axle4sp:integer,axle5:integer,axle5sp:integer,axle6:integer,axle6sp:integer,axle7:integer,axle7sp:integer,axle8:integer,axle8sp:integer,axle9:integer,axle9sp:integer,axle10:integer,axle10sp:integer,axle11:integer,axle11sp:integer,axle12:integer,axle12sp:integer,axle13:integer'"
+								terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
+								terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 4 2 2 2 2 3 6 2 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
+								
+							}
+							else if(lines[0][0] === 'C'){
+								var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,Class_Time_Interval:integer,total_vol:integer,restrictions:integer,class1:integer,class2:integer,class3:integer,class4:integer,class5:integer,class6:integer,class7:integer,class8:integer,class9:integer,class10:integer,class11:integer,class12:integer,class13:integer'"
+								terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
+								terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 4 2 2 2 1 5 1 5 5 5 5 5 5 5 5 5 5 5 5 5 ' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
+							}
 						}
 						else{
 							UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-ERROR"}).exec(function(err,job){
@@ -344,15 +373,26 @@ module.exports = {
       }
 
     else {
-    	sails.sockets.blast('load_start',"");
+    	if(typeof req.param('dataBase') == 'undefined'){
+ 			res.send('{status:"error",message:"Database required"}',500);
+ 			return;
+ 		}
+ 		var dataSource = req.param('dataBase')
+ 		sails.sockets.blast('load_start',"");
     	var currentJob = {};
     	var blastBackData = []
+    	if(dataSource === "notReady"){
+ 			res.send('{status:"error",message:"Database required"}',500);
+ 			blastBackData.push("Please select a data source.")
+			sails.sockets.blast('file_parsed',blastBackData)
+			return;	
+ 		}
 
     	//Below code sends messages to user that jobs are being run. Need to add code to remove jobs that
     	//Have been ran a long time ago
 
 
-    	UploadJob.create({filename:files[0].filename,isFinished:false,status:"Started",progress:"Began"}).exec(function(err,job){
+    	UploadJob.create({filename:files[0].filename,isFinished:false,status:"Started",progress:"Began",source:dataSource}).exec(function(err,job){
     		currentJob = job;
     		
     		
@@ -431,7 +471,7 @@ module.exports = {
 
         */
         terminal.stdout.on('data', function (data) {
-       		if(typeof data === 'object'){
+        	if(typeof data === 'object'){
        			if(data.toString().indexOf("Failure details") > -1){
        				UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-ERROR"}).exec(function(err,job){
 			    		if(err){
@@ -446,6 +486,19 @@ module.exports = {
        			}
        			else{
 		       		var status = data.toString().split(" Current status: ")
+		       		if(status[0].indexOf("Provided Schema does not match Table") > -1){
+		       			UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-ERROR"}).exec(function(err,job){
+				    		if(err){
+				    			console.log(err)
+				    		}
+				    	})
+						console.log('Ending terminal session.');
+						blastBackData = []
+						blastBackData.push("The file "+files[0].filename+" is improperly formated. Fix these errors and reupload the file.")
+						sails.sockets.blast('file_parsed',blastBackData)
+						terminal.stdin.end();
+       			
+		       		}
 		       		if(status[status.length-1].slice(0,4) === 'DONE'){
 		       			sails.sockets.blast('file_parsed',blastBackData);
 		       			UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-Success"}).exec(function(err,job){
@@ -461,7 +514,7 @@ module.exports = {
 	    //If something is printed to stderr, this code runs.
 	    //Only the bq command should ever cause this to run.
         terminal.stderr.on('data', function (data) {
-		  console.log('stderr: ' + data);
+          console.log('stderr: ' + data);
 		  UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-ERROR"}).exec(function(err,job){
 		    		if(err){
 		    			console.log(err)
@@ -484,24 +537,66 @@ module.exports = {
 			    fs.readFile(files[0].fd, "utf8", function(error, data) {
 			    	var lines = data.split('\n')
 			    	var dataHolder = []
-			    	
+			    	if(lines[0][0] === 'C'){
+			    		if(((lines[0].length - 29)%5) == 0){
+				    		var yearFormat = "2013"
+				    	}
+				    	else{
+				    		var yearFormat = "2001"
+				    	}
+				    }
+				    else{
+				    	// var lengthTot = (lines[0].length) - 15
+				    	// console.log(lines[0].length)
+				    	// while(lengthTot >= 34){
+				    	// 	lengthTot = lengthTot - 9
+				    	// }
+				    	// console.log(lengthTot)
+				    	// console.log(lines[0][25])
+				    	// console.log(lines[0][25] >= '0')
+				    	// console.log(lines[0][25] <= 'z')
+				    	if(lines[0][25] >= '0' && lines[0][25] <= 'z'){
+				    		var yearFormat = "2001"
+				    		
+				    	}
+				    	else{
+				    		var yearFormat = "2013"
+				    	}
 
+				    }
+				    
 			    	//This loop organizes input data for the sql query and later management
-
-			    	for(var i = 0;i<lines.length;i++){
-			    		
-			    		if(dataHolder.map(function(el) {return el.key;}).indexOf(lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]) == -1 && (lines[i][0] === 'W' ||lines[i][0] === 'C')){
-			    			var object ={
-			    						 'state':lines[i][1]+lines[i][2],
-			    						 'station':lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8],
-			    						 'year':lines[i][11]+lines[i][12],
-			    						 'month':lines[i][13]+lines[i][14],
-			    						 'key':lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]
-			    						}
-			    			dataHolder.push(object)
-		    			}
-			    	}
-			    	if(buffer.toString('utf8',0,1) === 'W'){
+			    	if(yearFormat === "2001"){
+				    	for(var i = 0;i<lines.length;i++){
+				    		
+				    		if(dataHolder.map(function(el) {return el.key;}).indexOf(lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]) == -1 && (lines[i][0] === 'W' ||lines[i][0] === 'C')){
+				    			var object ={
+				    						 'state':lines[i][1]+lines[i][2],
+				    						 'station':lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8],
+				    						 'year':lines[i][11]+lines[i][12],
+				    						 'month':lines[i][13]+lines[i][14],
+				    						 'key':lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]
+				    						}
+				    			dataHolder.push(object)
+			    			}
+				    	}
+				    }
+				    else if(yearFormat === "2013"){
+				    	for(var i = 0;i<lines.length;i++){
+				    		
+				    		if(dataHolder.map(function(el) {return el.key;}).indexOf(lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]+lines[i][15]+lines[i][16]) == -1 && (lines[i][0] === 'W' ||lines[i][0] === 'C')){
+				    			var object ={
+				    						 'state':lines[i][1]+lines[i][2],
+				    						 'station':lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8],
+				    						 'year':lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14],
+				    						 'month':lines[i][15]+lines[i][16],
+				    						 'key':lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]+lines[i][15]+lines[i][16]
+				    						}
+				    			dataHolder.push(object)
+			    			}
+				    	}	
+				    }
+				    if(buffer.toString('utf8',0,1) === 'W'){
 			    		var typeD = "weight"
 			    	}
 			    	else if(buffer.toString('utf8',0,1) === 'C'){
@@ -510,8 +605,8 @@ module.exports = {
 
 			    	//when creating new table pass true
 			    	//when not creating new table pass false
-			    	
-			    	newDataUploadChecker(dataHolder,typeD,lines,fs,files,terminal,false,currentJob,blastBackData)
+			    	console.log(yearFormat)
+			    	newDataUploadChecker(dataHolder,typeD,lines,fs,files,terminal,currentJob,blastBackData,dataSource,yearFormat)
 			    	
 
 				});
