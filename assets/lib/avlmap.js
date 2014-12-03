@@ -291,6 +291,53 @@
     MarkerControl.prototype = Object.create(Control.prototype);
     MarkerControl.prototype.constructor = MarkerControl;
 
+    function CustomControl(map, options) {
+        var data = [],
+            visible = true;
+
+        function control() {
+            if (!visible) {
+                control.DOMel.style('display', 'none');
+                return;
+            }
+            control.DOMel.style('display', 'block');
+
+            var controls = control.DOMel
+                .selectAll('div').data(data);
+
+            controls.enter().append('div')
+                .attr('class', 'avl-list avl-active');
+
+            controls.exit().remove();
+
+            controls
+                .text(function(d, i) { return d.name || "Custom Control "+i; })
+                .on('click.avl-custom-click', function(d) {
+                    if (d.func) {
+                        d.func(d.data);
+                    }
+                })
+        }
+        control.data = function(d) {
+            if (!arguments.length) {
+                return data;
+            }
+            data = d;
+            return control;
+        }
+        control.visible = function(v) {
+            if (!arguments.length) {
+                return visible;
+            }
+            visible = v;
+            return control;
+        }
+
+        Control.call(control, map, options);
+
+        return control;
+    }
+
     function ControlsManager(mapObj, map, projection, zoom) {
     	var self = this,
     		controls = {},
@@ -327,6 +374,18 @@
     			controls.marker = new MarkerControl(mapObj, projection, zoom, map, options);
     		}
     	}
+
+        this.customControl = function(options) {
+            options.position = getPosition(options.position);
+
+            if (!options.position) {
+                return null;
+            }
+
+            options.id = 'avl-map-custom-control';
+
+            return CustomControl(map, options);
+        }
 
         function getPosition(pos) {
             pos = pos || 'top-right';
@@ -630,6 +689,9 @@
 			}
             if (options.type == 'info') {
                 options.start = startLoc;
+            }
+            if (options.type == 'custom') {
+                return controlsManager.customControl(options);
             }
 			controlsManager.addControl(options);
 
