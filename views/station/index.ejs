@@ -1,4 +1,14 @@
 <link rel="stylesheet" href="/lib/leaflet.css">
+<style>
+
+	/*When tried adding below CSS to svg, didn't seem to want to work*/
+
+	.dashBoardLabel {
+            font-family:  Myriad, "Helvetic Neue", Helvetica, Arial;
+            text-anchor: middle;
+        }
+
+</style>
 <%- partial('../partials/nav') %>
 <div class="wrap sidebar-icons">
     <%- partial('../partials/header') %>
@@ -24,8 +34,8 @@
 		    <section class="widget widget-tabs">
 	            <header>
 	                <ul class="nav nav-tabs">
-	               		<li>
-	                        <a href="#info" data-toggle="tab">Dashboard</a>
+	                	<li>
+	                        <a href="#dashboard" data-toggle="tab">Dashboard</a>
 	                    </li>
 	                    <li>
 	                        <a href="#info" data-toggle="tab">Info</a>
@@ -57,6 +67,35 @@
 		    	
 		    	<div class="body tab-content" style="overflow:hidden;">
 		    		<!--
+						Dashboard
+		    		-->
+		    		<div id="dashboard" class="tab-pane clearfix">
+		    			<div ng-show="(loading4)">
+				      			<p>Loading</p>
+				      			<img src="/img/loading.gif">
+			      		</div>
+		    			<div ng-show="!(loading4)">
+		    				<label style="margin-right:">Vehicle Group:
+							    <select class="form-control" ng-model="myClassOrg" ng-options="item.id as item.label for item in graphs"></select>
+							</label>
+							<label>Month:
+								<select class="form-control" ng-model="myMonth" ng-options="item.id as item.label for item in monthList"></select>
+							</label>
+		    				<label>Year:
+			              		<select  class="form-control" ng-model="dashYear1" ng-options="item6 for item6 in yearRange" style='width:75px;display:inline;margin-right:5px;'></select>
+			              	</label>
+			              	
+			              	<button class='btn btn-info' type="button" ng-click="dashboardChange()">Apply</button>
+			            </div>
+                   	<!-- 	<div id="dashboardTable" class="col-md-6">
+                   			
+                   		</div> -->
+                   		<table id="dashboardTable" >
+	               			
+						</table>
+						
+               		</div>
+               		<!--
                			Info Table
                		-->
 		    		<div id="info" class="tab-pane clearfix">
@@ -241,6 +280,8 @@
 <script src="/trafficanalytics/reportTable.js"></script>
 <script src="/trafficanalytics/seasonalLineChart.js"></script>
 <script src="/trafficanalytics/seasonalBarGraph.js"></script>
+<script src="/trafficanalytics/radialProgress.js"></script>
+<script src="/trafficanalytics/dashboard.js"></script>
 <script src="/controllers/station/stationIndex.js"></script>
 <script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
 <script src="/lib/leaflet.js"></script>

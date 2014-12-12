@@ -41,7 +41,7 @@
 		 
 		 	<section class="widget ui-sortable" ng-show="(stations.length > 0)">
 		 		<div class="body tab-content" style="overflow:hidden;" ng-show="stations.length > 0">
-				 	<div  class="tab-pane AADT_Change_Graph clearfix active">   		
+				 	<div  class="tab-pane AADT_Change_Graph clearfix">   		
 		        		<div class="col-md-6 form-inline">
 		        			<div class="form-group">
 				            	<label>From:</label>
@@ -58,16 +58,18 @@
 				            </div>
 		            	</div>
 					</div>
-					<div  class="tab-pane Tonage_Graph clearfix active">
+					<div  class="tab-pane Tonage_Graph clearfix">
 					</div>
-				    <div  class="tab-pane ADDT_Graph clearfix">
-				  			<div class="col-md-6 form-inline">
+				    <div  class="tab-pane ADDT_Graph clearfix active">
+				  			<div class="form-inline">
 				            			<div class="form-group">
+				            				 <label style="margin-right: 15px">Vehicle Group:</label>
 							            	 <select class="form-control" ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select>
 							           	</div>
 							    </div>
-							    <div class="col-md-6 form-inline">
+							    <div class="form-inline">
 				            			<div class="form-group">
+				            				 <label style="margin-right: 92px">Year:</label>
 							            	 <select class="form-control" ng-model='active_years2.id'>
 							            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
 							            	</select>
@@ -75,20 +77,23 @@
 				        		</div>
 				    </div>
 				 	<div  class="tab-pane Line_Graph clearfix">
-				  			<div class="col-md-6 form-inline">
+				  			<div class="form-inline">
 				            			<div class="form-group">
+				            				<label style="margin-right: 15px">Vehicle Group:</label>
 							            	 <select class="form-control" ng-model="dispGraph" ng-options="item.id as item.label for item in graphs"></select>
 							           	</div>
 							    </div>
-							    <div class="col-md-6 form-inline">
+							    <div class="form-inline">
 				            			<div class="form-group">
+				            				<label style="margin-right: 92px">Year:</label>
 							            	 <select class="form-control" ng-model='active_years2.id'>
 							            		<option ng-repeat="year2 in years2" value='{{year2}}'>{{year2}}</option>
 							            	</select>
 				        				</div>
 				        		</div>
-				        		<div class="col-md-6 form-inline">
+				        		<div class="form-inline">
 				            			<div class="form-group">
+				            				<label style="margin-right: 5px">Displayed Time:</label>
 				            	 			<select class="form-control" ng-model="dispTime" ng-options="item2.id as item2.label for item2 in times"></select>
 				            	 		</div>
 				            	</div>
@@ -103,16 +108,16 @@
 		 	<header ng-show="stations.length > 0">
                 <ul class="nav nav-tabs">
                 	<li  class="active">
-                        <a href=".ADDT_Graph" data-toggle="tab">AAD Traffic</a>
+                        <a href=".ADDT_Graph" data-toggle="tab" style="font-size:10px">AAD Traffic</a>
                     </li>
                     <li>
-                        <a href=".Line_Graph" data-toggle="tab">MAD Traffic</a>
+                        <a href=".Line_Graph" data-toggle="tab" style="font-size:10px">MAD Traffic</a>
                     </li>
                     <li>
-                        <a href=".AADT_Change_Graph" data-toggle="tab">Year / Year</a>
+                        <a href=".AADT_Change_Graph" data-toggle="tab" style="font-size:10px">Year / Year</a>
                     </li>
                     <li>
-                        <a href=".Tonage_Graph" data-toggle="tab">AAD Tonnage</a>
+                        <a href=".Tonage_Graph" data-toggle="tab" style="font-size:10px">AAD Tonnage</a>
                     </li>
                     
                 </ul>

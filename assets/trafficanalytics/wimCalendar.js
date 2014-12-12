@@ -275,7 +275,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           }
         }
         $scope.drawVars = _init($scope.curAgency.dataC[x].f[1].v,$scope.curAgency.dataC[$scope.curAgency.dataC.length-1].f[1].v,"status")
-        calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.curAgency.dataC,$scope.drawVars[0],$scope.drawVars[4],"trucks","status")
+        wimCal.calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.curAgency.dataC,$scope.drawVars[0],$scope.drawVars[4],"trucks","status")
       }
       else{
         if($scope.curAgency.data[x].f[1].v == null){
@@ -284,7 +284,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
           }
         }
         $scope.drawVars = _init($scope.curAgency.data[x].f[1].v,$scope.curAgency.data[$scope.curAgency.data.length-1].f[1].v,"status")
-        calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.curAgency.data,$scope.drawVars[0],$scope.drawVars[4],"trucks","status")
+        wimCal.calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.curAgency.data,$scope.drawVars[0],$scope.drawVars[4],"trucks","status")
         
       }
       return
@@ -296,17 +296,17 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
            
     $scope.drawVars = _init($scope.minYear,$scope.maxYear,"");
     seasonalLineChart.drawseasonalLineChart("#seasonalLineGraph",$scope.stationDataAll,$scope.myDir2,_FILTERS)
-    calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationDataAll,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
+    wimCal.calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationDataAll,$scope.drawVars[0],$scope.drawVars[4],"Count",$scope.myDataDisp)
     _WIMGrapher("#seasonalLegend");
     if($scope.stationType === "wim"){
-          calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationData2,$scope.drawVars[0],$scope.drawVars[4],"trucks",$scope.myDataDisp)
+          wimCal.calCreate($scope.drawVars[5],$scope.drawVars[3],$scope.myClass,$scope.drawVars[1],$scope.drawVars[2],$scope.stationData2,$scope.drawVars[0],$scope.drawVars[4],"trucks",$scope.myDataDisp)
           $scope.$apply(function(){
             $scope.loading2 = false
             $scope.loading = false
             $scope.myDataDisp = $scope.values3[0].id
           });
           $scope.drawVars2 = _init($scope.minYear,$scope.maxYear,"ton");
-          calCreate($scope.drawVars2[5],$scope.drawVars2[3],9,$scope.drawVars2[1],$scope.drawVars2[2],$scope.stationTonageData,$scope.drawVars2[0],$scope.drawVars2[4],"trucks","Ton")
+          wimCal.calCreate($scope.drawVars2[5],$scope.drawVars2[3],9,$scope.drawVars2[1],$scope.drawVars2[2],$scope.stationTonageData,$scope.drawVars2[0],$scope.drawVars2[4],"trucks","Ton")
           $scope.reloadTable()
     } //End of if($scope.stationType === "wim")
                 
@@ -425,7 +425,7 @@ wimCal.colorDays = function(svg,input_data,monthPath,rect,color,dispType){
 //The below code is used to manage and organize data so that the right kind of calendar is drawn.
 
 
-function calCreate(rect,svg,classT,day,week,data,z,svg2,dispType,dispType2){
+wimCal.calCreate = function(rect,svg,classT,day,week,data,z,svg2,dispType,dispType2){
       if(dispType2 === "Freight"){
         wimCal.drawCalendar(rect,svg,parseDataF(data,classT),day,week,z,svg2,dispType,"");
       }
