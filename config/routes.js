@@ -33,9 +33,12 @@ module.exports.routes = {
   '/station/:type/:id':'StationController.index',
   '/user/admin':'UserController.admin',
   '/agency/admin':'AgencyController.admin',
+  '/agency/update':'AgencyController.updateSettings',
   '/user/db' : 'UserController.changeDatabase',
   '/upload' : 'DataLoaderController.index',
-  '/upload/data' : 'FileController.upload',
+  '/status' : 'StatusCalendarController.index',
+  '/datasource/setting' : 'DatasourcesettingController.index',
+  '/upload/data/:dataBase' : 'FileController.upload',
   '/allStations' : 'bqController.allStations',
   '/stations/geo':{
     controller : 'StationsController',
@@ -221,6 +224,15 @@ module.exports.routes = {
   '/station/byMostRecentDate/':{
     controller : 'StationsController',
     action : 'getRecentDates',
+    cors: {
+      origin: '*',
+      methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+      headers: 'content-type,X-Requested-With'
+    }
+  },
+  '/station/getStationCounts/':{
+    controller : 'StationsController',
+    action : 'getStationCount',
     cors: {
       origin: '*',
       methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',

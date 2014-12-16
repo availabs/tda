@@ -283,7 +283,6 @@
 				})
 				.on('mousemove', _popup)
 				.on('click', function(d) {
-
 					if($scope.state != undefined){
 						if($scope.state.toString().length == 2){
 							var URL = '/station/' + 

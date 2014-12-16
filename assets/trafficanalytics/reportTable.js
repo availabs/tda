@@ -4,7 +4,6 @@ var reportTable = {
 		$(elem).append('<table id="reportTable" class="table"><thead><tr><th><strong> Yearly Highest '+data+'</strong></th></tr></thead><tbody><tr><th colspan=2><strong>Location: '+location['station_location']+'</strong></th><th colspan=2><strong>Functional Class: '+location['func_class_code']+'</strong></th></tr></tbody></table>')
 	},
 	drawTable:function(elem,data,order,indexPoint,searchAgain){
-
 		var parsedData = []
 		var DailyVol = []
 		var total = 0

@@ -11,7 +11,8 @@ module.exports = {
   	filename:"string",
   	isFinished:"boolean",
   	status:"string",
-  	progress:"string"
+  	progress:"string",
+  	source:"string"
   }
 };
 

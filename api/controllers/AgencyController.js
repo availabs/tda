@@ -17,5 +17,19 @@ module.exports = {
 	      });
 	    });
 	},
+	updateSettings:function(req,res){
+		var id = req.param('agency');
+		var _update = req.param('newData')
+		Agency.update({id:id},{settings:_update}).exec(function(err,agency){
+			if(err){
+				console.log(err)
+				res.json({responsText:"Failed",status:500})
+				
+			}
+			req.session.database = agency[0];
+			res.json({responsText:"success",status:200})
+		})
+
+	}
 };
 

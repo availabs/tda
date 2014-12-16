@@ -12,8 +12,11 @@ module.exports = {
   	datasource:"STRING",
   	users:{
             collection: 'User',
-            via: 'agency'
+            via: 'agency',
+            dominant:true
         },
+    settings:"ARRAY",
+  	
   }
 
 };

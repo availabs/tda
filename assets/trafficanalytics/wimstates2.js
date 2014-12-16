@@ -509,10 +509,19 @@ stationTree = d3.geom.quadtree()
 			})
 			.on('mousemove', adjustPopup)
 			.on('click', function(d) {
-				var _URL = '/station/' + 
-					d.properties.type + '/' +
-					d.properties.stationID+"_"+$scope.state;
-				open(_URL, '_self');
+
+				//The two below if statements are needed to prevent a bug where the user
+				//clicks on the map too fast
+
+				if($scope.state != undefined){
+					if($scope.state.toString().length == 2){
+						var URL = '/station/' + 
+							d.properties.type + '/' +
+							d.properties.stationID+"_"+$scope.state;
+							
+						open(URL, '_self');
+					}
+				}
 			})
 			.each(function(d) {
 				stationTree.add(d);

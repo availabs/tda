@@ -31,7 +31,7 @@
       
 
       <script>
-        database= '<%= session.database %>';
+        database= '<%- JSON.stringify(session.database) %>';
       </script>
       <script src='/trafficanalytics/wimXHR.js'></script>
 

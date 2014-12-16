@@ -929,6 +929,30 @@ module.exports = {
       		res.json(response)
 	    });
  	},
+ 	getStationCount:function(req,res){
+ 		if(typeof req.param('dataSource') == 'undefined'){
+ 			res.send('{status:"error",message:"database required"}',500);
+ 			return;
+ 		}
+ 		var database = req.param('dataSource')
+ 		var sql = 'SELECT count(distinct station_id),year,month,day '+
+ 				  'FROM [tmasWIM12.'+database+'] '+
+ 				  'GROUP BY year, month,day '+
+ 				  'ORDER BY year, month,day '
+ 		var request = bigQuery.jobs.query({
+	    	kind: "bigquery#queryRequest",
+	    	projectId: 'avail-wim',
+	    	timeoutMs: '10000',
+	    	resource: {query:sql,projectId:'avail-wim'},
+	    	auth: jwt
+	    },
+
+		function(err, response) {
+			//console.log("classamount error: ",err)
+			if (err) console.log('Error:',err);
+      		res.json(response)
+	    });
+ 	},
 
 
   /**

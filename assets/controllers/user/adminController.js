@@ -12,7 +12,7 @@ function UserAdminController ($scope) {
     $scope.newUser = {};
     $scope.clicked = false
     $scope.agencys = window.agencys;
-    $scope.dataSource = ""
+    $scope.dataSource
     $scope.currentUser = {}
 
 
@@ -34,28 +34,38 @@ function UserAdminController ($scope) {
         $('#editableName').val(user.name);
         $('#editableUserName').val(user.username);
         $('#editableEmail').val(user.email);
-        $scope.currentUser = user
-        console.log(user,$scope.currentUser,$scope.dataSource)
-        if(user.agency != null){
-            // $scope.$apply(function(){
-            //      $scope.dataSource = $scope.agencys[$scope.agencys.map(function(el) {return el.id;}).indexOf($scope.currentUser.agency)]
-            //      console.log($scope.dataSource)
-            // });
-        }
-        else{
-            $('#editableDatasource').val("")   
-        }
+        
+        io.socket.get('/user/'+user.id, function serverSays(err2,message2){
+
+            if (message2.statusCode != 200){
+                return
+            }
+            $scope.currentUser = err2
+            
+        });
+
+        
     }
     $scope.updateDatasource = function(){
-        console.log($scope.dataSource)
-        console.log($scope.currentUser)
-        io.socket.put('/user/'+$scope.currentUser.id,{agency:$scope.dataSource},function serverSays(err,message){
-            if (err)
-                console.log(err)
+        //Extra get is needed since window doesn't seem to store the agency/user listing
+        $scope.currentUser.agency.push($scope.dataSource)
+        io.socket.put('/user/'+$scope.currentUser.id,{agency:$scope.currentUser.agency},function serverSays(err,message){
+            if (message.statusCode != 200){
+               return
+            }
             $scope.currentUser = err
-            console.log($scope.currentUser)
-            console.log(message);
+            
         });
+        
+
+
+        // io.socket.post('/user/'+$scope.currentUser.id,{agency:$scope.dataSource},function serverSays(err,message){
+        //     if (err)
+        //         console.log(err)
+        //     $scope.currentUser = err
+        //     console.log($scope.currentUser)
+        //     console.log(message);
+        // });
     }
 
 };

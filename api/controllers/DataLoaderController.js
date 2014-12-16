@@ -19,7 +19,7 @@ module.exports = {
     
   	index:function(req,res){
 
-  		res.view()
+  		res.view({user:req.session.User})
 
   	},
 
