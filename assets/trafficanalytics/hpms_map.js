@@ -60,6 +60,7 @@
 	  				if (d3.event.defaultPrevented) return;
 					clickedRoute = null;
 					popup.visible(false)();
+					d3.selectAll('.station-point').style('display', 'block');
 				})
 
 			floater = avlmenu.Popup()
@@ -227,9 +228,12 @@
 				if (clicked == clickedRoute) {
 					clickedRoute = null;
 					popup.visible(false)();
+					d3.selectAll('.station-point').style('display', 'block');
 					return;
 				}
 				clickedRoute = clicked;
+
+				wimstates2.selectCorridor(r);
 
 				url = HPMS_URL+'hpms/'+r.properties.route;
 
@@ -319,7 +323,19 @@
 					}
 					floater.visible(false)();
 				})
-				.on('click', showRouteData);
+				.on('click.hpms', showRouteData)
+				//.on('click.wim', wimstates2.selectCorridor)
+				.each(function(d) {
+					if (d.properties.route) {
+						if (checkMajorInterstate(d.properties)) {
+							d.WIMid = 'route-'+d.properties.route+'-'+d.properties.type;
+						}
+						else {
+							d.WIMid = 'route-'+d.properties.route+'-'+d.properties.type+'-'+d.properties.state;
+						}
+					}
+					d.centroid = d3.geo.centroid(d);
+				});
 	    }
 
 	    function LayerCache(maxSize) {

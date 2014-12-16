@@ -571,10 +571,11 @@
 		    .scale(startZoom / 2 / Math.PI)
 		    .translate([-width / 2, -height / 2]);
 
-        var dispatcher = d3.dispatch('mapzoom', 'zoomchange');
+        var dispatcher = d3.dispatch('mapzoom', 'zoomchange', 'tileupdate');
 
         dispatcher.mapzoom.bind(this);
         dispatcher.zoomchange.bind(this);
+        dispatcher.tileupdate.bind(this);
 
 		this.zoomMap = function() {
 			tileGen
@@ -599,8 +600,11 @@
 			    .selectAll(".avl-tile")
 			    .data(tiles, function(d) { return d; });
 
+            var tileUpdate = false;
+
 			vectorTiles.enter().append("svg")
-				.attr("class", "avl-tile");
+				.attr("class", "avl-tile")
+                .each(function() { tileUpdate = true; });
 
 			vectorTiles
 				.style("left", function(d) { return d[0] * 256 + "px"; })
@@ -630,6 +634,10 @@
 			vectorTiles.exit()
                 .each(function() { xhrCache.abortXHR(this.tileID); })
                 .remove();
+
+            if (tileUpdate) {
+                dispatcher.tileupdate(this);
+            }
 		}
 
         var zoom = d3.behavior.zoom()

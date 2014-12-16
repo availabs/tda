@@ -25,6 +25,8 @@
 	var colorScale = d3.scale.linear()
 		.range(['#deebf7', '#08306b']);
 
+	var stationTree;
+
 	wimstates.init = function(DOMelemID, $s) {
 		var states ={},
 			URL = '/stations/allWIMStations',
@@ -166,6 +168,35 @@
 		})
 	}
 
+	wimstates.selectCorridor = function(d) {
+		var centroid;
+
+		var stationSet = d3.set([]);
+
+		d3.selectAll('.'+d.WIMid)
+			.each(function(d) {
+				centroid = d.centroid;
+				stationTree.visit(travelTree);
+			})
+
+		function travelTree(node, x1, y1, x2, y2) {
+			if (node.point && !stationSet.has(node.point.properties.stationID)) {
+				var dist = d3.geo.distance(centroid, [node.x, node.y]);
+
+				if (dist < 0.00015) {
+					stationSet.add(node.point.properties.stationID)
+				}
+			}
+			return !(centroid[0] > x1 && centroid[0] < x2 &&
+					centroid[1] > y1 && centroid[1] < y2);
+		}
+
+		d3.selectAll('.station-point')
+			.style('display', 'block')
+			.filter(function(d) { return !stationSet.has(d.properties.stationID); })
+			.style('display', 'none');
+	}
+
 	function drawMap(states) {
 	    var markerData = [];
 
@@ -231,6 +262,12 @@
 			HPMSmap.updateActiveStates(clicked, false);
 	  	}
 
+console.log(d3.geo.bounds(__JSON__[marker.name]))
+stationTree = d3.geom.quadtree()
+	.x(function(d) { return d.geometry.coordinates[0]; })
+	.y(function(d) { return d.geometry.coordinates[1]; })
+	.extent(d3.geo.bounds(__JSON__[marker.name]))([]);
+
 	  	clicked = marker.name;
 
 		stateResetControl.data([{name: "Reset Map", func: doclick}, {name: "Reset State", func: resetState}])();
@@ -250,6 +287,10 @@
 		})
 
 		getStationData(marker.name);
+    }
+
+    function checkStations(d) {
+    	console.log(d)
     }
 
     function resetState() {
@@ -472,6 +513,9 @@
 					d.properties.type + '/' +
 					d.properties.stationID+"_"+$scope.state;
 				open(_URL, '_self');
+			})
+			.each(function(d) {
+				stationTree.add(d);
 			})
 	}
 
