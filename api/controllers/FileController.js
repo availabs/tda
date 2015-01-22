@@ -219,6 +219,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 		    			}
 			    		else if(newData.map(function(el) {return el.key;}).indexOf(lines[j][1]+lines[j][2]+lines[j][3]+lines[j][4]+lines[j][5]+lines[j][6]+lines[j][7]+lines[j][8]+lines[j][11]+lines[j][12]+lines[j][13]+lines[j][14]) != -1 && (lines[j][0] === 'W' ||lines[j][0] === 'C')){
 			    			//wstream.write(lines[j] +"\n")
+						
 			    			terminal.stdin.write('printf "'+lines[j]+'\n" >> '+files[0].fd+'_'+currentJob.id+'\n');
 			    		}
 
@@ -267,6 +268,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 
 						The first if statement ends the code since there is no new data to be added in.
 						*/
+						
 						if(newData.length == 0){
 							UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-No New Data"}).exec(function(err,job){
 					    		if(err){
@@ -285,7 +287,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 								var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,class:integer,open:string,total_weight:integer,numAxles:integer,axle1:integer,axle1sp:integer,axle2:integer,axle2sp:integer,axle3:integer,axle3sp:integer,axle4:integer,axle4sp:integer,axle5:integer,axle5sp:integer,axle6:integer,axle6sp:integer,axle7:integer,axle7sp:integer,axle8:integer,axle8sp:integer,axle9:integer,axle9sp:integer,axle10:integer,axle10sp:integer,axle11:integer,axle11sp:integer,axle12:integer,axle12sp:integer,axle13:integer'"
 								terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
 								terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 2 2 2 2 2 3 4 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
-								
+							
 							}
 							else if(lines[0][0] === 'C'){
 								var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,total_vol:integer,class1:integer,class2:integer,class3:integer,class4:integer,class5:integer,class6:integer,class7:integer,class8:integer,class9:integer,class10:integer,class11:integer,class12:integer,class13:integer,class14:integer,class15:integer'"
@@ -555,13 +557,13 @@ module.exports = {
 				    	// console.log(lines[0][25])
 				    	// console.log(lines[0][25] >= '0')
 				    	// console.log(lines[0][25] <= 'z')
-				    	if(lines[0][25] >= '0' && lines[0][25] <= 'z'){
+				    	//if(lines[0][25] >= '0' && lines[0][25] <= 'z'){
 				    		var yearFormat = "2001"
 				    		
-				    	}
+				    	/*}
 				    	else{
 				    		var yearFormat = "2013"
-				    	}
+				    	}*/
 
 				    }
 				    
