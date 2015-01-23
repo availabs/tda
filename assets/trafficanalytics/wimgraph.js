@@ -187,11 +187,9 @@
 	    // initialize x scale and axis
 	    var Xscale = d3.scale.ordinal()
 	    	.rangePoints([0, wdth]);
-
 	    var Xaxis = d3.svg.axis()
 	    		.scale(Xscale)
 	    		.orient('bottom');
-
 	    cwGraphSVG.append('g')
 	    	.attr('class', 'x-axis')
 	        .attr('transform', 'translate(0, '+(height - margin.top - margin.bottom)+')');
@@ -283,7 +281,6 @@
 		var classScale = d3.scale.ordinal()
 			.domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
 			.range([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-
 		// this scale maps weights to weight scales
 		// weight class 0 corressponds to weights [0, 20,000),
 		// weight class 1 corresponds to weights [20,000, 40,000)
@@ -696,6 +693,7 @@
 		    wdGraphSVG.select('.x-axis').call(wdXaxis)
 		    wdGraphSVG.select('.y-axis').call(Yaxis);
 
+
 		}
 		// reduces formatted data, eliminating attr and grouping by keeper.
 		// this function also keeps track of min and max time values, max
@@ -786,16 +784,19 @@
 
 		   	var padding = (2*gap + barWidth) / (gap + barWidth);
 
-		    Xscale.domain(ticks)
-		    	.rangePoints([0, wdth], padding);
-
-		   	Yscale.domain([0, Ymax]);
-		   	
+		   
 		   	//Below is where volume table is created.
 		   	$('#wimgraphTable').html('')
 		   	var timeRow = ""
 		   	for(x = 0;x<data.length;x++){
-		   		timeRow = timeRow+"<th style='color:#fff'>"+data[x][time]+"</th>"
+		   		if(time === "year"){
+		   			timeRow = timeRow+"<th style='color:#fff'>"+(2000+data[x][time])+"</th>"
+		   			ticks[x] = ticks[x]+2000
+		   		}
+		   		else if(time === "month"){
+		   			timeRow = timeRow+"<th style='color:#fff'>"+monthCheck(data[x][time]-1)+"</th>"
+		   			ticks[x] = monthCheck(ticks[x]-1)
+		   		}
 		   	}
 		   	var zero = true
 		   	var htmlCode = '<table id="seasonal_Table" class="table table-hover"><thead style="background:#618fb0;""><tr   ><th style="color:#fff">Class/'+time+'</th>'+timeRow+'</tr></th></thead>'
@@ -820,7 +821,11 @@
 			$('#wimgraphTable').append(htmlCode)
 			//End wim table creation
 
+			Xscale.domain(ticks)
+		    	.rangePoints([0, wdth], padding);
 
+		   	Yscale.domain([0, Ymax]);
+		   
 			var stacks = cwGraphSVG.selectAll('.stack')
 				.data(data);
 
@@ -1048,6 +1053,44 @@
 	wimgraph.grapher = function(id) {
 		return new _WIMGrapher(id);
 	}
+	function monthCheck(date){
+			if(date == 0){
+				return "January"
+			}
+			else if(date == 1){
+				return "February"
+			}
+			else if(date == 2){
+				return "March"
+			}
+			else if(date == 3){
+				return "April"
+			}
+			else if(date == 4){
+				return "May"
+			}
+			else if(date == 5){
+				return "June"
+			}
+			else if(date == 6){
+				return "July"
+			}
+			else if(date == 7){
+				return "August"
+			}
+			else if(date == 8){
+				return "September"
+			}
+			else if(date == 9){
+				return "October"
+			}
+			else if(date == 10){
+				return "November"
+			}
+			else if(date == 11){
+				return "December"
+			}
+		}
 
 	this.wimgraph = wimgraph;
 })()
