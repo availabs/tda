@@ -636,6 +636,7 @@
 		    	.rangePoints([0, wdth], padding);
 
 		   	Yscale.domain([0, Ymax]);
+		   	
 
 		   	var bars = wdGraphSVG.selectAll('rect').data(data);
 		   	bars.enter().append('rect')
@@ -784,8 +785,7 @@
 
 		   	var padding = (2*gap + barWidth) / (gap + barWidth);
 
-		   
-		   	//Below is where volume table is created.
+		    //Below is where volume table is created.
 		   	$('#wimgraphTable').html('')
 		   	var timeRow = ""
 		   	for(x = 0;x<data.length;x++){
@@ -797,25 +797,49 @@
 		   			timeRow = timeRow+"<th style='color:#fff'>"+monthCheck(data[x][time]-1)+"</th>"
 		   			ticks[x] = monthCheck(ticks[x]-1)
 		   		}
+		   		else{
+		   			timeRow = timeRow+"<th style='color:#fff'>"+data[x][time]+"</th>"
+		   		}
 		   	}
 		   	var zero = true
-		   	var htmlCode = '<table id="seasonal_Table" class="table table-hover"><thead style="background:#618fb0;""><tr   ><th style="color:#fff">Class/'+time+'</th>'+timeRow+'</tr></th></thead>'
-			for(k = 0;k<13;k++){
-				htmlCode = htmlCode + '<tr><th>Class '+(k+1)+'</th>'
-				for(l = 0;l<data.length;l++){
-					for(m = 0;m<data[l]["data"].length;m++){
-						if(data[l]["data"][m].class == k){
-							htmlCode = htmlCode + '<th>'+Math.floor(data[l]["data"][m].amount)+'</th>'
-							m = data[l]["data"].length
-							zero = false
+		   	var htmlCode = '<table id="seasonal_Table" class="table table-hover"><thead style="background:#618fb0;""><tr   ><th style="color:#fff">'+groupBy+'/'+time+'</th>'+timeRow+'</tr></th></thead>'
+			if(groupBy === "class"){   	
+			   	for(k = 0;k<13;k++){
+					htmlCode = htmlCode + '<tr><th>Class '+(k+1)+'</th>'
+					for(l = 0;l<data.length;l++){
+						for(m = 0;m<data[l]["data"].length;m++){
+							if(data[l]["data"][m].class == k){
+								htmlCode = htmlCode + '<th>'+Math.floor(data[l]["data"][m].amount)+'</th>'
+								m = data[l]["data"].length
+								zero = false
+							}
 						}
+						if(zero){
+							htmlCode = htmlCode + '<th>0</th>'
+						}
+						zero = true
 					}
-					if(zero){
-						htmlCode = htmlCode + '<th>0</th>'
-					}
-					zero = true
+					htmlCode = htmlCode + '</tr>'
 				}
-				htmlCode = htmlCode + '</tr>'
+			}
+			else{
+				for(k = 0;k<7;k++){
+					htmlCode = htmlCode + '<tr><th>'+weightRange(k)+'</th>'
+					for(l = 0;l<data.length;l++){
+						for(m = 0;m<data[l]["data"].length;m++){
+							if(data[l]["data"][m].weight == k){
+								htmlCode = htmlCode + '<th>'+Math.floor(data[l]["data"][m].amount)+'</th>'
+								m = data[l]["data"].length
+								zero = false
+							}
+						}
+						if(zero){
+							htmlCode = htmlCode + '<th>0</th>'
+						}
+						zero = true
+					}
+					htmlCode = htmlCode + '</tr>'
+				}	
 			}
 			htmlCode = htmlCode + '</table>'
 			$('#wimgraphTable').append(htmlCode)
@@ -1053,6 +1077,32 @@
 	wimgraph.grapher = function(id) {
 		return new _WIMGrapher(id);
 	}
+
+	function weightRange(index){
+		if(index == 0){
+			return "0-20k lbs."
+		}
+		else if(index == 1){
+			return "20-40k lbs."
+		}
+		else if(index == 2){
+			return "40-60k lbs."
+		}
+		else if(index == 3){
+			return "60-80k lbs."
+		}
+		else if(index == 4){
+			return "80-100k lbs."
+		}
+		else if(index == 5){
+			return "100-120k lbs."
+		}
+		else{
+			return "120k+ lbs."
+		}
+
+	}
+
 	function monthCheck(date){
 			if(date == 0){
 				return "January"
