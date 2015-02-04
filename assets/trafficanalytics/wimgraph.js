@@ -29,7 +29,9 @@
 
 			_formatData,
 		
-			route = ['url','station'],	// URL to retrieve graph data from
+			classType = ''					//Used to keep track of page type(class/wim)
+
+			route = ['url','station',''],	// URL to retrieve graph data from
 			
 
 		// depth is an array object that is treated as a stack.
@@ -54,60 +56,61 @@
 		// this is used to keep track of which attribute to reduce
 			reduceBy = (groupBy === 'class' ? 'weight' : 'class');
 
-		// create selector buttons
-		var selectorDIV = d3.select(id).append('div')
-				.attr('id', 'selectorDIV')
-				.append('div')
-				.attr('class', 'selector'),
+		
+		// // create selector buttons
+		// var selectorDIV = d3.select(id).append('div')
+		// 		.attr('id', 'selectorDIV')
+		// 		.append('div')
+		// 		.attr('class', 'selector'),
 
-			classWeightButton = selectorDIV.append('a')
-				.text('Classes & Weights')
-				.classed('active', true)
-				.on('click', _selectorToggle),
+		// 	classWeightButton = selectorDIV.append('a')
+		// 		.text('Classes & Weights')
+		// 		.classed('active', true)
+		// 		.on('click', _selectorToggle),
 
-			weightDistButton = selectorDIV.append('a')
-				.text('Weight Distribution')
-				.classed('inactive', true)
-				.on('click', _selectorToggle);
+		// 	weightDistButton = selectorDIV.append('a')
+		// 		.text('Load Spectra')
+		// 		.classed('inactive', true)
+		// 		.on('click', _selectorToggle);
 
-		// this function is used to toggle between
-		// the weight/class graph
-		// and the weight dist. graph
-		function _selectorToggle() {
-			var self = d3.select(this),
-				active = self.classed('active'),
-				deactivated = self.classed('deactivated');
+		// // this function is used to toggle between
+		// // the weight/class graph
+		// // and the weight dist. graph
+		// function _selectorToggle() {
+		// 	var self = d3.select(this),
+		// 		active = self.classed('active'),
+		// 		deactivated = self.classed('deactivated');
 
-			if (!active && !clicked && !deactivated) {
+		// 	if (!active && !clicked && !deactivated) {
 
-				selectorDIV.selectAll('a')
-					.classed('active', false)
-					.classed('inactive', true)
-				self.classed('active', true)
-					.classed('inactive', false)
+		// 		selectorDIV.selectAll('a')
+		// 			.classed('active', false)
+		// 			.classed('inactive', true)
+		// 		self.classed('active', true)
+		// 			.classed('inactive', false)
 
-				if (classWeightButton.classed('active')) {
-					_toggleSVG(cwSVG);
-				} else {
-					_toggleSVG(wdSVG);
-				}
-			}
-		}
-		// this function displays which ever svg was passed as a parameter
-		// and hides the other svg
-		function _toggleSVG(svg) {
-			var hide = (svg === cwSVG ? wdSVG : cwSVG);
+		// 		if (classWeightButton.classed('active')) {
+		// 			_toggleSVG(cwSVG);
+		// 		} else {
+		// 			_toggleSVG(wdSVG);
+		// 		}
+		// 	}
+		// }
+		// // this function displays which ever svg was passed as a parameter
+		// // and hides the other svg
+		// function _toggleSVG(svg) {
+		// 	var hide = (svg === cwSVG ? wdSVG : cwSVG);
+			
+		// 	svg.style('display', 'block');
 
-			svg.style('display', 'block');
+		// 	hide.style('display', 'none');
 
-			hide.style('display', 'none');
+		// 	var cwSVGdisplay = cwSVG.style('display');
 
-			var cwSVGdisplay = cwSVG.style('display');
-
-			navBar.style('display', cwSVGdisplay);
-			togglesDiv.style('display', cwSVGdisplay);
-			//legendDIV.style('display', cwSVGdisplay);
-		}
+		// 	navBar.style('display', cwSVGdisplay);
+		// 	togglesDiv.style('display', cwSVGdisplay);
+		// 	//legendDIV.style('display', cwSVGdisplay);
+		// }
 
 		// initialize graph div
 		var graphDIV = d3.select(id).append('div')
@@ -125,6 +128,28 @@
 		// create popup div
 			popup = d3.select(id).append('div')
 				.attr('class', 'graph-popup');
+			
+
+
+		if(classType !== 'class'){	
+			// initialize wdgraph div
+			var wdgraphDIV = d3.select("#wimSpectra").append('div')
+				.attr('id', 'wdgraphDIV'),
+			// initialize wdmeasurements
+				wdnavBarWidth = 70,
+
+				wdmargin = {top: 10, right: 10, bottom: 25, left: 80},
+				wdwidth = parseInt(graphDIV.style('width'))-wdnavBarWidth-wdmargin.right,
+				wdheight = parseInt(graphDIV.style('height')),
+
+				wdwdth = wdwidth - wdmargin.left - wdmargin.right,
+			    wdhght = wdheight - wdmargin.top - wdmargin.bottom;
+
+			// create wdpopup div
+				wdpopup = d3.select("#wimSpectra").append('div')
+					.attr('class', 'graph-popup');
+				// console.log(wdwidth,wdhght,parseInt(wdgraphDIV.style('width')),wdgraphDIV.style('width'),wdgraphDIV)
+		}
 
 		function _showPopup(json, DOMel) {
 			var html = '';
@@ -135,6 +160,8 @@
 			html = html.replace(/<br>$/i, '');
 
 			popup.style('display', 'block')
+				.html(html)
+			wdpopup.style('display', 'block')
 				.html(html)
 
 			_movePopup(DOMel);
@@ -151,8 +178,8 @@
 			    xPos = d3.event.layerX;
 			    yPos = d3.event.layerY;
 			//}
-			xPos += 40;
-			yPos += 100;
+			//xPos += 40;
+			yPos += 35;
 			//console.log(xPos,yPos)
 			if (xPos+parseInt(popup.style('width')) > parseInt(graphDIV.style('width'))) {
 				popup.style('right', xPos + 'px')
@@ -163,9 +190,19 @@
 					.style('right', '0px')
 					.style('top', yPos + 'px')
 			}
+			if (xPos+parseInt(wdpopup.style('width')) > parseInt(wdgraphDIV.style('width'))) {
+				wdpopup.style('right', xPos + 'px')
+					.style('left', (parseInt(wdgraphDIV.style('width'))-parseInt(wdpopup.style('width')))+'px')
+					.style('top', (yPos-20) + 'px')
+			} else {
+				wdpopup.style('left', xPos + 'px')
+					.style('right', '0px')
+					.style('top', (yPos-20) + 'px')
+			}
 		}
 		function _hidePopup() {
 			popup.style('display', 'none')
+			wdpopup.style('display', 'none')
 		}
 
 		// initialize class and weight SVG
@@ -174,15 +211,14 @@
 				.attr('height', height + 'px'),
 		// create cwSVG group. this is used to draw class/weight bars
 			cwGraphSVG = cwSVG.append('g')
-				.attr("transform", "translate("+margin.left+", "+margin.top+")"),
+				.attr("transform", "translate("+margin.left+", "+margin.top+")");
 
 		// initialize weight distribution SVG
-			wdSVG = graphDIV.append('svg')
-				.attr('width', width + 'px')
-				.attr('height', height + 'px')
-				.style('display', 'none'),
+		var wdSVG = wdgraphDIV.append('svg')
+				.attr('width', wdwidth + 'px')
+				.attr('height', wdheight + 'px')
 			wdGraphSVG = wdSVG.append('g')
-				.attr("transform", "translate("+margin.left+", "+margin.top+")");
+				.attr("transform", "translate("+wdmargin.left+", "+wdmargin.top+")");
 
 	    // initialize x scale and axis
 	    var Xscale = d3.scale.ordinal()
@@ -196,7 +232,7 @@
 
 	    // initialize weight distribution x scale and axis
 	    var wdXscale = d3.scale.ordinal()
-	    	.rangePoints([0, wdth]);
+	    	.rangePoints([0, wdwdth]);
 
 	    var wdXaxis = d3.svg.axis()
 	    		.scale(wdXscale)
@@ -204,7 +240,7 @@
 
 	    wdGraphSVG.append('g')
 	    	.attr('class', 'x-axis')
-	        .attr('transform', 'translate(0, '+(height - margin.top - margin.bottom)+')');
+	        .attr('transform', 'translate(0, '+(wdheight - wdmargin.top - wdmargin.bottom)+')');
 
 	    // initialize y scale and axis
 	   	var Yscale = d3.scale.linear()
@@ -223,6 +259,13 @@
 
 		// initialize nav bar div
 			navBar = graphDIV.append('div')
+				.attr('class', 'navBar')
+				.style('right', margin.right +'px')
+				.style('top', margin.top+'px')
+				.style('width', navBarWidth+'px');
+
+		// initialize nav bar div for load spectra
+			wdnavBar = wdgraphDIV.append('div')
 				.attr('class', 'navBar')
 				.style('right', margin.right +'px')
 				.style('top', margin.top+'px')
@@ -345,6 +388,18 @@
 			.style('text-align', 'left')
 			.style('top', '45px');
 
+		// create legends for load spectra
+		var wdlegendDIV = d3.select("#wimSpectra").append('div')
+			.attr('id', 'legendDIV');
+		// class legend
+		var wdclassLegend = wdlegendDIV.append('div')
+			.attr('class', 'legend');
+		// weight legend
+		var wdweightLegend = wdlegendDIV.append('div')
+			.attr('class', 'legend')
+			.style('text-align', 'left')
+			.style('top', '45px');
+
 		// this function creates the labels for the legend parameter
 		// values is an array of data the data contains
 		// 		labels for data not included in values are not created
@@ -361,9 +416,9 @@
 				.on('click', function(d) {
 					clicked = true;
 					var self = d3.select(this)
-
 					self.classed('inactive', !self.classed('inactive'));
 					_FILTERS[attr][d] = self.classed('inactive');
+					
 
 					if (self.classed('inactive')) {
 						self.style('background', null)
@@ -429,8 +484,7 @@
 			.text('Loading...\nPlease wait')
 
 		// this function retrieves the requested data from the back end API
-		function _getData(station) {
-			//console.log("getData",route,depth)
+		function _getData() {
 			//console.time("getData");
 			loader.style('display', 'inline')
 			wimXHR.post(route[0], {'depth': depth,'id':route[1],'state_code':route[2]}, function(error, data) {
@@ -443,6 +497,9 @@
             	_formatData(data);
             	//console.timeEnd("getData");
             	// console.log(depth)
+
+            	//Below is what draws graphs for the first time?
+
             	_drawGraph();
 	            _drawWDGraph();
             });
@@ -485,6 +542,7 @@
 			}
 			
 			_createLegendLabels(classLegend, classValues, 'class')
+			_createLegendLabels(wdclassLegend, classValues, 'class')
 		}
 
 		// this function formats the data returned from Google big query
@@ -547,6 +605,9 @@
 
 			_createLegendLabels(classLegend, classValues, 'class')
 			_createLegendLabels(weightLegend, weightValues, 'weight')
+			_createLegendLabels(wdclassLegend, classValues, 'class')
+			_createLegendLabels(wdweightLegend, weightValues, 'weight')
+
 
 			return;
 
@@ -623,9 +684,9 @@
 			return filtered;
 		}
 		function _drawWDGraph() {
+			
 			var data = _sortBy(_filterWeightDistributionData(), 'weight'),
 				Ymax = d3.max(data, function(d) {return d.amount; });
-//console.log(data.length)
 		   	var barWidth = Math.min((wdth-(data.length+1)*2) / data.length, 75),
 		   		space = wdth - (barWidth * data.length),
 		   		gap = space / (data.length+1);
@@ -980,6 +1041,8 @@
 			weight: ["#d94701","#fd8d3c","#fdbe85","#feedde"]
 		}
 		var navButtons;
+		var wdnavButtons;
+
 		function _drawNavigator() {
 			navButtons = navBar.selectAll('a')
 				.data(depth);
@@ -993,7 +1056,20 @@
 			navButtons.style('background-color', function(d, i) {
 					return _NAV_COLORS[groupBy][i];
 				});
+			wdnavButtons = wdnavBar.selectAll('a')
+				.data(depth);
+
+			wdnavButtons.enter().append('a')
+				.text(_getNavBarText)
+				.on('click', _clicked);
+
+			wdnavButtons.exit().remove();
+
+			wdnavButtons.style('background-color', function(d, i) {
+					return _NAV_COLORS[groupBy][i];
+				});
 		}
+
 		var _MONTHS = {
 			1: 'Jan.',
 			2: 'Feb.',
@@ -1050,10 +1126,10 @@
 		self.drawGraph = function(station, type, state) {
 			//stationID = station;
 			//stationType = type;
-
 			route[0] = '/station/graph'+type+'Data';
 			route[1] = station
 			route[2] = state
+			classType = type
 
 			if (type == 'class') {
 				weightDistButton.classed('active', false)

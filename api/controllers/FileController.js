@@ -174,6 +174,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 				It has extra error checking due to the above error notification and new table management
 
 				*/
+
 				if(response != null || NewTable){
 					if(response != null){
 						if(response.rows != undefined){
@@ -487,6 +488,7 @@ module.exports = {
 					terminal.stdin.end();
        			}
        			else{
+       				console.log(data.toString())
 		       		var status = data.toString().split(" Current status: ")
 		       		if(status[0].indexOf("Provided Schema does not match Table") > -1){
 		       			UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-ERROR"}).exec(function(err,job){
@@ -571,6 +573,7 @@ module.exports = {
 			    	if(yearFormat === "2001"){
 				    	for(var i = 0;i<lines.length;i++){
 				    		
+				    		
 				    		if(dataHolder.map(function(el) {return el.key;}).indexOf(lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]) == -1 && (lines[i][0] === 'W' ||lines[i][0] === 'C')){
 				    			var object ={
 				    						 'state':lines[i][1]+lines[i][2],
@@ -585,7 +588,6 @@ module.exports = {
 				    }
 				    else if(yearFormat === "2013"){
 				    	for(var i = 0;i<lines.length;i++){
-				    		
 				    		if(dataHolder.map(function(el) {return el.key;}).indexOf(lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]+lines[i][15]+lines[i][16]) == -1 && (lines[i][0] === 'W' ||lines[i][0] === 'C')){
 				    			var object ={
 				    						 'state':lines[i][1]+lines[i][2],

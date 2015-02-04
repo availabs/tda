@@ -512,7 +512,7 @@ function parseDataForDashBoard(graphData,yearRange){
         }     
 
       })
-      console.log(parsedData)
+      //console.log(parsedData)
       for(var x = 0;x<parsedData.length;x++){
             if(parseInt(parsedData[x].dir1.year) < 2000 ){
               parsedData[x].dir1.year = 2000 + parseInt(parsedData[x].dir1.year)

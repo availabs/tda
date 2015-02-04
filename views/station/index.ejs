@@ -44,7 +44,7 @@
 	                        <a href="#graphs" data-toggle="tab">Volume Graphs</a>
 	                    </li>
 	                    <li>
-	                        <a href="#graphs" data-toggle="tab">Weight Distribution</a>
+	                        <a href="#graphs2" data-toggle="tab" ng-hide='stationType=="class"'>Load Spectra</a>
 	                    </li>
 	                    <li>
 	                        <a href="#calendar" data-toggle="tab">Seasonality</a>
@@ -107,6 +107,14 @@
                		<div id="graphs" class="tab-pane clearfix active">
                    		<div class="col-md-12" id="wimgraph"></div>
                    		<div class="col-md-12" id="wimgraphTable"></div>
+
+               		</div>
+               		<!--
+               			Load Spectra Graph
+               		-->
+               		<div id="graphs2" class="tab-pane clearfix">
+                   		<div class="col-md-12" id="wimSpectra"></div>
+                   		
 
                		</div>
 
