@@ -68,11 +68,11 @@ var bigQuery = googleapis.bigquery('v2');
 	Parameter info for newDataUploadChecker:
 
 	newData: List of data in file. If new table all data is uploaded otherwise only select
-	data contained in the array will be uploaded
+	data contained in this array of strings will be uploaded
 
 	typeD: The kind of data to be uploaded, being either weight or class data
 
-	lines: Listing of data that may be uploaded
+	lines: Listing of data that may be uploaded. This is a copy of the file itself.
 
 	fs: used for creating new file for data management
 
@@ -93,7 +93,7 @@ var bigQuery = googleapis.bigquery('v2');
 
 Things that still need to be done:
 
-1. How to obtain the name of the database data will be inserted into(this name can be used for new tables as well)
+newDataUploadChecker(dataHolder,typeD,lines,fs,files,terminal,currentJob,blastBackData,dataSource,yearFormat)
 
 */
 
@@ -119,7 +119,6 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
  			}
  		}
  		sql = sql+"group by state_fips,station_id,year,month"
-
  		//Make request and run query
  		var request = bigQuery.jobs.query({
 	    	kind: "bigquery#queryRequest",
@@ -164,9 +163,11 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 					blastBackData.push("An error beyond our control happened courtesy of Google.\nEither upload the file again or try again later.")
 					sails.sockets.blast('file_parsed',blastBackData)
 					terminal.stdin.write('rm ' + files[0].fd +'\n');
+					terminal.stdin.write('rm ' + files[0].fd+"_"+currentJob.id +'\n');
 				    terminal.stdin.end();
 				}
 			else{ //data management else
+		    		
 
 				/*
 
@@ -174,18 +175,32 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 				It has extra error checking due to the above error notification and new table management
 
 				*/
-
 				if(response != null || NewTable){
 					if(response != null){
 						if(response.rows != undefined){
 							response.rows.forEach(function(row){
-				    			if(parseInt(row.f[2].v) < 10){
-				    				row.f[2].v = "0"+row.f[2].v
+								if(yearFormat === "2001"){
+					    			if(parseInt(row.f[2].v) < 10){
+					    				row.f[2].v = "0"+row.f[2].v
+					    			}
+					    			
+					    		}
+					    		if(parseInt(row.f[3].v) < 10){
+					    			row.f[3].v = "0"+row.f[3].v
+					    		}
+					    		if(newData.map(function(el) {return el.key;}).indexOf(row.f[0].v+row.f[1].v+row.f[2].v+row.f[3].v) != -1){
+				    				newData.splice(newData.map(function(el) {return el.key;}).indexOf(row.f[0].v+row.f[1].v+row.f[2].v+row.f[3].v),1)
 				    			}
-				    			if(parseInt(row.f[3].v) < 10){
-				    				row.f[3].v = "0"+row.f[3].v
-				    			}
+				    			//Because of how the Texas data was formatted, this extra check is needed to be done for yearly data.
+				    			//Otherwise repeat data would go unrecognized.
+				    			if(yearFormat === "2001"){
+					    			if(parseInt(row.f[2].v) < 10){
+					    				
+					    				row.f[2].v = " "+row.f[2].v[1]
+					    			}
+					    		}
 				    			if(newData.map(function(el) {return el.key;}).indexOf(row.f[0].v+row.f[1].v+row.f[2].v+row.f[3].v) != -1){
+				    				
 				    				newData.splice(newData.map(function(el) {return el.key;}).indexOf(row.f[0].v+row.f[1].v+row.f[2].v+row.f[3].v),1)
 				    			}
 							});
@@ -198,9 +213,8 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 					Update is done here since the following part of the code is slow
 
 					*/
-
-			    	UploadJob.update({id:currentJob.id},{isFinished:false,status:"Running"}).exec(function(err,job){
-			    		if(err){
+					UploadJob.update({id:currentJob.id},{isFinished:false,status:"Running"}).exec(function(err,job){
+						if(err){
 			    			console.log(err)
 			    		}
 			    	})
@@ -212,29 +226,37 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 					for later processing and management.
 
 		    		*/
-		    		var wstream = fs.createWriteStream(files[0].fd+"_"+currentJob.id,{ flags: 'w',encoding: null,mode: 0666 });
-		    		for(var j = 0;j<lines.length;j++){
-		    			if(NewTable || (response.rows == undefined) ){
-		    				terminal.stdin.write('cp ' + files[0].fd+" "+files[0].fd+"_"+currentJob.id+'\n');
-		    				j = lines.length
-		    			}
-			    		else if(newData.map(function(el) {return el.key;}).indexOf(lines[j][1]+lines[j][2]+lines[j][3]+lines[j][4]+lines[j][5]+lines[j][6]+lines[j][7]+lines[j][8]+lines[j][11]+lines[j][12]+lines[j][13]+lines[j][14]) != -1 && (lines[j][0] === 'W' ||lines[j][0] === 'C')){
-			    			//wstream.write(lines[j] +"\n")
-						
-			    			terminal.stdin.write('printf "'+lines[j]+'\n" >> '+files[0].fd+'_'+currentJob.id+'\n');
-			    		}
+		    		if(newData.length != 0){
+			    		for(var j = 0;j<lines.length;j++){
+			    			if(NewTable || (response.rows == undefined) ){
+			    				// terminal.stdin.write('cp ' + files[0].fd+" "+files[0].fd+"_"+currentJob.id+'\n');
+			    				// j = lines.length
+			    				terminal.stdin.write('printf "'+lines[j]+'\n" >> '+files[0].fd+'_'+currentJob.id+'\n');
+			    			}
+			    			if(yearFormat === '2001'){
+				    			if(newData.map(function(el) {return el.key;}).indexOf(lines[j][1]+lines[j][2]+lines[j][3]+lines[j][4]+lines[j][5]+lines[j][6]+lines[j][7]+lines[j][8]+lines[j][11]+lines[j][12]+lines[j][13]+lines[j][14]) != -1 && (lines[j][0] === 'W' || lines[j][0] === 'C')){
+					    			//wstream.write(lines[j] +"\n")
+									terminal.stdin.write('printf "'+lines[j]+'\n" >> '+files[0].fd+'_'+currentJob.id+'\n');
+				    			}
+				    		}
+				    		if(yearFormat === '2013'){
+				    			if(newData.map(function(el) {return el.key;}).indexOf(lines[j][1]+lines[j][2]+lines[j][3]+lines[j][4]+lines[j][5]+lines[j][6]+lines[j][7]+lines[j][8]+lines[j][11]+lines[j][12]+lines[j][13]+lines[j][14]+lines[j][15]+lines[j][16]) != -1 && (lines[j][0] === 'W' || lines[j][0] === 'C')){
+					    			//wstream.write(lines[j] +"\n")
+									terminal.stdin.write('printf "'+lines[j]+'\n" >> '+files[0].fd+'_'+currentJob.id+'\n');
+				    			}
+				    		}
 
+				    	}
 			    	}
-			    	wstream.end("\n");
-		    		/*Below blocks of code may cause a server crashing error if they don't work. Unsure how to cause this error
-		    		  since files needed generally exist at this point in the code. Using try and catch blocks for now, but
-		    		  wstream.on should catch the error even before that. This is just extra safety precaution and the below
-		    		  error should indeed be fized and a none issue.*/
-		    		wstream.on('finish', function() {
+			    	/*
+			    	Try and catch blocks to make sure files exist and prevent a server crashing error
+			    	*/
+		    		//wstream.on('finish', function() {
 			    		try{
 							fs.chmodSync(files[0].fd+"_"+currentJob.id,0777)
 						}
 						catch(err){
+							console.log(err)
 							UploadJob.update({id:currentJob.id},{isFinished:true,status:"Finished-ERROR"}).exec(function(err,job){
 					    		if(err){
 					    			console.log(err)
@@ -258,7 +280,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 					    		}
 					    	})
 							terminal.stdin.write('rm ' + files[0].fd+"_"+currentJob.id +'\n');
-							terminal.stdin.write('rm ' + files[0].fd +'\n');
+							terminal.stdin.write('rm ' + files[0].fd +'n');
 							blastBackData.push("A small error occured. Please try reuploading "+files[0].filename)
 							sails.sockets.blast('file_parsed',blastBackData)
 							terminal.stdin.end();
@@ -267,7 +289,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 						/*
 						Below parses new data to be properly formed for table insertion.
 
-						The first if statement ends the code since there is no new data to be added in.
+						The first if statement ends the code if there is no new data to be added in.
 						*/
 						
 						if(newData.length == 0){
@@ -288,6 +310,7 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 								var schema = "'record_type:string,state_fips:string,station_id:string,dir:integer,lane:integer,year:integer,month:integer,day:integer,hour:integer,class:integer,open:string,total_weight:integer,numAxles:integer,axle1:integer,axle1sp:integer,axle2:integer,axle2sp:integer,axle3:integer,axle3sp:integer,axle4:integer,axle4sp:integer,axle5:integer,axle5sp:integer,axle6:integer,axle6sp:integer,axle7:integer,axle7sp:integer,axle8:integer,axle8sp:integer,axle9:integer,axle9sp:integer,axle10:integer,axle10sp:integer,axle11:integer,axle11sp:integer,axle12:integer,axle12sp:integer,axle13:integer'"
 								terminal.stdin.write("sed 's/\\r$//' '"+files[0].fd+"_"+currentJob.id+"' > '"+files[0].fd+"'\n")
 								terminal.stdin.write("awk -v FIELDWIDTHS='1 2 6 1 1 2 2 2 2 2 3 4 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3' -v OFS=',' '{ $1=$1 \"\"; print }' '"+files[0].fd+"' > '"+files[0].fd+"_"+currentJob.id+"'\n")
+								
 							
 							}
 							else if(lines[0][0] === 'C'){
@@ -326,18 +349,18 @@ var newDataUploadChecker = function(newData,typeD,lines,fs,files,terminal,curren
 
 							
 							//Below line is what inserts data to bigquery
-							console.log("Performing query")
+							terminal.stdin.write("echo Performing query \n")
 							//blastBackData = []
 							for(var i = 0;i<newData.length;i++){
 				                blastBackData.push("StateFips Code: "+newData[i].state+" Station: "+newData[i].station+" Month: "+newData[i].month+" Year: "+newData[i].year);
 				            }
 				            terminal.stdin.write("bq --project_id=avail-wim load --max_bad_records=10 tmasWIM12."+database+" "+files[0].fd+"_"+currentJob.id+" "+schema+" \n");
-							//Below removes junkfiles and lets the user know what data got uploaded
+				            //Below removes junkfiles and lets the user know what data got uploaded
 							terminal.stdin.write('rm ' + files[0].fd+"_"+currentJob.id +'\n');
 							terminal.stdin.write('rm ' + files[0].fd +'\n');
 							terminal.stdin.end();
 					
-					}); //End wstream on finish
+					//}); //End wstream on finish
 
 				}
 				else{
@@ -539,10 +562,12 @@ module.exports = {
 			    //Remaining data management done below
 
 			    fs.readFile(files[0].fd, "utf8", function(error, data) {
+
 			    	var lines = data.split('\n')
 			    	var dataHolder = []
 			    	if(lines[0][0] === 'C'){
 			    		if(((lines[0].length - 29)%5) == 0){
+
 				    		var yearFormat = "2013"
 				    	}
 				    	else{
@@ -557,47 +582,88 @@ module.exports = {
 				    	// }
 				    	// console.log(lengthTot)
 				    	// console.log(lines[0][25])
-				    	// console.log(lines[0][25] >= '0')
+	 			    	// console.log(lines[0][25] >= '0')
 				    	// console.log(lines[0][25] <= 'z')
-				    	//if(lines[0][25] >= '0' && lines[0][25] <= 'z'){
-				    		var yearFormat = "2001"
-				    		
-				    	/*}
-				    	else{
+				    	if( (lines[0][22] !== ' ')){
 				    		var yearFormat = "2013"
-				    	}*/
+				 
+				    	}
+				    	else{
+				    		var yearFormat = "2001"
+				    	}
 
 				    }
 				    
 			    	//This loop organizes input data for the sql query and later management
+			    	var skip = false
 			    	if(yearFormat === "2001"){
 				    	for(var i = 0;i<lines.length;i++){
-				    		
-				    		
-				    		if(dataHolder.map(function(el) {return el.key;}).indexOf(lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]) == -1 && (lines[i][0] === 'W' ||lines[i][0] === 'C')){
-				    			var object ={
-				    						 'state':lines[i][1]+lines[i][2],
-				    						 'station':lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8],
-				    						 'year':lines[i][11]+lines[i][12],
-				    						 'month':lines[i][13]+lines[i][14],
-				    						 'key':lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]
-				    						}
-				    			dataHolder.push(object)
-			    			}
+				    		//Below checks are to make sure line does not invalidate
+				    		//FDA upload format by checking for critical values
+				    		if(lines[i][0] === 'C'){
+				    			if((lines[i][2] === ' ') || (lines[i][8] === ' ') || (lines[i][9] === ' ') || (lines[i][10] === ' ') || (lines[i][12] === ' ') || (lines[i][14] === ' ') || (lines[i][16] === ' ') || (lines[i][18] === ' ') || (lines[i][33] === ' ') || (lines[i][43] === ' ') || (lines[i][48] === ' ') || (lines[i][53] === ' ') || (lines[i][58] === ' ') || (lines[i][63] === ' ') || (lines[i][68] === ' ') || (lines[i][73] === ' ') || (lines[i][78] === ' ') || (lines[i][83] === ' ') || (lines[i][88] === ' ')){
+				    				skip = true
+				    				lines.splice(i,1)
+				    				i = i - 1
+				    			}
+
+				    		}
+				    		else if(lines[i][0] === 'W'){
+				    			if((lines[i][2] === ' ') || (lines[i][8] === ' ') || (lines[i][9] === ' ') || (lines[i][10] === ' ') || (lines[i][12] === ' ') || (lines[i][14] === ' ') || (lines[i][16] === ' ') || (lines[i][18] === ' ') || (lines[i][20] === ' ')){
+				    				skip = true
+				    				lines.splice(i,1)
+				    				i = i - 1
+				    			}
+
+				    		}
+				    		if(!skip){
+					    		if(dataHolder.map(function(el) {return el.key;}).indexOf(lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]) == -1 && (lines[i][0] === 'W' ||lines[i][0] === 'C')){
+					    			var object ={
+					    						 'state':lines[i][1]+lines[i][2],
+					    						 'station':lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8],
+					    						 'year':lines[i][11]+lines[i][12],
+					    						 'month':lines[i][13]+lines[i][14],
+					    						 'key':lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]
+					    						}
+					    			dataHolder.push(object)
+				    			}
+				    		}
+				    		skip = false
 				    	}
 				    }
 				    else if(yearFormat === "2013"){
+				    	skip = false
 				    	for(var i = 0;i<lines.length;i++){
-				    		if(dataHolder.map(function(el) {return el.key;}).indexOf(lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]+lines[i][15]+lines[i][16]) == -1 && (lines[i][0] === 'W' ||lines[i][0] === 'C')){
-				    			var object ={
-				    						 'state':lines[i][1]+lines[i][2],
-				    						 'station':lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8],
-				    						 'year':lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14],
-				    						 'month':lines[i][15]+lines[i][16],
-				    						 'key':lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]+lines[i][15]+lines[i][16]
-				    						}
-				    			dataHolder.push(object)
-			    			}
+				    		
+				    		if(lines[i][0] === 'C'){
+				    			if((lines[i][2] === ' ') || (lines[i][8] === ' ') || (lines[i][9] === ' ') || (lines[i][10] === ' ') || (lines[i][11] === '0') || (lines[i][11] === ' ') || (lines[i][14] === ' ') || (lines[i][16] === ' ') || (lines[i][18] === ' ') || (lines[i][20] === ' ') || (lines[i][26] === ' ') || (lines[i][27] === ' ') || (lines[i][32] === ' ') || (lines[i][37] === ' ')){
+				    				skip = true
+				    				lines.splice(i,1)
+				    				i = i - 1
+				    			}
+				    		}
+				    		else if(lines[i][0] === 'W'){
+				    			if((lines[i][2] === ' ') || (lines[i][8] === ' ') || (lines[i][9] === ' ') || (lines[i][10] === ' ') || (lines[i][11] === '0') || (lines[i][11] === ' ') || (lines[i][14] === ' ') || (lines[i][16] === ' ') || (lines[i][18] === ' ') || (lines[i][20] === ' ') || (lines[i][31] === ' ') || (lines[i][33] === ' ') || (lines[i][38] === ' ') || (lines[i][42] === ' ') || (lines[i][47] === ' ')){
+				    				skip = true
+				    				lines.splice(i,1)
+				    				i = i - 1
+				    			}
+
+				    		}
+
+
+				    		if(!skip){
+					    		if(dataHolder.map(function(el) {return el.key;}).indexOf(lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]+lines[i][15]+lines[i][16]) == -1 && (lines[i][0] === 'W' ||lines[i][0] === 'C')){
+					    			var object ={
+					    						 'state':lines[i][1]+lines[i][2],
+					    						 'station':lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8],
+					    						 'year':lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14],
+					    						 'month':lines[i][15]+lines[i][16],
+					    						 'key':lines[i][1]+lines[i][2]+lines[i][3]+lines[i][4]+lines[i][5]+lines[i][6]+lines[i][7]+lines[i][8]+lines[i][11]+lines[i][12]+lines[i][13]+lines[i][14]+lines[i][15]+lines[i][16]
+					    						}
+					    			dataHolder.push(object)
+				    			}
+				    		}
 				    	}	
 				    }
 				    if(buffer.toString('utf8',0,1) === 'W'){
@@ -607,8 +673,15 @@ module.exports = {
 			    		var typeD = "class"
 			    	}
 
+			    	//Below creates a new file for working with awk and sed
+
+					var wstream = fs.createWriteStream(files[0].fd+"_"+currentJob.id,{ flags: 'w',encoding: null,mode: 0666 });
+			    	wstream.end();
+
+
 			    	//when creating new table pass true
 			    	//when not creating new table pass false
+
 			    	console.log(yearFormat)
 			    	newDataUploadChecker(dataHolder,typeD,lines,fs,files,terminal,currentJob,blastBackData,dataSource,yearFormat)
 			    	
@@ -622,6 +695,7 @@ module.exports = {
 		    		}
 		    	})
 				terminal.stdin.write('rm ' + files[0].fd +'\n');
+				terminal.stdin.write('rm ' + files[0].fd+"_"+currentJob.id +'\n');
 			    //console.log('Ending terminal session. Invalid File.');
 			    blastBackData.push("The file "+files[0].filename+" you have input is invalid. Please select a different file.")
 			    sails.sockets.blast('file_parsed',blastBackData);
